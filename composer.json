@@ -14,7 +14,7 @@
     },
     "autoload": {
         "psr-4": {
-            "DigipolisGent\\Domainator9k\\CoreBundle": ""
+            "DigipolisGent\\Domainator9k\\CoreBundle\\": ""
         }
     }
 }

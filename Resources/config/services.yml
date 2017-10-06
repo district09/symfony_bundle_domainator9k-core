@@ -1,0 +1,124 @@
+parameters:
+    digip_deploy.workspace_dir: "/tmp"
+
+
+
+services:
+
+    digip_deploy.environment_service:
+        arguments: ["@doctrine"]
+        class: DigipolisGent\Domainator9k\CoreBundle\Service\EnvironmentService
+
+    digip_deploy.application_type_builder:
+        arguments: []
+        class: DigipolisGent\Domainator9k\CoreBundle\Service\ApplicationTypeBuilder
+
+    digip_deploy.application_type_settings_service:
+        arguments: ["@doctrine", "@digip_deploy.application_type_builder"]
+        class: DigipolisGent\Domainator9k\CoreBundle\Service\AppTypeSettingsService
+
+    digip_deploy.ci_type_builder:
+        arguments: []
+        class: DigipolisGent\Domainator9k\CoreBundle\Service\CiTypeBuilder
+    digip_deploy.ci_settings_service:
+        arguments: ["@doctrine"]
+        class: DigipolisGent\Domainator9k\CoreBundle\Service\CiSettingsService
+    digip_deploy.ci_apptype_settings_service:
+        arguments: ["@doctrine", "@digip_deploy.application_type_builder", "@digip_deploy.ci_type_builder"]
+        class: DigipolisGent\Domainator9k\CoreBundle\Service\CiAppTypeSettingsService
+
+
+
+
+
+
+
+
+
+
+        #///////////////// from older Digip\DeployBundle
+
+
+
+
+    #
+    # entity services
+    #
+
+    digip_deploy.entity.application:
+        class: DigipolisGent\Domainator9k\CoreBundle\EntityService\ApplicationService
+        tags:
+            - { name: ctrl_rad.entity_service }
+
+    digip_deploy.entity.application_type:
+        class: DigipolisGent\Domainator9k\CoreBundle\EntityService\ApplicationTypeService
+        tags:
+            - { name: ctrl_rad.entity_service }
+
+    digip_deploy.entity.appenvironment:
+        class: DigipolisGent\Domainator9k\CoreBundle\EntityService\AppEnvironmentService
+        arguments: ["@digip_deploy.settings", "@digip_deploy.application_type_builder"]
+        tags:
+            - { name: ctrl_rad.entity_service }
+
+    digip_deploy.entity.server:
+        class: DigipolisGent\Domainator9k\CoreBundle\EntityService\ServerService
+        tags:
+            - { name: ctrl_rad.entity_service }
+
+    digip_deploy.entity.ssh_key_group:
+        class: DigipolisGent\Domainator9k\CoreBundle\EntityService\SshKeyGroupService
+        tags:
+            - { name: ctrl_rad.entity_service }
+
+    digip_deploy.entity.ssh_key:
+        class: DigipolisGent\Domainator9k\CoreBundle\EntityService\SshKeyService
+        tags:
+            - { name: ctrl_rad.entity_service }
+
+    digip_deploy.entity.build:
+        class: DigipolisGent\Domainator9k\CoreBundle\EntityService\BuildService
+        arguments: [%digip_deploy.workspace_dir%, %kernel.root_dir%]
+        calls:
+            - [setContainer, ["@service_container"]]
+        tags:
+            - { name: ctrl_rad.entity_service }
+
+    digip_deploy.entity.settings:
+        class: DigipolisGent\Domainator9k\CoreBundle\EntityService\SettingsService
+        tags:
+            - { name: ctrl_rad.entity_service }
+
+    digip_deploy.entity.role:
+        class: DigipolisGent\Domainator9k\CoreBundle\EntityService\RoleService
+        arguments: [ "%security.role_hierarchy.roles%" ]
+        tags:
+            - { name: ctrl_rad.entity_service }
+
+    digip_deploy.entity.environment:
+        class: DigipolisGent\Domainator9k\CoreBundle\EntityService\EnvironmentService
+        tags:
+            - { name: ctrl_rad.entity_service }
+
+    digip_deploy.settings:
+        class: DigipolisGent\Domainator9k\CoreBundle\Entity\Settings
+        factory: ["@digip_deploy.entity.settings", getSettings]
+
+
+    #
+    # Mail service
+    #
+    digip_deploy.mailer:
+        class: DigipolisGent\Domainator9k\CoreBundle\Service\Mail
+        arguments: ["@mailer", "@digip_deploy.environment_service"]
+
+
+    #
+    # Security Voters
+    #
+    digip_deploy.security.application_voter:
+        class:      DigipolisGent\Domainator9k\CoreBundle\Security\Voter\ApplicationVoter
+        arguments:  ["@service_container"]
+        public:     false
+        tags:
+            - { name: security.voter }

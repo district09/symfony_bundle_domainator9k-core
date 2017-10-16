@@ -40,10 +40,12 @@ class ProvisionCommandTest extends TestCase
         $this->app1Id = mt_rand(0, 100);
         $this->app1 = $this->getMockBuilder(ApplicationEntity::class)
             ->disableOriginalConstructor()
+            ->setMethods(array('getId', 'getName'))
             ->getMock();
         $this->app2Id = mt_rand(0, 100);
         $this->app2 = $this->getMockBuilder(ApplicationEntity::class)
             ->disableOriginalConstructor()
+            ->setMethods(array('getId', 'getName'))
             ->getMock();
         $application = new Application();
         $application->add(new ProvisionCommand());

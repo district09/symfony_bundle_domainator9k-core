@@ -5,4 +5,9 @@ install:
   - composer self-update
   - composer install --dev
 script:
-  - vendor/bin/phpunit --disallow-test-output --report-useless-tests --strict-coverage -d error_reporting=-1 --coverage-clover=build/logs/clover.xml Tests
+  - vendor/bin/robo test:coverage-codeclimate
+addons:
+  code_climate:
+    repo_token: a30397d4d834a355071eede1d9b6e1aa4ac2a597661676f1d1933f1e9f0dc9dc
+after_success:
+  - vendor/bin/test-reporter

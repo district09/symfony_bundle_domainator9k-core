@@ -2,26 +2,18 @@
 
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/4.1/phpunit.xsd"
-         bootstrap="vendor/autoload.php"
 >
-  <php>
-    <server name="KERNEL_DIR" value="Tests/TestKernel" />
-  </php>
-  <testsuites>
-    <testsuite name="domainator9k-core-bundle tests">
-      <directory>./Tests</directory>
-    </testsuite>
-  </testsuites>
-
-  <!--<filter>
-      <whitelist processUncoveredFilesFromWhitelist="true">
-          <directory suffix=".php">./</directory>
-      </whitelist>
-      <exclude>
-    <directory>./Tests</directory>
-  </exclude>
-  </filter>
-  <logging>
-      <log type="coverage-clover" target="build/logs/clover.xml"/>
-  </logging>-->
+    <testsuites>
+        <testsuite name="domainator9k-core-bundle tests">
+            <directory>./Tests</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src</directory>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
+    </logging>
 </phpunit>

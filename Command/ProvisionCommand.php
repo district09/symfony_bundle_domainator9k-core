@@ -12,6 +12,26 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ProvisionCommand extends AbstractBuildCommand
 {
+
+    /**
+     *
+     * @var \DigipolisGent\Domainator9k\CoreBundle\EntityService\SettingsService
+     */
+    protected $settingsService;
+
+    /**
+     *
+     * @var \DigipolisGent\Domainator9k\CoreBundle\EntityService\ServerService
+     */
+    protected $serverService;
+
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        parent::initialize($input, $output);
+        $this->settingsService = $this->getContainer()->get('digip_deploy.entity.settings');
+        $this->serverService = $this->getContainer()->get('digip_deploy.entity.server');
+    }
+
     protected function configure()
     {
         $this
@@ -46,11 +66,9 @@ class ProvisionCommand extends AbstractBuildCommand
             $output->writeln($message);
         });
 
-        $buildService = $this->container->get('digip_deploy.entity.build');
-
         if ($input->getOption('build')) {
             /** @var Build $build */
-            $build = $buildService->getFinder()->get($input->getOption('build'));
+            $build = $this->buildService->getFinder()->get($input->getOption('build'));
 
             if ($build->isStarted()) {
                 throw new \InvalidArgumentException(sprintf(
@@ -66,21 +84,18 @@ class ProvisionCommand extends AbstractBuildCommand
             }
             $build = new Build($application, Build::TYPE_PROVISION);
             $application->setProvisionBuild($build);
-            $buildService->persist($build);
+            $this->buildService->persist($build);
         }
 
         $build->setPid(getmypid());
-        $buildService->persist($build);
+        $this->buildService->persist($build);
 
         $this->doBuild($build, $input);
     }
 
     protected function doBuild(Build $build, InputInterface $input)
     {
-        $settings = $this->container->get('digip_deploy.entity.settings')->getSettings();
-
-        $buildService = $this->container->get('digip_deploy.entity.build');
-        $serverService = $this->container->get('digip_deploy.entity.server');
+        $settings = $this->settingsService->getSettings();
 
         $mask = 0;
         $parts = false;
@@ -116,9 +131,9 @@ class ProvisionCommand extends AbstractBuildCommand
             $mask = BuildService::PROVISION_ALL;
         }
 
-        $result = $buildService->execute(
+        $result = $this->buildService->execute(
             $build,
-            $serverService->getFinder()->find()->getAll(),
+            $this->serverService->getFinder()->find()->getAll(),
             $settings,
             $mask
         );

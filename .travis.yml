@@ -12,6 +12,6 @@ before_script:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 script:
-  - vendor/bin/robo test:coverage-codeclimate
+  - vendor/bin/phpunit --disallow-test-output --report-useless-tests --strict-coverage -d error_reporting=-1 --coverage-clover=build/logs/clover.xml Tests
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT

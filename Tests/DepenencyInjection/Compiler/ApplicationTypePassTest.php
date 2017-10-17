@@ -60,7 +60,7 @@ class ApplicationTypePassTest extends TestCase
         for ($i = 0; $i<= mt_rand(5, 10); $i++) {
             do {
                 $id = (string) mt_rand(0, 100000);
-            } while (!isset($types[$id]));
+            } while (isset($types[$id]));
 
             $type = $this->getMockBuilder(BaseAppType::class)->getMockForAbstractClass();
             $type

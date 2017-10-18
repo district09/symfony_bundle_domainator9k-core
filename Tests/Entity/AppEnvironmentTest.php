@@ -26,6 +26,8 @@ class AppEnvironmentTest extends TestCase
         $mockApp = $this->getMockBuilder(Application::class)->disableOriginalConstructor()->getMock();
         $mockApp->expects($this->once())->method('getCron')->willReturn('cron_' . $name);
         $mockApp->expects($this->once())->method('hasDatabase')->willReturn(true);
+        $mockApp->expects($this->any())->method('getNameCanonical')->willReturn($name);
+        $mockApp->expects($this->any())->method('getName')->willReturn($name);
 
         $appEnv = new AppEnvironment($mockApp, $name, $devPermissions, $prod);
         $this->assertEquals($appEnv->getName(), $name);
@@ -50,6 +52,7 @@ class AppEnvironmentTest extends TestCase
         $this->assertEquals($appEnv, $appEnv->getDatabaseSettings()->getAppEnvironment());
         $expectedDbName = $appEnv->getServerSettings()->getUser() . '_' . substr($mockApp->getNameCanonical(), 0, 1);
         $this->assertSame($expectedDbName, $appEnv->getDatabaseSettings()->getName());
+        $this->assertNotEmpty($appEnv->getDatabaseSettings()->getPassword());
     }
 
 }

@@ -90,14 +90,13 @@ abstract class AbstractBuildCommand extends ContainerAwareCommand
         $question = new ChoiceQuestion('Which application would you like to deploy?', $choices);
         $result = $dialog->ask($input, $output, $question);
 
+        // The ChoiceQuestion class handles invalid answers, so the chosen
+        // application will always exist.
         foreach ($this->getApplications() as $app) {
             if ($app->getName() === $result) {
-                return $app;
+                break;
             }
         }
-
-        $output->writeln('something went wrong with the selection, please try again');
-
-        return $this->askApplication($input, $output);
+        return $app;
     }
 }

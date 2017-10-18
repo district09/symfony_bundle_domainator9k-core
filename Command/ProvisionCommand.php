@@ -63,19 +63,14 @@ class ProvisionCommand extends AbstractBuildCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         Messenger::addListener(function ($message) use ($output) {
+            // @codeCoverageIgnoreStart
             $output->writeln($message);
+            // @codeCoverageIgnoreEnd
         });
 
         if ($input->getOption('build')) {
             /** @var Build $build */
-            $build = $this->buildService->getFinder()->get($input->getOption('build'));
-
-            if ($build->isStarted()) {
-                throw new \InvalidArgumentException(sprintf(
-                    'build %s was already started',
-                    $build->getId()
-                ));
-            }
+            $build = $this->loadBuild($input->getOption('build'));
         } else {
             if ($input->getArgument('application')) {
                 $application = $this->loadApplication($input->getArgument('application'));

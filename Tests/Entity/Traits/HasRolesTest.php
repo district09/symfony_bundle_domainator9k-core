@@ -65,6 +65,13 @@ class HasRolesTest extends TestCase
             $this->assertEquals($result, $this->mockedTrait);
         }
         $this->assertEquals($this->roles, $this->mockedTrait->getRoles()->toArray());
+
+        // Test that adding them again doesn't duplicate them.
+        foreach ($this->roles as $role) {
+            $result = $this->mockedTrait->addRole($role);
+            $this->assertEquals($result, $this->mockedTrait);
+        }
+        $this->assertEquals($this->roles, $this->mockedTrait->getRoles()->toArray());
     }
 
     public function testRemoveRole() {

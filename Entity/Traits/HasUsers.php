@@ -28,21 +28,45 @@ trait HasUsers
      */
     public function setUsers($users)
     {
-        $this->users = $users;
+        $this->users = ($users instanceof ArrayCollection)
+            ? $users
+            : new ArrayCollection($users);
 
         return $this;
     }
 
+    /**
+     * @param User $user
+     *
+     * @return $this
+     */
     public function addUser(User $user)
     {
-        $this->users[] = $user;
+        if (!$this->users instanceof ArrayCollection) {
+            $this->users = new ArrayCollection($this->users);
+        }
+        $this->users->add($user);
+
+        return $this;
     }
 
+    /**
+     * @param User $user
+     *
+     * @return $this
+     */
     public function removeUser(User $user)
     {
         $this->users->removeElement($user);
+
+        return $this;
     }
 
+    /**
+     * @param User $user
+     *
+     * @return bool
+     */
     public function hasUser(User $user)
     {
         return $this->users->contains($user);

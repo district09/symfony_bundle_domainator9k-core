@@ -229,6 +229,9 @@ class ProvisionCommandTest extends TestCase
             $this->tester->execute(
                 array('command' => $this->command->getName(), '--build' => $this->buildId)
             );
+            if ($started) {
+                $this->fail('Should not be able to load a build that has already started.');
+            }
         }
         catch (\Exception $e)
         {
@@ -241,6 +244,7 @@ class ProvisionCommandTest extends TestCase
             }
             else
             {
+                $this->fail($e->getMessage());
                 throw $e;
             }
         }

@@ -158,12 +158,12 @@ class Application
     /**
      * @param ApplicationTypeInterface $type
      * @param string                   $name
+     * @param Environment[]            $environments
      * @param string                   $urlScheme    for production
      * @param string|null              $siteConfig
      * @param Application|null         $parent
-     * @param Environment[]            $environments
      */
-    public function __construct(ApplicationTypeInterface $type, $name, $urlScheme = self::URL_SCHEME_STAD_GENT, $siteConfig = null, $parent = null, $environments)
+    public function __construct(ApplicationTypeInterface $type, $name, $environments, $urlScheme = self::URL_SCHEME_STAD_GENT, $siteConfig = null, $parent = null)
     {
         //exit(var_dump('construct'));
 
@@ -179,7 +179,7 @@ class Application
         $this->setParent($parent);
 
         foreach ($environments as $environment) {
-            $appEnv = new AppEnvironment($this, $environment->getName(), $urlScheme, $environment->isDevPermissions(), $environment->isProd());
+            $appEnv = new AppEnvironment($this, $environment->getName(), $environment->isDevPermissions(), $environment->isProd(), $urlScheme);
             $appEnv->setDomainByDefault($environment, $urlScheme);
             $this->addAppEnvironment($appEnv);
         }

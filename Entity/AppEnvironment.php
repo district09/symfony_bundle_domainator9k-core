@@ -139,9 +139,9 @@ class AppEnvironment
      * @param Application $application
      * @param string      $name
      * @param string      $urlScheme
-     * @param $devPermissions
+     * @param bool $devPermissions
      */
-    public function __construct(Application $application, $name, $urlScheme = Application::URL_SCHEME_GENT_GRP_ENV, $devPermissions, $prod)
+    public function __construct(Application $application, $name, $devPermissions, $prod, $urlScheme = Application::URL_SCHEME_GENT_GRP_ENV)
     {
         $this->name = $name;
         $this->application = $application;
@@ -155,15 +155,9 @@ class AppEnvironment
         $this->assertServerSettings();
         $this->assertDatabaseSettings();
 
-        // set default git branch
-        switch ($this->getNameCanonical()) {
-            case 'qa':
-                $this->gitRef = 'release/*';
-                break;
-            case 'test':
-                $this->gitRef = 'develop';
-                break;
-        }
+        // Set default git branch.
+        // @TODO: Get this from a key-value store.
+        $this->gitRef = '';
         $this->devPermissions = $devPermissions;
         $this->prod = $prod;
     }

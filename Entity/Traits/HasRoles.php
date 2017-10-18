@@ -39,13 +39,18 @@ trait HasRoles
      */
     public function setRoles($roles)
     {
-        $this->roles = $roles;
+        $this->roles = ($roles instanceof ArrayCollection)
+            ? $roles
+            : new ArrayCollection($roles);
 
         return $this;
     }
 
     public function addRole(Role $role)
     {
+        if (!$this->roles instanceof ArrayCollection) {
+            $this->roles = new ArrayCollection($this->roles);
+        }
         if (!$this->hasRole($role)) {
             $this->roles[] = $role;
         }

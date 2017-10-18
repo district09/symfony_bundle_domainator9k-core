@@ -2,7 +2,7 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Tests\DependencyInjection\Compiler;
 
-use DigipolisGent\Domainator9k\CoreBundle\DependencyInjection\Compiler\ApplicationTypePass;
+use DigipolisGent\Domainator9k\CoreBundle\DependencyInjection\Compiler\CiTypePass;
 use Symfony\Bundle\WebProfilerBundle\Tests\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -12,28 +12,28 @@ use Symfony\Component\DependencyInjection\Definition;
  *
  * @author Jelle Sebreghts
  */
-class ApplicationTypePassTest extends TestCase
+class CiTypePassTest extends TestCase
 {
 
-    public function testNoAppTypeBuilder()
+    public function testNoCiTypeBuilder()
     {
         $container = $this->getMockBuilder(ContainerBuilder::class)->getMock();
         $container
             ->expects($this->once())
             ->method('has')
-            ->with('digip_deploy.application_type_builder')
+            ->with('digip_deploy.ci_type_builder')
             ->willReturn(false);
 
         // Assert no other methods are called.
         $container
             ->expects($this->never())
             ->method('findDefinition')
-            ->with('digip_deploy.application_type_builder');
+            ->with('digip_deploy.ci_type_builder');
 
         $container
             ->expects($this->never())
             ->method('findTaggedServiceIds')
-            ->with('digip_deploy.type');
+            ->with('digip_deploy.ci_type');
 
         $this->process($container);
     }
@@ -41,19 +41,19 @@ class ApplicationTypePassTest extends TestCase
     public function testTaggedServices()
     {
         $container = $this->getMockBuilder(ContainerBuilder::class)->getMock();
-        $appTypeBuilderDefinition = $this->getMockBuilder(Definition::class)->getMock();
+        $ciTypeBuilderDefinition = $this->getMockBuilder(Definition::class)->getMock();
         $container
             ->expects($this->at(0))
             ->method('has')
-            ->with('digip_deploy.application_type_builder')
+            ->with('digip_deploy.ci_type_builder')
             ->willReturn(true);
 
         // Assert no other methods are called.
         $container
             ->expects($this->at(1))
             ->method('findDefinition')
-            ->with('digip_deploy.application_type_builder')
-            ->willReturn($appTypeBuilderDefinition);
+            ->with('digip_deploy.ci_type_builder')
+            ->willReturn($ciTypeBuilderDefinition);
 
         $types = array();
         for ($i = 0; $i <= mt_rand(5, 10); $i++)
@@ -76,33 +76,13 @@ class ApplicationTypePassTest extends TestCase
                     })
             );
 
-            $typeDefinition
-                ->expects($this->at(1))
-                ->method('addMethodCall')
-                ->with(
-                    'setAppTypeSettingsService', $this->callback(function(array $args)
-                    {
-                        return ((string) $args[0]) === 'digip_deploy.application_type_settings_service';
-                    })
-            );
-
-            $typeDefinition
-                ->expects($this->at(2))
-                ->method('addMethodCall')
-                ->with(
-                    'setEnvironmentService', $this->callback(function(array $args)
-                    {
-                        return ((string) $args[0]) === 'digip_deploy.environment_service';
-                    })
-            );
-
             $container
                 ->expects($this->at($i + 3))
                 ->method('findDefinition')
                 ->with($id)
                 ->willReturn($typeDefinition);
 
-            $appTypeBuilderDefinition
+            $ciTypeBuilderDefinition
                 ->expects($this->at($i))
                 ->method('addMethodCall')
                 ->with(
@@ -118,15 +98,15 @@ class ApplicationTypePassTest extends TestCase
         $container
             ->expects($this->at(2))
             ->method('findTaggedServiceIds')
-            ->with('digip_deploy.type')
-            ->willReturn(array_combine(array_keys($types), array_fill(0, count($types), array('digip_deploy.type'))));
+            ->with('digip_deploy.ci_type')
+            ->willReturn(array_combine(array_keys($types), array_fill(0, count($types), array('digip_deploy.ci_type'))));
 
         $this->process($container);
     }
 
     protected function process(ContainerBuilder $container)
     {
-        $pass = new ApplicationTypePass();
+        $pass = new CiTypePass();
         $pass->process($container);
     }
 

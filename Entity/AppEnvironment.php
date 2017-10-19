@@ -333,7 +333,7 @@ class AppEnvironment
      */
     public function setPreferredDomain($preferredDomain)
     {
-        if (in_array($preferredDomain, $this->domains)) {
+        if (!$this->domains || !in_array($preferredDomain, $this->domains)) {
             throw new \InvalidArgumentException(sprintf("the domain '%s' is not a configured domain for this environment.", $preferredDomain));
         }
 
@@ -342,6 +342,13 @@ class AppEnvironment
         return $this;
     }
 
+    /**
+     * @param Environment $env
+     *
+     * @param string $scheme
+     *
+     * @return $this
+     */
     public function setDomainByDefault(Environment $env, $scheme)
     {
         $urlName = $this->getApplication()->getNameForUrl();
@@ -353,7 +360,7 @@ class AppEnvironment
 
         $this->addDomain($url);
 
-        return;
+        return $this;
     }
 
     /**
@@ -591,10 +598,14 @@ class AppEnvironment
 
     /**
      * @param string $ciJobUri
+     *
+     * @return $this
      */
     public function setCiJobUri($ciJobUri)
     {
         $this->ciJobUri = $ciJobUri;
+
+        return $this;
     }
 
     /**
@@ -607,10 +618,14 @@ class AppEnvironment
 
     /**
      * @param bool $devPermissions
+     *
+     * @return $this
      */
     public function setDevPermissions($devPermissions)
     {
         $this->devPermissions = $devPermissions;
+
+        return $this;
     }
 
     /**
@@ -623,9 +638,13 @@ class AppEnvironment
 
     /**
      * @param bool $prod
+     *
+     * @return $this
      */
     public function setProd($prod)
     {
         $this->prod = $prod;
+
+        return $this;
     }
 }

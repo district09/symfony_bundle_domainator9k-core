@@ -312,7 +312,6 @@ class Application
      */
     public function setType($type)
     {
-        exit(var_dump('type setter'));
         $this->type = $type;
 
         return $this;

@@ -13,15 +13,15 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\ServerSettings;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\SshKeyGroup;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
+use InvalidArgumentException;
 use ReflectionObject;
-use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
  * Description of AppEnvironmentTest
  *
  * @author Jelle Sebreghts
  */
-class AppEnvironmentTest extends TestCase
+class AppEnvironmentTest extends EntityTest
 {
 
     public function testContstructor()
@@ -200,7 +200,7 @@ class AppEnvironmentTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage the domain 'http://google.com' is not a configured domain for this environment.
      */
     public function testSetPreferredDomain()
@@ -357,6 +357,11 @@ class AppEnvironmentTest extends TestCase
             ['prod', true, true],
             ['prod', false, true],
         ];
+    }
+
+    protected function getEntity()
+    {
+        return $this->getAppEnv();
     }
 
 }

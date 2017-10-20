@@ -26,7 +26,7 @@ class AppEnvironmentTest extends EntityTest
 
     public function testContstructor()
     {
-        $name = str_repeat(uniqid(mt_rand(), true), mt_rand(1, 5));
+        $name = str_repeat($this->getAlphaNumeric(false, 13), mt_rand(1, 5));
         $devPermissions = (bool) (microtime() % 2);
         $prod = (bool) (microtime() % 3);
         $mockApp = $this->getMockApp($name);
@@ -60,17 +60,17 @@ class AppEnvironmentTest extends EntityTest
 
     public function testContstructorWithParent()
     {
-        $name = str_repeat(uniqid(mt_rand(), true), mt_rand(1, 5));
+        $name = str_repeat($this->getAlphaNumeric(false, 13), mt_rand(1, 5));
         $devPermissions = (bool) (microtime() % 2);
         $prod = (bool) (microtime() % 3);
         $mockApp = $this->getMockApp($name);
 
-        $parentName = str_repeat(uniqid(mt_rand(), true), mt_rand(1, 5));
+        $parentName = str_repeat($this->getAlphaNumeric(false, 13), mt_rand(1, 5));
         $mockAppParent = $this->getMockBuilder(Application::class)->disableOriginalConstructor()->getMock();
         $mockAppParent->expects($this->any())->method('getNameCanonical')->willReturn($parentName);
         $mockAppParent->expects($this->any())->method('getName')->willReturn($parentName);
         $parentAppEnv = $this->getMockBuilder(AppEnvironment::class)->disableOriginalConstructor()->getMock();
-        $parentServerPassword = uniqid();
+        $parentServerPassword = $this->getAlphaNumeric();
         $parentServerSettings = new ServerSettings($parentAppEnv, $parentName, $parentServerPassword);
         $sockId = uniqid();
         $parentServerSettings->setSockAccountId($sockId);
@@ -130,18 +130,7 @@ class AppEnvironmentTest extends EntityTest
 
     public function testGetNameCanonical()
     {
-        $seed = str_split('abcdefghijklmnopqrstuvwxyz'
-            . 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-            . '0123456789!@#$%^&*()_-');
-        $invalidSeed = str_split('!@#$%^&*()_-');
-        $name = '';
-
-        foreach (array_rand($seed, mt_rand(5, count($seed))) as $k)
-        {
-            $name .= $seed[$k];
-        }
-        // Make sure we have at least one invalid character.
-        $name .= $invalidSeed[array_rand($invalidSeed)];
+        $name = $this->getAlphaNumeric(true);
         $mockApp = $this->getMockApp($name);
         $appEnv = new AppEnvironment($mockApp, $name, false, true);
         $canonical = $appEnv->getNameCanonical();
@@ -152,18 +141,7 @@ class AppEnvironmentTest extends EntityTest
 
     public function testGetFullNameCanonical()
     {
-        $seed = str_split('abcdefghijklmnopqrstuvwxyz'
-            . 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-            . '0123456789!@#$%^&*()_-');
-        $invalidSeed = str_split('!@#$%^&*()_-');
-        $name = '';
-
-        foreach (array_rand($seed, mt_rand(5, count($seed))) as $k)
-        {
-            $name .= $seed[$k];
-        }
-        // Make sure we have at least one invalid character.
-        $name .= $invalidSeed[array_rand($invalidSeed)];
+        $name = $this->getAlphaNumeric(true);
         $mockApp = $this->getMockApp($name);
         $appEnv = new AppEnvironment($mockApp, $name, false, true);
         $envCanonical = $appEnv->getNameCanonical();
@@ -244,14 +222,14 @@ class AppEnvironmentTest extends EntityTest
 
     public function testSetDomainByDefault()
     {
-        $name = str_repeat(uniqid(mt_rand(), true), mt_rand(1, 5));
+        $name = str_repeat($this->getAlphaNumeric(false, 13), mt_rand(1, 5));
         $mockApp = $this->getMockApp($name);
         $appEnv = new AppEnvironment($mockApp, $name, false, true);
         $mockApp->expects($this->any())->method('getNameForUrl')->willReturn($name);
         $env = $this->getMockBuilder(Environment::class)->getMock();
-        $env->expects($this->any())->method('getUrlStructure')->willReturn('[URL_SCHEMA]://[APP_NAME].com');
-        $appEnv->setDomainByDefault($env, 'https');
-        $this->assertEquals('https://' . $name . '.com', $appEnv->getPreferredDomain());
+        $env->expects($this->any())->method('getUrlStructure')->willReturn('http://[APP_NAME].[URL_SCHEMA]');
+        $appEnv->setDomainByDefault($env, 'com');
+        $this->assertEquals('http://' . $name . '.com', $appEnv->getPreferredDomain());
     }
 
     public function testSetSiteConfig()
@@ -269,7 +247,7 @@ class AppEnvironmentTest extends EntityTest
         $appEnv->setDomains(['http://google.com']);
         $appEnv->setPreferredDomain('http://google.com');
         $content = '[[URL]] [[IP]]';
-        $ip = uniqid();
+        $ip = $this->getAlphaNumeric();
 
         $server = $this->getMockBuilder(Server::class)->disableOriginalConstructor()->getMock();
         $server->expects($this->once())->method('isTaskServer')->willReturn(true);
@@ -285,9 +263,9 @@ class AppEnvironmentTest extends EntityTest
         $appEnv = $this->getAppEnv();
         $mockApp = $appEnv->getApplication();
         $type = $this->getMockBuilder(ApplicationType::class)->disableOriginalConstructor()->getMock();
-        $type->expects($this->any())->method('getSlug')->willReturn(uniqid());
-        $dirs = [uniqid(), uniqid()];
-        $user = uniqid();
+        $type->expects($this->any())->method('getSlug')->willReturn($this->getAlphaNumeric());
+        $dirs = [$this->getAlphaNumeric(), $this->getAlphaNumeric()];
+        $user = $this->getAlphaNumeric();
         $type->expects($this->once())->method('getDirectories')->with($mockApp, $user)->willReturn($dirs);
         $mockApp->expects($this->any())->method('getType')->willReturn($type);
         $this->assertEquals($dirs, $appEnv->getProjectSpecificDirs($user));
@@ -312,7 +290,7 @@ class AppEnvironmentTest extends EntityTest
 
     protected function getAppEnv()
     {
-        $name = str_repeat(uniqid(mt_rand(), true), mt_rand(1, 5));
+        $name = str_repeat($this->getAlphaNumeric(false, 13), mt_rand(1, 5));
         $mockApp = $this->getMockApp($name);
         $appEnv = new AppEnvironment($mockApp, $name, false, true);
 
@@ -323,17 +301,17 @@ class AppEnvironmentTest extends EntityTest
     {
         return [
             ['id', uniqid()],
-            ['salt', uniqid()],
-            ['application', $this->getMockApp(uniqid())],
+            ['salt', $this->getAlphaNumeric(true)],
+            ['application', $this->getMockApp($this->getAlphaNumeric())],
             ['sockApplicationId', uniqid()],
-            ['name', uniqid()],
+            ['name', $this->getAlphaNumeric()],
             ['preferredDomain', 'http://google.com'],
-            ['gitRef', uniqid()],
-            ['cron', uniqid()],
+            ['gitRef', $this->getAlphaNumeric()],
+            ['cron', $this->getAlphaNumeric()],
             ['createdAt', new \DateTime()],
             ['updatedAt', new \DateTime()],
-            ['sshKeyGroups', new ArrayCollection([new SshKeyGroup(uniqid()), new SshKeyGroup(uniqid())])],
-            ['ciJobUri', uniqid()],
+            ['sshKeyGroups', new ArrayCollection([new SshKeyGroup($this->getAlphaNumeric()), new SshKeyGroup($this->getAlphaNumeric())])],
+            ['ciJobUri', $this->getAlphaNumeric()],
             ['devPermissions', true, true],
             ['devPermissions', false, true],
             ['prod', true, true],
@@ -344,14 +322,14 @@ class AppEnvironmentTest extends EntityTest
     public function setterTestDataProvider()
     {
         return [
-            ['application', $this->getMockApp(uniqid())],
+            ['application', $this->getMockApp($this->getAlphaNumeric())],
             ['sockApplicationId', uniqid()],
-            ['gitRef', uniqid()],
-            ['siteConfig', uniqid()],
-            ['cron', uniqid()],
-            ['sshKeyGroups', new ArrayCollection([new SshKeyGroup(uniqid()), new SshKeyGroup(uniqid())])],
-            ['databaseSettings', new DatabaseSettings($this->getAppEnv(), uniqid())],
-            ['ciJobUri', uniqid()],
+            ['gitRef', $this->getAlphaNumeric()],
+            ['siteConfig', $this->getAlphaNumeric()],
+            ['cron', $this->getAlphaNumeric()],
+            ['sshKeyGroups', new ArrayCollection([new SshKeyGroup($this->getAlphaNumeric()), new SshKeyGroup($this->getAlphaNumeric())])],
+            ['databaseSettings', new DatabaseSettings($this->getAppEnv(), $this->getAlphaNumeric())],
+            ['ciJobUri', $this->getAlphaNumeric()],
             ['devPermissions', true, true],
             ['devPermissions', false, true],
             ['prod', true, true],

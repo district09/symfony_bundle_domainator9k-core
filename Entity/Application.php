@@ -22,6 +22,7 @@ class Application
     use HasUsers;
     use HasRoles;
 
+    // @TODO: Move to key value store.
     const URL_SCHEME_STAD_GENT = 'stad.gent';
     const URL_SCHEME_GENT_BE = 'gent.be';
     const URL_SCHEME_OCMW_GENT = 'ocmw.gent';
@@ -165,8 +166,6 @@ class Application
      */
     public function __construct(ApplicationTypeInterface $type, $name, $environments, $urlScheme = self::URL_SCHEME_STAD_GENT, $siteConfig = null, $parent = null)
     {
-        //exit(var_dump('construct'));
-
         $this->appTypeSlug = $type->getSlug();
         $this->name = $name;
         $this->nameCanonical = StringHelper::canonicalize($name);
@@ -207,6 +206,8 @@ class Application
     public function setAppTypeSlug($appTypeSlug)
     {
         $this->appTypeSlug = $appTypeSlug;
+
+        return $this;
     }
 
     /**
@@ -342,6 +343,7 @@ class Application
      */
     public function getGitRepoFull()
     {
+        // @TODO: Support multiple platforms.
         return 'git@bitbucket.org:'.$this->gitRepo.'.git';
     }
 
@@ -461,16 +463,14 @@ class Application
      */
     public function getAppEnvironment($name)
     {
+        $env = null;
+        if ($name instanceof Environment) {
+            $env = $name;
+            $name = (string) $name;
+        }
         foreach ($this->appEnvironments as $e) {
-            if (is_string($name) && ($e->getName() === $name || $e->getNameCanonical() === $name)) {
-                var_dump('using old string in getappenvs');
-
+            if (($e->getName() === $name || $e->getNameCanonical() === $name) || ($env && ($e->getName() === $env->getName() || $e->getNameCanonical() === $env->getName()))) {
                 return $e;
-            } else {
-                //this function now receives an actual Env entity instead of a string
-                if ($name instanceof Environment && ($e->getName() === $name->getName() || $e->getNameCanonical() === $name->getName())) {
-                    return $e;
-                }
             }
         }
 
@@ -617,6 +617,8 @@ class Application
     public function setCiTypeSlug($ciTypeSlug)
     {
         $this->ciTypeSlug = $ciTypeSlug;
+
+        return $this;
     }
 
     /**
@@ -633,6 +635,8 @@ class Application
     public function setAppTypeSettings($appTypeSettings)
     {
         $this->appTypeSettings = $appTypeSettings;
+
+        return $this;
     }
 
     /**
@@ -649,5 +653,7 @@ class Application
     public function setCiAppTypeSettings($ciAppTypeSettings)
     {
         $this->ciAppTypeSettings = $ciAppTypeSettings;
+
+        return $this;
     }
 }

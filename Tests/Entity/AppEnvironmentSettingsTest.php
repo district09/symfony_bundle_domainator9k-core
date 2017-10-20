@@ -17,20 +17,20 @@ class AppEnvironmentSettingsTest extends EntityTest
     {
         return [
             ['id', uniqid()],
-            ['databaseHost', uniqid()],
-            ['redisPassword', uniqid()],
+            ['databaseHost', $this->getAlphaNumeric()],
+            ['redisPassword', $this->getAlphaNumeric()],
             ['settings', $this->getMockBuilder(Settings::class)->getMock()],
-            ['environment', uniqid()],
+            ['environment', $this->getAlphaNumeric()],
         ];
     }
 
     public function setterTestDataProvider()
     {
         return [
-            ['databaseHost', uniqid()],
-            ['redisPassword', uniqid()],
+            ['databaseHost', $this->getAlphaNumeric()],
+            ['redisPassword', $this->getAlphaNumeric()],
             ['settings', $this->getMockBuilder(Settings::class)->getMock()],
-            ['environment', uniqid()],
+            ['environment', $this->getAlphaNumeric()],
         ];
     }
 

@@ -6,7 +6,7 @@ use Ctrl\RadBundle\Entity\User;
 use DateTime;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Application;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationType;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\BaseAppType;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Build;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\DatabaseSettings;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Environment;
@@ -27,7 +27,7 @@ class ApplicationTest extends EntityTest
 
     /**
      *
-     * @var ApplicationType|PHPUnit_Framework_MockObject_MockObject
+     * @var BaseAppType|PHPUnit_Framework_MockObject_MockObject
      */
     protected $type;
 
@@ -61,7 +61,7 @@ class ApplicationTest extends EntityTest
         $this->name = $this->getAlphaNumeric(true);
         $this->scheme = $this->getAlphaNumeric();
         $this->siteConfig = $this->getAlphaNumeric();
-        $this->type = $this->getMockBuilder(ApplicationType::class)->disableOriginalConstructor()->getMock();
+        $this->type = $this->getMockBuilder(BaseAppType::class)->disableOriginalConstructor()->getMock();
         $this->type->expects($this->any())->method('getSlug')->willReturn($this->getAlphaNumeric());
         $env = $this->getMockBuilder(Environment::class)->getMock();
         $env->expects($this->atLeastOnce())->method('getName')->willReturn($this->getAlphaNumeric());
@@ -102,7 +102,7 @@ class ApplicationTest extends EntityTest
         $this->assertEquals($this->type->getSlug(), $app->getAppTypeSlug());
 
         // Set a different type and make sure we get that slug.
-        $type = $this->getMockBuilder(ApplicationType::class)->disableOriginalConstructor()->getMock();
+        $type = $this->getMockBuilder(BaseAppType::class)->disableOriginalConstructor()->getMock();
         $type->expects($this->any())->method('getSlug')->willReturn($this->getAlphaNumeric());
         $refObject = new ReflectionObject($app);
         $refProperty = $refObject->getProperty('type');
@@ -297,7 +297,7 @@ class ApplicationTest extends EntityTest
             ['nameCanonical', $this->getAlphaNumeric()],
             ['parent', $this->getMockBuilder(Application::class)->disableOriginalConstructor()->getMock()],
             ['children', [$this->getMockBuilder(Application::class)->disableOriginalConstructor()->getMock()]],
-            ['type', [$this->getMockBuilder(ApplicationType::class)->disableOriginalConstructor()->getMock()]],
+            ['type', $this->getMockBuilder(BaseAppType::class)->disableOriginalConstructor()->getMock()],
             ['gitRepo', $this->getAlphaNumeric()],
             ['hasDatabase', (bool) mt_rand(0, 1), true, ''],
             ['hasSolr', (bool) mt_rand(0, 1), true, ''],
@@ -320,7 +320,7 @@ class ApplicationTest extends EntityTest
             ['appTypeSlug', $this->getAlphaNumeric()],
             ['name', $this->getAlphaNumeric()],
             ['parent', $this->getMockBuilder(Application::class)->disableOriginalConstructor()->getMock()],
-            ['type', [$this->getMockBuilder(ApplicationType::class)->disableOriginalConstructor()->getMock()]],
+            ['type', $this->getMockBuilder(BaseAppType::class)->disableOriginalConstructor()->getMock()],
             ['gitRepo', $this->getAlphaNumeric()],
             ['hasSolr', (bool) mt_rand(0, 1), true, ''],
             ['provisionBuild', uniqid()],

@@ -3,7 +3,6 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Service;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\BaseAppType;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationType;
 
 class ApplicationTypeBuilder
 {
@@ -30,7 +29,7 @@ class ApplicationTypeBuilder
     /**
      * @param $slug
      *
-     * @return BaseAppType|ApplicationType
+     * @return BaseAppType
      *
      * @throws \Exception
      */

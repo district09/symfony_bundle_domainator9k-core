@@ -4,7 +4,6 @@ namespace DigipolisGent\Domainator9k\CoreBundle\EntityService;
 
 use Ctrl\Common\EntityService\AbstractDoctrineService;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Application;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationType;
 use ZipStream\ZipStream;
 
 class ApplicationService extends AbstractDoctrineService
@@ -26,10 +25,9 @@ class ApplicationService extends AbstractDoctrineService
     public function generateDrushAliasFile(Application $application, ServerService $serverService)
     {
         //todo: make requiresdrush variable in appType config ?
-        if (!in_array($application->getType()->getSlug(), [ApplicationType::TYPE_DRUPAL_7, ApplicationType::TYPE_DRUPAL_8])) {
+        if (strpos($application->getType()->getSlug(), 'drupal') !== FALSE) {
             throw new \InvalidArgumentException(sprintf(
-                'Only applications of type %s can be used to generate drush alias files, %s given',
-                ApplicationType::TYPE_DRUPAL_7.' or '.ApplicationType::TYPE_DRUPAL_8,
+                'Only Drupal applications can be used to generate drush alias files, %s given',
                 $application->getType()->getSlug()
             ));
         }
@@ -84,7 +82,7 @@ DRUSH;
 
         foreach ($servers as $server) {
             $drush .= <<<DRUSH
-            
+
 /**
  * {$server->getEnvironment()} alias
  */
@@ -113,14 +111,12 @@ DRUSH;
         /** @var Application[] $apps */
         $apps = $this->getEntityRepository()->createQueryBuilder('a')
             ->join('a.type', 'type')
-            ->where('type.slug = :'.ApplicationType::TYPE_DRUPAL_7)
-            ->orWhere('type.slug = :'.ApplicationType::TYPE_DRUPAL_8)
-            ->setParameters([ApplicationType::TYPE_DRUPAL_7 => ApplicationType::TYPE_DRUPAL_7, ApplicationType::TYPE_DRUPAL_8 => ApplicationType::TYPE_DRUPAL_8])
+            ->where('type.slug LIKE \'%drupal%\'')
             ->getQuery()
             ->getResult();
 
         if (!count($apps)) {
-            throw new \RuntimeException(sprintf('No applications found of type %s', ApplicationType::TYPE_DRUPAL_7.' or '.ApplicationType::TYPE_DRUPAL_8));
+            throw new \RuntimeException('No Drupal applications found.');
         }
 
         // zip streamer outputs directly, catch in buffer

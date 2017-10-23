@@ -5,7 +5,7 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Entity;
 use DateTime;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Application;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationType;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\BaseAppType;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\DatabaseSettings;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Environment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Server;
@@ -262,7 +262,7 @@ class AppEnvironmentTest extends EntityTest
     {
         $appEnv = $this->getAppEnv();
         $mockApp = $appEnv->getApplication();
-        $type = $this->getMockBuilder(ApplicationType::class)->disableOriginalConstructor()->getMock();
+        $type = $this->getMockBuilder(BaseAppType::class)->disableOriginalConstructor()->getMock();
         $type->expects($this->any())->method('getSlug')->willReturn($this->getAlphaNumeric());
         $dirs = [$this->getAlphaNumeric(), $this->getAlphaNumeric()];
         $user = $this->getAlphaNumeric();

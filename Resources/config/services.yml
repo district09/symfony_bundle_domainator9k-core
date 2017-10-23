@@ -26,6 +26,11 @@ services:
     digip_deploy.ci_apptype_settings_service:
         arguments: ["@doctrine", "@digip_deploy.application_type_builder", "@digip_deploy.ci_type_builder"]
         class: DigipolisGent\Domainator9k\CoreBundle\Service\CiAppTypeSettingsService
+    digip_deploy.apptype_injector_listener:
+        arguments: ["@digip_deploy.application_type_builder"]
+        class: DigipolisGent\Domainator9k\CoreBundle\EventListener\AppTypeInjectorListener
+        tags:
+            - { name: doctrine.event_listener, event: postLoad }
 
 
 

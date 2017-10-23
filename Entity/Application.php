@@ -69,8 +69,7 @@ class Application
     protected $children;
 
     /**
-     * @var ApplicationType
-     * @ORM\ManyToOne(targetEntity="ApplicationType", inversedBy="applications")
+     * @var ApplicationTypeInterface
      */
     protected $type;
 
@@ -299,7 +298,7 @@ class Application
     }
 
     /**
-     * @return ApplicationType
+     * @return ApplicationTypeInterface
      */
     public function getType()
     {
@@ -307,11 +306,11 @@ class Application
     }
 
     /**
-     * @param ApplicationType $type
+     * @param ApplicationTypeInterface $type
      *
      * @return $this
      */
-    public function setType($type)
+    public function setType(ApplicationTypeInterface $type)
     {
         $this->type = $type;
 

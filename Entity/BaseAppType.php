@@ -17,7 +17,7 @@ abstract class BaseAppType implements ApplicationTypeInterface
     protected $cron;
     protected $databaseRequired;
     protected $ymlConfigName;
-    protected $additionalConfig;
+    protected $siteConfig;
 
     protected $settingsFormClass;
     protected $settingsEntityClass;
@@ -35,9 +35,11 @@ abstract class BaseAppType implements ApplicationTypeInterface
     /**
      * @param EnvironmentService $environmentService
      */
-    public function setEnvironmentService($environmentService)
+    public function setEnvironmentService(EnvironmentService $environmentService)
     {
         $this->environmentService = $environmentService;
+
+        return $this;
     }
 
     /**
@@ -51,9 +53,11 @@ abstract class BaseAppType implements ApplicationTypeInterface
     /**
      * @param mixed $appTypeSettingsService
      */
-    public function setAppTypeSettingsService($appTypeSettingsService)
+    public function setAppTypeSettingsService(AppTypeSettingsService $appTypeSettingsService)
     {
         $this->appTypeSettingsService = $appTypeSettingsService;
+
+        return $this;
     }
 
     /**
@@ -109,7 +113,7 @@ abstract class BaseAppType implements ApplicationTypeInterface
      */
     public function getSiteConfig()
     {
-        return $this->additionalConfig;
+        return $this->siteConfig;
     }
 
     public function parseYamlConfig()
@@ -117,9 +121,9 @@ abstract class BaseAppType implements ApplicationTypeInterface
         $class_info = new ReflectionClass($this);
         if ($this->ymlConfigName) {
             //todo: parse @ notation or something
-            $path = $class_info->getFileName().'../../'.$this->ymlConfigName;
+            $path = dirname($class_info->getFileName()) . '/' .$this->ymlConfigName;
         } else {
-            $path = $class_info->getFileName().'../../type_config.yml';
+            $path = dirname($class_info->getFileName()) . '/type_config.yml';
         }
         $content = Yaml::parse(file_get_contents($path));
         $this->mapYmlToProperties($content);
@@ -127,7 +131,7 @@ abstract class BaseAppType implements ApplicationTypeInterface
 
     protected function mapYmlToProperties($content)
     {
-        $this->additionalConfig = $content['additional_config'];
+        $this->siteConfig = $content['additional_config'];
         $this->name = $content['name'];
         $this->slug = $content['slug'];
         $this->cron = $content['cron'];

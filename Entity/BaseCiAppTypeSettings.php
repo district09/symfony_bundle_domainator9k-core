@@ -66,6 +66,8 @@ abstract class BaseCiAppTypeSettings
     public function setAppTypeSlug($appTypeSlug)
     {
         $this->appTypeSlug = $appTypeSlug;
+
+        return $this;
     }
 
     /**
@@ -82,6 +84,8 @@ abstract class BaseCiAppTypeSettings
     public function setCiTypeSlug($ciTypeSlug)
     {
         $this->ciTypeSlug = $ciTypeSlug;
+
+        return $this;
     }
 
     /**
@@ -98,6 +102,8 @@ abstract class BaseCiAppTypeSettings
     public function setEnabled($enabled)
     {
         $this->enabled = $enabled;
+
+        return $this;
     }
 
     /**
@@ -114,6 +120,8 @@ abstract class BaseCiAppTypeSettings
     public function setAdditionalConfig($additionalConfig)
     {
         $this->additionalConfig = $additionalConfig;
+
+        return $this;
     }
 
     /**
@@ -130,5 +138,7 @@ abstract class BaseCiAppTypeSettings
     public function setAppId($appId)
     {
         $this->appId = $appId;
+
+        return $this;
     }
 }

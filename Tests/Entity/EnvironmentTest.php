@@ -14,25 +14,6 @@ use DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\EntityTest;
 class EnvironmentTest extends EntityTest
 {
 
-    /**
-     *
-     * @var string
-     */
-    protected $ciTypeSlug;
-
-    /**
-     *
-     * @var string
-     */
-    protected $appTypeSlug;
-
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->ciTypeSlug = $this->getAlphaNumeric();
-        $this->appTypeSlug = $this->getAlphaNumeric();
-    }
-
     public function testConstructor()
     {
         $env = $this->getEntity();
@@ -40,7 +21,8 @@ class EnvironmentTest extends EntityTest
         $this->assertEmpty($env->getUrlStructure());
     }
 
-    public function testToString() {
+    public function testToString()
+    {
         $env = $this->getEntity();
         $name = $this->getAlphaNumeric();
         $env->setName($name);
@@ -70,7 +52,7 @@ class EnvironmentTest extends EntityTest
 
     /**
      *
-     * @return BaseCiAppTypeSettings
+     * @return Environment
      */
     protected function getEntity()
     {

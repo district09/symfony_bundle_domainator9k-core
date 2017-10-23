@@ -105,29 +105,6 @@ class AppEnvironmentTest extends EntityTest
         $this->assertNotEmpty($appEnv->getDatabaseSettings()->getPassword());
     }
 
-    /**
-     * @dataProvider getterTestDataProvider
-     */
-    public function testGetter($prop, $val, $isBool = false)
-    {
-        $appEnv = $this->getAppEnv();
-        $refObject = new ReflectionObject($appEnv);
-        $refProperty = $refObject->getProperty($prop);
-        $refProperty->setAccessible(true);
-        $refProperty->setValue($appEnv, $val);
-        $this->assertEquals($val, $appEnv->{(!$isBool ? 'get' : 'is') . ucfirst($prop)}());
-    }
-
-    /**
-     * @dataProvider setterTestDataProvider
-     */
-    public function testSetter($prop, $val, $isBool = false)
-    {
-        $appEnv = $this->getAppEnv();
-        $this->assertEquals($appEnv, $appEnv->{'set' . ucfirst($prop)}($val));
-        $this->assertEquals($val, $appEnv->{(!$isBool ? 'get' : 'is') . ucfirst($prop)}());
-    }
-
     public function testGetNameCanonical()
     {
         $name = $this->getAlphaNumeric(true);

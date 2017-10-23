@@ -62,6 +62,8 @@ class Environment
     public function setDevPermissions($devPermissions)
     {
         $this->devPermissions = $devPermissions;
+
+        return $this;
     }
 
     /**
@@ -86,6 +88,8 @@ class Environment
     public function setName($name)
     {
         $this->name = $name;
+
+        return $this;
     }
 
     public function __toString()
@@ -107,6 +111,8 @@ class Environment
     public function setProd($prod)
     {
         $this->prod = $prod;
+
+        return $this;
     }
 
     /**
@@ -123,5 +129,7 @@ class Environment
     public function setUrlStructure($urlStructure)
     {
         $this->urlStructure = $urlStructure;
+
+        return $this;
     }
 }

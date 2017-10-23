@@ -26,13 +26,6 @@ class RoleTest extends EntityTest
         $this->assertEquals($this->name, $role->getName());
     }
 
-    public function testToString() {
-        $role = $this->getEntity();
-        $name = $this->getAlphaNumeric();
-        $role->setName($name);
-        $this->assertEquals($name, (string) $role);
-    }
-
     public function getterTestDataProvider()
     {
         return [

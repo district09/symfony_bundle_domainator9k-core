@@ -1,6 +1,6 @@
 <?php
 
-namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\Stub;
+namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\Stub\AppType;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\BaseAppType;
 

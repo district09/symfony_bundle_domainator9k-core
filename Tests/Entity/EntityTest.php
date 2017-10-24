@@ -42,6 +42,8 @@ abstract class EntityTest extends TestCase
             . ($withSymbols? '0123456789!@#$%^&*()_-' : ''));
         $invalidSeed = str_split('!@#$%^&*()_-');
         $name = '';
+        shuffle($seed);
+        shuffle($invalidSeed);
         foreach (array_rand($seed, mt_rand(5, count($seed))) as $k)
         {
             $name .= $seed[$k];

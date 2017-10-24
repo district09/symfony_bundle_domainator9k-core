@@ -53,7 +53,7 @@ class AppEnvironmentTest extends EntityTest
         // Assert database settings are set.
         $this->assertInstanceOf(DatabaseSettings::class, $appEnv->getDatabaseSettings());
         $this->assertEquals($appEnv, $appEnv->getDatabaseSettings()->getAppEnvironment());
-        $expectedDbName = $appEnv->getServerSettings()->getUser() . '_' . substr($mockApp->getNameCanonical(), 0, 1);
+        $expectedDbName = $appEnv->getServerSettings()->getUser() . '_' . strtolower(substr($mockApp->getNameCanonical(), 0, 1));
         $this->assertSame($expectedDbName, $appEnv->getDatabaseSettings()->getName());
         $this->assertNotEmpty($appEnv->getDatabaseSettings()->getPassword());
     }
@@ -100,7 +100,7 @@ class AppEnvironmentTest extends EntityTest
         // Assert database settings are set.
         $this->assertInstanceOf(DatabaseSettings::class, $appEnv->getDatabaseSettings());
         $this->assertEquals($appEnv, $appEnv->getDatabaseSettings()->getAppEnvironment());
-        $expectedDbName = substr($name, 0, 14) . '_' . substr($mockApp->getNameCanonical(), 0, 1);
+        $expectedDbName = substr($name, 0, 14) . '_' . strtolower(substr($mockApp->getNameCanonical(), 0, 1));
         $this->assertSame($expectedDbName, $appEnv->getDatabaseSettings()->getName());
         $this->assertNotEmpty($appEnv->getDatabaseSettings()->getPassword());
     }

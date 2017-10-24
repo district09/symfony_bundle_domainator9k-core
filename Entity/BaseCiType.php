@@ -2,37 +2,34 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
-use DigipolisGent\Domainator9k\CoreBundle\Interfaces\CiTypeInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
+use DigipolisGent\Domainator9k\CoreBundle\Interfaces\CiTypeInterface;
+use DigipolisGent\Domainator9k\CoreBundle\Interfaces\CiTypeSettingsInterface;
+use LogicException;
 use ReflectionClass;
 use Symfony\Component\Yaml\Yaml;
 
 abstract class BaseCiType implements CiTypeInterface
 {
+
     protected $slug; //i getter
     protected $name; //i getter
-
     protected $ymlConfigName; //i getter
     protected $additionalConfig; //i getter
-
     protected $settingsFormClass; //i getter
     protected $settingsEntityClass; //i getter
-
     protected $appTypeSettingsFormClass; //i getter
     protected $appTypeSettingsEntityClass; //i getter
-
     protected $processorServiceClass; //i getter
-
     //which settings field should be used to build the menu of this citype // i dont like this, will change
     protected $menuUrlFieldName = 'url'; //i getter
 
-    //todo settingsinterface?
-    public function buildCiUrl($settings, AppEnvironment $env)
+    public function buildCiUrl(CiTypeSettingsInterface $settings, AppEnvironment $env)
     {
-        return $settings->getUrl().'job/'.$env->getFullNameCanonical();
+        return rtrim($settings->getUrl(), '/') . '/job/' . $settings->getJobName($env);
     }
 
-    public function buildUrl($ciTypeSettings)
+    public function buildUrl(CiTypeSettingsInterface $ciTypeSettings)
     {
         return $ciTypeSettings->getUrl();
     }
@@ -49,11 +46,14 @@ abstract class BaseCiType implements CiTypeInterface
     public function parseYamlConfig()
     {
         $class_info = new ReflectionClass($this);
-        if ($this->ymlConfigName) {
+        if ($this->ymlConfigName)
+        {
             //todo: parse @ notation or something
-            $path = $class_info->getFileName().'../../'.$this->ymlConfigName;
-        } else {
-            $path = $class_info->getFileName().'../../type_config.yml';
+            $path = dirname($class_info->getFileName()) . '/' . $this->ymlConfigName;
+        }
+        else
+        {
+            $path = dirname($class_info->getFileName()) . '/type_config.yml';
         }
         $content = Yaml::parse(file_get_contents($path));
         $this->mapYmlToProperties($content);
@@ -71,8 +71,9 @@ abstract class BaseCiType implements CiTypeInterface
      */
     public function getSettingsFormClass()
     {
-        if (!$this->settingsFormClass) {
-            throw new \LogicException('SettingsFormClass in CiType '.get_class($this).' cannot be false');
+        if (!$this->settingsFormClass)
+        {
+            throw new LogicException('SettingsFormClass in CiType ' . get_class($this) . ' cannot be false');
         }
 
         return $this->settingsFormClass;
@@ -83,8 +84,9 @@ abstract class BaseCiType implements CiTypeInterface
      */
     public function getSettingsEntityClass()
     {
-        if (!$this->settingsEntityClass) {
-            throw new \LogicException('SettingsEntityClass in CiType '.get_class($this).' cannot be false');
+        if (!$this->settingsEntityClass)
+        {
+            throw new LogicException('SettingsEntityClass in CiType ' . get_class($this) . ' cannot be false');
         }
 
         return $this->settingsEntityClass;
@@ -95,8 +97,9 @@ abstract class BaseCiType implements CiTypeInterface
      */
     public function getProcessorServiceClass()
     {
-        if (!$this->processorServiceClass) {
-            throw new \LogicException('ProcessorServiceClass in CiType '.get_class($this).' cannot be false');
+        if (!$this->processorServiceClass)
+        {
+            throw new LogicException('ProcessorServiceClass in CiType ' . get_class($this) . ' cannot be false');
         }
 
         return $this->processorServiceClass;
@@ -107,8 +110,9 @@ abstract class BaseCiType implements CiTypeInterface
      */
     public function getAppTypeSettingsFormClass()
     {
-        if (!$this->appTypeSettingsFormClass) {
-            throw new \LogicException('AppTypeSettingsFormClass in CiType '.get_class($this).' cannot be false');
+        if (!$this->appTypeSettingsFormClass)
+        {
+            throw new LogicException('AppTypeSettingsFormClass in CiType ' . get_class($this) . ' cannot be false');
         }
 
         return $this->appTypeSettingsFormClass;
@@ -119,8 +123,9 @@ abstract class BaseCiType implements CiTypeInterface
      */
     public function getAppTypeSettingsEntityClass()
     {
-        if (!$this->appTypeSettingsEntityClass) {
-            throw new \LogicException('AppTypeSettingsEntityClass in CiType '.get_class($this).' cannot be false');
+        if (!$this->appTypeSettingsEntityClass)
+        {
+            throw new LogicException('AppTypeSettingsEntityClass in CiType ' . get_class($this) . ' cannot be false');
         }
 
         return $this->appTypeSettingsEntityClass;
@@ -131,8 +136,9 @@ abstract class BaseCiType implements CiTypeInterface
      */
     public function getName()
     {
-        if (!$this->slug) {
-            throw new \LogicException('Name in CiType '.get_class($this).' cannot be false');
+        if (!$this->name)
+        {
+            throw new LogicException('Name in CiType ' . get_class($this) . ' cannot be false');
         }
 
         return $this->name;
@@ -143,8 +149,9 @@ abstract class BaseCiType implements CiTypeInterface
      */
     public function getSlug()
     {
-        if (!$this->slug) {
-            throw new \LogicException('Slug in CiType '.get_class($this).' cannot be false');
+        if (!$this->slug)
+        {
+            throw new LogicException('Slug in CiType ' . get_class($this) . ' cannot be false');
         }
 
         return $this->slug;
@@ -165,4 +172,5 @@ abstract class BaseCiType implements CiTypeInterface
     {
         return $this->ymlConfigName;
     }
+
 }

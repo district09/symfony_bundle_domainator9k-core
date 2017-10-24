@@ -26,7 +26,7 @@ interface CiTypeInterface
 
     public function getMenuUrlFieldName();
 
-    public function buildCiUrl($settings, AppEnvironment $env);
+    public function buildCiUrl(CiTypeSettingsInterface $settings, AppEnvironment $env);
 
-    public function buildUrl($ciTypeSettings);
+    public function buildUrl(CiTypeSettingsInterface $ciTypeSettings);
 }

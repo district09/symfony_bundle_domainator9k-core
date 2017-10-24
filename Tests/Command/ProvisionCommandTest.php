@@ -37,12 +37,12 @@ class ProvisionCommandTest extends TestCase
         $this->applicationService = $this->getMockBuilder(ApplicationService::class)->disableOriginalConstructor()->getMock();
         $this->settingsService = $this->getMockBuilder(SettingsService::class)->disableOriginalConstructor()->getMock();
         $this->serverService = $this->getMockBuilder(ServerService::class)->disableOriginalConstructor()->getMock();
-        $this->app1Id = mt_rand(0, 100);
+        $this->app1Id = mt_rand(1, 100);
         $this->app1 = $this->getMockBuilder(ApplicationEntity::class)
             ->disableOriginalConstructor()
             ->setMethods(array('getId', 'getName'))
             ->getMock();
-        $this->app2Id = mt_rand(0, 100);
+        $this->app2Id = mt_rand(1, 100);
         $this->app2 = $this->getMockBuilder(ApplicationEntity::class)
             ->disableOriginalConstructor()
             ->setMethods(array('getId', 'getName'))
@@ -52,7 +52,7 @@ class ProvisionCommandTest extends TestCase
         $this->command = $application->find('digip:provision');
         $this->command->setContainer($this->container);
         $this->tester = new CommandTester($this->command);
-        $this->buildId = mt_rand(0, 100);
+        $this->buildId = mt_rand(1, 100);
     }
 
     public function testProvisionInvalidAppChoice()
@@ -110,7 +110,7 @@ class ProvisionCommandTest extends TestCase
             ->method('getFinder')
             ->willReturn($this->applicationFinder);
         $this->applicationFinder
-            ->expects($this->at(0))
+            ->expects($this->any())
             ->method('get')
             ->with($this->app1Id)
             ->willReturn($this->app1);

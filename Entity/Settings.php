@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Settings
 {
+
     /**
      * @var int
      * @ORM\Column(type="integer")
@@ -128,6 +129,10 @@ class Settings
      */
     public function setDefaultSshKeyGroups($defaultSshKeyGroups)
     {
+        if (!$defaultSshKeyGroups instanceof ArrayCollection)
+        {
+            $defaultSshKeyGroups = new ArrayCollection($defaultSshKeyGroups);
+        }
         $this->defaultSshKeyGroups = $defaultSshKeyGroups;
 
         return $this;
@@ -240,16 +245,20 @@ class Settings
      */
     public function getAppEnvironmentSettings($appEnvironment = null)
     {
-        if ($appEnvironment === null) {
+        if ($appEnvironment === null)
+        {
             return $this->appEnvironmentSettings;
         }
 
-        if ($appEnvironment instanceof AppEnvironment) {
+        if ($appEnvironment instanceof AppEnvironment)
+        {
             $appEnvironment = $appEnvironment->getNameCanonical();
         }
 
-        foreach ($this->appEnvironmentSettings as $settings) {
-            if ($settings->getEnvironment() === $appEnvironment) {
+        foreach ($this->appEnvironmentSettings as $settings)
+        {
+            if ($settings->getEnvironment() === $appEnvironment)
+            {
                 return $settings;
             }
         }
@@ -291,5 +300,8 @@ class Settings
     public function removeDefaultSshKeyGroup(SshKeyGroup $defaultSshKeyGroups)
     {
         $this->defaultSshKeyGroups->removeElement($defaultSshKeyGroups);
+
+        return $this;
     }
+
 }

@@ -5,7 +5,7 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Entity;
 use DigipolisGent\Domainator9k\CoreBundle\Service\AppTypeSettingsService;
 use DigipolisGent\Domainator9k\CoreBundle\Service\EnvironmentService;
 use DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\EntityTest;
-use DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\Stub\TestAppType;
+use DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\Stub\AppType\TestAppType;
 use ReflectionObject;
 
 /**

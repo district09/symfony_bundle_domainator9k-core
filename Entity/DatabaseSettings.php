@@ -279,9 +279,13 @@ class DatabaseSettings
 
     /**
      * @param string $engine
+     *
+     * @return $this
      */
     public function setEngine($engine)
     {
         $this->engine = $engine;
+
+        return $this;
     }
 }

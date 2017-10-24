@@ -3,7 +3,9 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
 use Ctrl\RadBundle\Entity\User;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use InvalidArgumentException;
 
 /**
  * @ORM\Entity
@@ -36,7 +38,7 @@ class Build
     protected $application;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      * @ORM\Column(name="timestamp", type="datetime", nullable=false)
      */
     protected $timestamp;
@@ -67,7 +69,7 @@ class Build
 
     /**
      * @var User
-     * @ORM\ManyToOne(targetEntity="Ctrl\RadBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="SET NULL")
      */
     protected $user;
@@ -91,12 +93,12 @@ class Build
         $this->type = $type;
 
         if ($type === self::TYPE_DEPLOY && !$env) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'environment is required when creating a DEPLOY build'
             ));
         }
 
-        $this->timestamp = new \DateTime();
+        $this->timestamp = new DateTime();
     }
 
     /**
@@ -140,7 +142,7 @@ class Build
      *
      * @return $this
      */
-    public function setUser($user)
+    public function setUser(User $user)
     {
         $this->user = $user;
 
@@ -170,7 +172,7 @@ class Build
      *
      * @return $this
      */
-    public function setApplication($application)
+    public function setApplication(Application $application)
     {
         $this->application = $application;
 
@@ -190,7 +192,7 @@ class Build
      *
      * @return $this
      */
-    public function setAppEnvironment($appEnvironment)
+    public function setAppEnvironment(AppEnvironment $appEnvironment)
     {
         $this->appEnvironment = $appEnvironment;
 
@@ -198,7 +200,7 @@ class Build
     }
 
     /**
-     * @return mixed
+     * @return DateTime
      */
     public function getTimestamp()
     {
@@ -210,7 +212,7 @@ class Build
      *
      * @return $this
      */
-    public function setTimestamp($timestamp)
+    public function setTimestamp(DateTime $timestamp)
     {
         $this->timestamp = $timestamp;
 

@@ -49,7 +49,7 @@ class AppEnvironmentService extends AbstractDoctrineService
      */
     public function getEntityClass()
     {
-        return 'DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment';
+        return AppEnvironment::class;
     }
 
     // SOCK
@@ -66,6 +66,8 @@ class AppEnvironmentService extends AbstractDoctrineService
      *
      * @throws \InvalidArgumentException
      * @throws \Exception
+     *
+     * @todo Shouldn't this be in a separate sock bundle??
      */
     public function createSockAccount(AppEnvironment $appEnvironment, Server $server, AccountService $sockAccountService)
     {

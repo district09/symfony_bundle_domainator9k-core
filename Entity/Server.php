@@ -103,6 +103,8 @@ class Server
 
     /**
      * @return string
+     *
+     * @todo Shouldn't this be in a separate sock bundle??
      */
     public function getSockId()
     {
@@ -113,6 +115,8 @@ class Server
      * @param string $sockId
      *
      * @return $this
+     *
+     * @todo Shouldn't this be in a separate sock bundle??
      */
     public function setSockId($sockId)
     {

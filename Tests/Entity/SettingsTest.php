@@ -5,7 +5,6 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Entity;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironmentSettings;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\SshKeyGroup;
 use DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\EntityTest;
 use Doctrine\Common\Collections\ArrayCollection;
 use InvalidArgumentException;
@@ -17,27 +16,6 @@ use InvalidArgumentException;
  */
 class SettingsTest extends EntityTest
 {
-
-    public function testConstructor()
-    {
-        $settings = $this->getEntity();
-        $this->assertInstanceOf(ArrayCollection::class, $settings->getDefaultSshKeyGroups());
-    }
-
-    public function testSetDefaultSshKeyGroup()
-    {
-        $settings = $this->getEntity();
-        $group1 = $this->getMockBuilder(SshKeyGroup::class)->disableOriginalConstructor()->getMock();
-        $group2 = $this->getMockBuilder(SshKeyGroup::class)->disableOriginalConstructor()->getMock();
-        $group = [
-            $group1,
-            $group2,
-        ];
-        $settings->setDefaultSshKeyGroups($group);
-        $this->assertInstanceOf(ArrayCollection::class, $settings->getDefaultSshKeyGroups());
-        $this->assertEquals($group1, $settings->getDefaultSshKeyGroups()[0]);
-        $this->assertEquals($group2, $settings->getDefaultSshKeyGroups()[1]);
-    }
 
     public function testGetAppEnvironmentSettingsValidString()
     {
@@ -101,16 +79,6 @@ class SettingsTest extends EntityTest
         $settings->getAppEnvironmentSettings($env);
     }
 
-    public function testAddDeleteDefaultSshKeyGroup()
-    {
-        $settings = $this->getEntity();
-        $group = $this->getMockBuilder(SshKeyGroup::class)->disableOriginalConstructor()->getMock();
-        $this->assertEquals($settings, $settings->addDefaultSshKeyGroup($group));
-        $this->assertEquals($group, $settings->getDefaultSshKeyGroups()[0]);
-        $this->assertEquals($settings, $settings->removeDefaultSshKeyGroup($group));
-        $this->assertEmpty($settings->getDefaultSshKeyGroups());
-    }
-
     public function getterTestDataProvider()
     {
         return [
@@ -130,15 +98,6 @@ class SettingsTest extends EntityTest
         return [
             ['id', uniqid()],
             ['defaultSockSshKeys', $this->getAlphaNumeric()],
-            [
-                'defaultSshKeyGroups',
-                new ArrayCollection(
-                    [
-                    $this->getMockBuilder(SshKeyGroup::class)->disableOriginalConstructor()->getMock(),
-                    $this->getMockBuilder(SshKeyGroup::class)->disableOriginalConstructor()->getMock(),
-                    ]
-                ),
-            ],
             ['dnsMailRecipients', $this->getAlphaNumeric()],
             ['dnsMailTemplate', $this->getAlphaNumeric()],
             ['sockDomain', $this->getAlphaNumeric()],

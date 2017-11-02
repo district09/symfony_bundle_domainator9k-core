@@ -10,7 +10,6 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\DatabaseSettings;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Environment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Server;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\ServerSettings;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\SshKeyGroup;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 use InvalidArgumentException;
@@ -287,7 +286,6 @@ class AppEnvironmentTest extends EntityTest
             ['cron', $this->getAlphaNumeric()],
             ['createdAt', new \DateTime()],
             ['updatedAt', new \DateTime()],
-            ['sshKeyGroups', new ArrayCollection([new SshKeyGroup($this->getAlphaNumeric()), new SshKeyGroup($this->getAlphaNumeric())])],
             ['ciJobUri', $this->getAlphaNumeric()],
             ['devPermissions', true, true],
             ['devPermissions', false, true],
@@ -304,7 +302,6 @@ class AppEnvironmentTest extends EntityTest
             ['gitRef', $this->getAlphaNumeric()],
             ['siteConfig', $this->getAlphaNumeric()],
             ['cron', $this->getAlphaNumeric()],
-            ['sshKeyGroups', new ArrayCollection([new SshKeyGroup($this->getAlphaNumeric()), new SshKeyGroup($this->getAlphaNumeric())])],
             ['databaseSettings', new DatabaseSettings($this->getAppEnv(), $this->getAlphaNumeric())],
             ['ciJobUri', $this->getAlphaNumeric()],
             ['devPermissions', true, true],

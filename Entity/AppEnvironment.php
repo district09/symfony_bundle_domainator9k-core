@@ -105,12 +105,6 @@ class AppEnvironment
     protected $salt;
 
     /**
-     * @var SshKeyGroup[]|array|ArrayCollection
-     * @ORM\ManyToMany(targetEntity="SshKeyGroup", inversedBy="appEnvironments")
-     */
-    protected $sshKeyGroups;
-
-    /**
      * @var \Datetime
      * @ORM\Column(name="created_at", type="datetime", nullable=false)
      */
@@ -438,26 +432,6 @@ class AppEnvironment
     public function getUpdatedAt()
     {
         return $this->updatedAt;
-    }
-
-    /**
-     * @return array|SshKeyGroup[]|ArrayCollection
-     */
-    public function getSshKeyGroups()
-    {
-        return $this->sshKeyGroups;
-    }
-
-    /**
-     * @param array|SshKeyGroup[]|ArrayCollection $sshKeyGroups
-     *
-     * @return $this
-     */
-    public function setSshKeyGroups($sshKeyGroups)
-    {
-        $this->sshKeyGroups = $sshKeyGroups;
-
-        return $this;
     }
 
     /**

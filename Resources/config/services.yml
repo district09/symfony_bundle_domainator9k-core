@@ -71,16 +71,6 @@ services:
         tags:
             - { name: ctrl_rad.entity_service }
 
-    digip_deploy.entity.ssh_key_group:
-        class: DigipolisGent\Domainator9k\CoreBundle\EntityService\SshKeyGroupService
-        tags:
-            - { name: ctrl_rad.entity_service }
-
-    digip_deploy.entity.ssh_key:
-        class: DigipolisGent\Domainator9k\CoreBundle\EntityService\SshKeyService
-        tags:
-            - { name: ctrl_rad.entity_service }
-
     digip_deploy.entity.build:
         class: DigipolisGent\Domainator9k\CoreBundle\EntityService\BuildService
         arguments: [%digip_deploy.workspace_dir%, %kernel.root_dir%]

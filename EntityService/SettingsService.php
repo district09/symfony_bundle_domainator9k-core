@@ -34,9 +34,6 @@ class SettingsService extends AbstractDoctrineService
         $settings = $this->getSettings();
 
         foreach ($app->getAppEnvironments() as $env) {
-            $env->setSshKeyGroups(
-                $settings->getDefaultSshKeyGroups()
-            );
             if ((null !== $env->getDatabaseSettings())) {
                 $env->getDatabaseSettings()->setHost(
                     $settings->getAppEnvironmentSettings($env)->getDatabaseHost()

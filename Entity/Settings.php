@@ -28,12 +28,6 @@ class Settings
     protected $defaultSockSshKeys;
 
     /**
-     * @var SshKeyGroup[]|array|ArrayCollection
-     * @ORM\ManyToMany(targetEntity="DigipolisGent\Domainator9k\CoreBundle\Entity\SshKeyGroup", inversedBy="defaultSettings")
-     */
-    protected $defaultSshKeyGroups;
-
-    /**
      * @var string
      * @ORM\Column(name="dns_mail_recipients", type="string", nullable=true)
      */
@@ -68,11 +62,6 @@ class Settings
      * @ORM\OneToMany(targetEntity="DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironmentSettings", mappedBy="settings")
      */
     protected $appEnvironmentSettings;
-
-    public function __construct()
-    {
-        $this->defaultSshKeyGroups = new ArrayCollection();
-    }
 
     /**
      * @return int
@@ -110,30 +99,6 @@ class Settings
     public function setDefaultSockSshKeys($defaultSockSshKeys)
     {
         $this->defaultSockSshKeys = $defaultSockSshKeys;
-
-        return $this;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDefaultSshKeyGroups()
-    {
-        return $this->defaultSshKeyGroups;
-    }
-
-    /**
-     * @param mixed $defaultSshKeyGroups
-     *
-     * @return $this
-     */
-    public function setDefaultSshKeyGroups($defaultSshKeyGroups)
-    {
-        if (!$defaultSshKeyGroups instanceof ArrayCollection)
-        {
-            $defaultSshKeyGroups = new ArrayCollection($defaultSshKeyGroups);
-        }
-        $this->defaultSshKeyGroups = $defaultSshKeyGroups;
 
         return $this;
     }
@@ -274,32 +239,6 @@ class Settings
     public function setAppEnvironmentSettings($appEnvironmentSettings)
     {
         $this->appEnvironmentSettings = $appEnvironmentSettings;
-
-        return $this;
-    }
-
-    /**
-     * Add defaultSshKeyGroups.
-     *
-     * @param \DigipolisGent\Domainator9k\CoreBundle\Entity\SshKeyGroup $defaultSshKeyGroups
-     *
-     * @return Settings
-     */
-    public function addDefaultSshKeyGroup(SshKeyGroup $defaultSshKeyGroups)
-    {
-        $this->defaultSshKeyGroups[] = $defaultSshKeyGroups;
-
-        return $this;
-    }
-
-    /**
-     * Remove defaultSshKeyGroups.
-     *
-     * @param \DigipolisGent\Domainator9k\CoreBundle\Entity\SshKeyGroup $defaultSshKeyGroups
-     */
-    public function removeDefaultSshKeyGroup(SshKeyGroup $defaultSshKeyGroups)
-    {
-        $this->defaultSshKeyGroups->removeElement($defaultSshKeyGroups);
 
         return $this;
     }

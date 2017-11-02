@@ -6,6 +6,12 @@ use Ctrl\Common\EntityService\AbstractDoctrineService;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Application;
 use ZipStream\ZipStream;
 
+/**
+ * @codeCoverageIgnore
+ *
+ * @todo No tests are written for these methods because they might be removed or
+ * will at least be heavily refactored.
+ */
 class ApplicationService extends AbstractDoctrineService
 {
     /**
@@ -13,7 +19,7 @@ class ApplicationService extends AbstractDoctrineService
      */
     public function getEntityClass()
     {
-        return 'DigipolisGent\Domainator9k\CoreBundle\Entity\Application';
+        return Application::class;
     }
 
     /**

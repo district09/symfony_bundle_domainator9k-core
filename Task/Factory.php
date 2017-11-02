@@ -2,7 +2,7 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Task;
 
-class Factory
+class Factory implements FactoryInterface
 {
     protected static $map = array(
         'provision.filesystem' => '\DigipolisGent\Domainator9k\CoreBundle\Task\Provision\Filesystem',

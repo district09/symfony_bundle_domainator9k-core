@@ -2,10 +2,10 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Task;
 
-class TaskRunner
+class TaskRunner implements TaskRunnerInterface
 {
     /**
-     * @var array|AbstractTask[]
+     * @var array|TaskInterface[]
      */
     protected $tasks = array();
 
@@ -35,11 +35,11 @@ class TaskRunner
     }
 
     /**
-     * @param AbstractTask $task
+     * @param TaskInterface $task
      *
      * @return $this
      */
-    public function addTask(AbstractTask $task)
+    public function addTask(TaskInterface $task)
     {
         $this->tasks[] = $task;
 
@@ -100,7 +100,7 @@ class TaskRunner
         // revert in reverse order of execution
         $tasks = array_reverse($tasks);
 
-        /** @var AbstractTask[] $tasks */
+        /** @var TaskInterface[] $tasks */
         foreach ($tasks as $task) {
             // only revert executed tasks
             if ($task->isExecuted()) {

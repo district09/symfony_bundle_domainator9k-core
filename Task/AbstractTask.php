@@ -5,7 +5,7 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Task;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-abstract class AbstractTask
+abstract class AbstractTask implements TaskInterface
 {
     /**
      * @var bool

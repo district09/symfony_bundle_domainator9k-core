@@ -4,22 +4,26 @@ namespace DigipolisGent\Domainator9k\CoreBundle\EntityService;
 
 use Ctrl\Common\EntityService\AbstractDoctrineService;
 use DigipolisGent\Domainator9k\CiTypes\JenkinsBundle\Service\Jenkins;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Application;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Server;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
 use DigipolisGent\Domainator9k\CoreBundle\Service\ApplicationTypeBuilder;
-use DigipolisGent\SockAPIBundle\Service\Event\Poller;
+use DigipolisGent\Domainator9k\CoreBundle\Task\Factory as TaskFactory;
+use DigipolisGent\Domainator9k\CoreBundle\Task\FactoryInterface;
 use DigipolisGent\SockAPIBundle\JsonModel\Account;
 use DigipolisGent\SockAPIBundle\JsonModel\Application as SockApp;
 use DigipolisGent\SockAPIBundle\JsonModel\Database;
 use DigipolisGent\SockAPIBundle\Service\AccountService;
 use DigipolisGent\SockAPIBundle\Service\ApplicationService as SockAppService;
 use DigipolisGent\SockAPIBundle\Service\DatabaseService;
-use DigipolisGent\Domainator9k\CoreBundle\Task\Factory as TaskFactory;
+use DigipolisGent\SockAPIBundle\Service\Event\Poller;
 use DigipolisGent\SockAPIBundle\Service\Promise\EntityCreatePromise;
+use Exception;
+use InvalidArgumentException;
 
+// @codeCoverageIgnoreStart
 define('SOCK_MAX_SECONDS', '900');
+// @codeCoverageIgnoreEnd
 
 class AppEnvironmentService extends AbstractDoctrineService
 {
@@ -36,7 +40,13 @@ class AppEnvironmentService extends AbstractDoctrineService
     /**
      * @var ApplicationTypeBuilder
      */
-    private $applicationTypeBuilder;
+    protected $applicationTypeBuilder;
+
+    /**
+     *
+     * @var string
+     */
+    protected $taskFactoryClass;
 
     public function __construct(Settings $settings, ApplicationTypeBuilder $applicationTypeBuilder)
     {
@@ -52,6 +62,25 @@ class AppEnvironmentService extends AbstractDoctrineService
         return AppEnvironment::class;
     }
 
+    /**
+     * Set the task factory class.
+     *
+     * @param string|FactoryInterface $class
+     *
+     * @return $this
+     */
+    public function setTaskFactoryClass($class) {
+        if (!is_subclass_of($class, FactoryInterface::class)) {
+            throw new InvalidArgumentException(sprintf(
+                'Task Factory %s does not implement %s.',
+                $class,
+                FactoryInterface::class
+            ));
+        }
+        $this->taskFactoryClass = $class;
+        return $this;
+    }
+
     // SOCK
 
     /**
@@ -64,15 +93,15 @@ class AppEnvironmentService extends AbstractDoctrineService
      *
      * @return EntityCreatePromise
      *
-     * @throws \InvalidArgumentException
-     * @throws \Exception
+     * @throws InvalidArgumentException
+     * @throws Exception
      *
      * @todo Shouldn't this be in a separate sock bundle??
      */
     public function createSockAccount(AppEnvironment $appEnvironment, Server $server, AccountService $sockAccountService)
     {
         if (!$server->getSockId()) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 "Can not create account on sock: Environment '%s' has no server assigned",
                 $appEnvironment->getName()
             ));
@@ -126,13 +155,13 @@ class AppEnvironmentService extends AbstractDoctrineService
      *
      * @return EntityCreatePromise
      *
-     * @throws \InvalidArgumentException
-     * @throws \Exception
+     * @throws InvalidArgumentException
+     * @throws Exception
      */
     public function createSockApplication(AppEnvironment $appEnvironment, SockAppService $sockAppService)
     {
         if (!$appEnvironment->getServerSettings()->getSockAccountId()) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 "Can not create application on sock: Environment '%s' has no account assigned",
                 $appEnvironment->getName()
             ));
@@ -192,15 +221,15 @@ class AppEnvironmentService extends AbstractDoctrineService
      *
      * @return EntityCreatePromise
      *
-     * @throws \InvalidArgumentException
-     * @throws \Exception
+     * @throws InvalidArgumentException
+     * @throws Exception
      */
     public function createSockDatabase(AppEnvironment $appEnvironment, DatabaseService $sockDatabaseService)
     {
         $accountId = $appEnvironment->getServerSettings()->getSockAccountId();
 
         if (!$appEnvironment->getServerSettings()->getSockAccountId()) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 "Can not create database on sock: Environment '%s' has no account assigned",
                 $appEnvironment->getName()
             ));
@@ -252,23 +281,29 @@ class AppEnvironmentService extends AbstractDoctrineService
      * @param AppEnvironment $appEnvironment
      * @param array|Server[] $servers
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function createServerFilesystem(AppEnvironment $appEnvironment, array $servers)
     {
-        $taskRunner = TaskFactory::createRunner();
+        $taskRunner = call_user_func([$this->taskFactoryClass, 'createRunner']);
 
-        $taskRunner->addTask(TaskFactory::create('provision.filesystem', array(
-            'appEnvironment' => $appEnvironment,
-            'settings' => $this->settings,
-            'servers' => $servers,
-            'applicationTypeBuilder' => $this->applicationTypeBuilder,
-        )));
+        $taskRunner->addTask(
+            call_user_func(
+                [$this->taskFactoryClass, 'create'],
+                'provision.filesystem',
+                array(
+                    'appEnvironment' => $appEnvironment,
+                    'settings' => $this->settings,
+                    'servers' => $servers,
+                    'applicationTypeBuilder' => $this->applicationTypeBuilder,
+                )
+            )
+        );
 
         $result = $taskRunner->run();
 
         if (!$result->isSuccess()) {
-            throw new \Exception('failed to create server filesystem');
+            throw new Exception('failed to create server filesystem');
         }
     }
 
@@ -276,23 +311,29 @@ class AppEnvironmentService extends AbstractDoctrineService
      * @param AppEnvironment $appEnvironment
      * @param array|Server[] $servers
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function createServerConfigFiles(AppEnvironment $appEnvironment, array $servers)
     {
-        $taskRunner = TaskFactory::createRunner();
+        $taskRunner = call_user_func([$this->taskFactoryClass, 'createRunner']);
 
-        $taskRunner->addTask(TaskFactory::create('provision.config_files', array(
-            'appEnvironment' => $appEnvironment,
-            'servers' => $servers,
-            'settings' => $this->settings,
-            'applicationTypeBuilder' => $this->applicationTypeBuilder,
-        )));
+        $taskRunner->addTask(
+            call_user_func(
+                [$this->taskFactoryClass, 'create'],
+                'provision.config_files',
+                array(
+                    'appEnvironment' => $appEnvironment,
+                    'servers' => $servers,
+                    'settings' => $this->settings,
+                    'applicationTypeBuilder' => $this->applicationTypeBuilder,
+                )
+            )
+        );
 
         $result = $taskRunner->run();
 
         if (!$result->isSuccess()) {
-            throw new \Exception('failed to create server filesystem');
+            throw new Exception('failed to create server config files');
         }
     }
 
@@ -300,7 +341,7 @@ class AppEnvironmentService extends AbstractDoctrineService
      * @param AppEnvironment $appEnvironment
      * @param array          $servers
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @return bool
      */
@@ -311,18 +352,23 @@ class AppEnvironmentService extends AbstractDoctrineService
             return false;
         }
 
-        $taskRunner = TaskFactory::createRunner();
+        $taskRunner = call_user_func([$this->taskFactoryClass, 'createRunner']);
 
-        $taskRunner->addTask(TaskFactory::create('provision.cron', array(
-            'appEnvironment' => $appEnvironment,
-            //'settings'          => $this->settings,
-            'servers' => $servers,
-        )));
+        $taskRunner->addTask(
+            call_user_func(
+                [$this->taskFactoryClass, 'create'],
+                'provision.cron',
+                array(
+                    'appEnvironment' => $appEnvironment,
+                    'servers' => $servers,
+                )
+            )
+        );
 
         $result = $taskRunner->run();
 
         if (!$result->isSuccess()) {
-            throw new \Exception('failed to install cron job');
+            throw new Exception('failed to install cron job');
         }
 
         return true;

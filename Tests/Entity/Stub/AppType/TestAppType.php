@@ -2,7 +2,9 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\Stub\AppType;
 
+use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\BaseAppType;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
 
 /**
  * Description of TestAppType
@@ -11,7 +13,7 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\BaseAppType;
  */
 class TestAppType extends BaseAppType
 {
-    public function getConfigFiles(\DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment $env, array $servers, \DigipolisGent\Domainator9k\CoreBundle\Entity\Settings $settings)
+    public function getConfigFiles(AppEnvironment $env, array $servers, Settings $settings)
     {
         return '';
     }

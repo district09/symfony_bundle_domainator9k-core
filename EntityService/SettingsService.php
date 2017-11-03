@@ -3,8 +3,8 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\EntityService;
 
 use Ctrl\Common\EntityService\AbstractDoctrineService;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Application;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
 
 class SettingsService extends AbstractDoctrineService
 {
@@ -13,7 +13,7 @@ class SettingsService extends AbstractDoctrineService
      */
     public function getEntityClass()
     {
-        return 'DigipolisGent\Domainator9k\CoreBundle\Entity\Settings';
+        return Settings::class;
     }
 
     /**

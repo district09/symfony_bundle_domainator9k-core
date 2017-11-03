@@ -26,7 +26,7 @@ class RoleService extends AbstractDoctrineService
      */
     public function getEntityClass()
     {
-        return 'DigipolisGent\Domainator9k\CoreBundle\Entity\Role';
+        return Role::class;
     }
 
     /**

@@ -37,7 +37,7 @@ class ApplicationVoter extends AbstractVoter
 
         $user = $token->getUser();
 
-        if ($this->getAuthChecker()->isGranted('ROLE_ADMIN', $user)) {
+        if ($this->getAuthChecker()->isGranted(['ROLE_ADMIN'], $user)) {
             return true;
         }
 

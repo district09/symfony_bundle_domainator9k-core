@@ -31,15 +31,15 @@ class AppTypeSettingsService
     public function getSettings(Application $application, $fallback = true)
     {
         $type = $this->applicationTypeBuilder->getType($application->getAppTypeSlug());
-        $settings = $this->doctrine->getManager()->getRepository($type->getSettingsEntityClass())->findOneBy(['application' => $application]);
+        $settingsEntityClass = $type->getSettingsEntityClass();
+        $settings = $this->doctrine->getManager()->getRepository($settingsEntityClass)->findOneBy(['application' => $application]);
 
         if (!$settings) {
             if (!$fallback) {
                 return false;
             }
-            $className = $type->getSettingsEntityClass();
 
-            return new $className();
+            return new $settingsEntityClass();
         }
 
         return $settings;

@@ -2,21 +2,25 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Service;
 
-use DigipolisGent\Domainator9k\CoreBundle\Entity\BaseAppType;
-use DigipolisGent\Domainator9k\CoreBundle\Interfaces\CiTypeInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Application;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\BaseAppType;
+use DigipolisGent\Domainator9k\CoreBundle\Interfaces\ApplicationTypeInterface;
+use DigipolisGent\Domainator9k\CoreBundle\Interfaces\CiTypeInterface;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
 class CiAppTypeSettingsService
 {
+
     /**
      * @var Registry
      */
     private $doctrine;
+
     /**
      * @var ApplicationTypeBuilder
      */
     private $applicationTypeBuilder;
+
     /**
      * @var CiTypeBuilder
      */
@@ -42,13 +46,13 @@ class CiAppTypeSettingsService
      *
      * @return mixed
      */
-    public function getSettings(CiTypeInterface $ciType, BaseAppType $appType)
+    public function getSettings(CiTypeInterface $ciType, ApplicationTypeInterface $appType)
     {
         $settings = $this->doctrine->getManager()->getRepository($ciType->getAppTypeSettingsEntityClass())->findOneBy(['appTypeSlug' => $appType->getSlug(), 'ciTypeSlug' => $ciType->getSlug()]);
-        if (!$settings) {
+        if (!$settings)
+        {
             $className = $ciType->getAppTypeSettingsEntityClass();
             $class = new $className($ciType->getSlug(), $appType->getSlug());
-            /* @noinspection PhpUndefinedMethodInspection */
             $class->setAdditionalConfig($ciType->getAdditionalConfig());
 
             return $class;
@@ -61,7 +65,8 @@ class CiAppTypeSettingsService
 
     public function getSettingsForApp(Application $app)
     {
-        if ($app->getCiAppTypeSettings()) {
+        if ($app->getCiAppTypeSettings())
+        {
             return $app->getCiAppTypeSettings();
         }
 
@@ -69,7 +74,8 @@ class CiAppTypeSettingsService
         $appType = $this->applicationTypeBuilder->getType($app->getAppTypeSlug());
 
         $ciAppTypeSettings = $this->doctrine->getManager()->getRepository($ciType->getAppTypeSettingsEntityClass())->findOneBy(['appId' => $app->getId()]);
-        if ($ciAppTypeSettings) {
+        if ($ciAppTypeSettings)
+        {
             return $ciAppTypeSettings;
         }
 
@@ -81,4 +87,5 @@ class CiAppTypeSettingsService
         $this->doctrine->getManager()->persist($settings);
         $this->doctrine->getManager()->flush();
     }
+
 }

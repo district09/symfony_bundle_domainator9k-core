@@ -12,7 +12,9 @@
         "ctrl-f5/ctrl-common": "dev-master#edae03efdceee75c6ae59bb1405b85715f42b919 as 2.0.0",
         "ctrl-f5/ctrl-rad-bundle": "dev-master#dev-master#98250f8b737248be054192650d16ccfc9ba82259",
         "digipolisgent/sock-api-bundle": "dev-master",
-        "doctrine/doctrine-bundle": "^1.6"
+        "doctrine/doctrine-bundle": "^1.6",
+        "symfony/swiftmailer-bundle": "^2.3",
+        "phpseclib/phpseclib": "^2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.7"

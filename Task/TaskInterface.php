@@ -3,11 +3,12 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Task;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
+use DigipolisGent\Domainator9k\CoreBundle\Ssh\Factory\SshShellFactoryInterface;
 
 interface TaskInterface
 {
 
-    public function getName();
+    public static function getName();
 
     /**
      * @return TaskResult
@@ -42,4 +43,9 @@ interface TaskInterface
      * @return string
      */
     public function getHomeDirectory();
+
+    /**
+     * @param SshShellFactoryInterface $sshShellFactory
+     */
+    public function setShellFactory(SshShellFactoryInterface $sshShellFactory);
 }

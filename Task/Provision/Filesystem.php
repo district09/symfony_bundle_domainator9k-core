@@ -2,24 +2,26 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Task\Provision;
 
-use DigipolisGent\Domainator9k\CoreBundle\Service\ApplicationTypeBuilder;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Server;
-use DigipolisGent\Domainator9k\CoreBundle\Ssh\Auth\KeyFile;
-use DigipolisGent\Domainator9k\CoreBundle\Ssh\SshShell;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
+use DigipolisGent\Domainator9k\CoreBundle\Service\ApplicationTypeBuilder;
 use DigipolisGent\Domainator9k\CoreBundle\Task\AbstractTask;
 use DigipolisGent\Domainator9k\CoreBundle\Task\Factory as TaskFactory;
-use DigipolisGent\Domainator9k\CoreBundle\Task\Messenger;
-use DigipolisGent\Domainator9k\CoreBundle\Task\TaskRunner;
+use DigipolisGent\Domainator9k\CoreBundle\Task\TaskFactoryAware;
+use DigipolisGent\Domainator9k\CoreBundle\Task\TaskFactoryAwareInterface;
+use RuntimeException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Filesystem extends AbstractTask
+class Filesystem extends AbstractTask implements TaskFactoryAwareInterface
 {
+
+    use TaskFactoryAware;
+
     /**
      * @return string
      */
-    public function getName()
+    public static function getName()
     {
         return 'provision.filesystem';
     }
@@ -47,12 +49,12 @@ class Filesystem extends AbstractTask
         $servers = $this->options['servers'];
         $user = $this->appEnvironment->getServerSettings()->getUser();
         $appFolder = $this->appEnvironment->getApplication()->getNameForFolder();
-        $taskRunner = new TaskRunner();
+        $taskRunner = $this->taskFactory->createRunner();
         $keyFilePath = $this->getHomeDirectory().'/.ssh/id_rsa';
         $keyFile = realpath($keyFilePath);
 
         if (!file_exists($keyFile)) {
-            throw new \RuntimeException(sprintf("private keyfile '%s' doesn't seem to exist", $keyFilePath));
+            throw new RuntimeException(sprintf("private keyfile '%s' doesn't seem to exist", $keyFilePath));
         }
 
         $appType = $appTypeBuilder->getType($appEnvironment->getApplication()->getAppTypeSlug());
@@ -78,28 +80,22 @@ class Filesystem extends AbstractTask
             "/home/$user/apps/$appFolder/current" => "/home/$user/apps/$appFolder/releases/current",
         );
 
-        $sshAuth = new KeyFile($user, $keyFile);
         foreach ($servers as $server) {
-            $ssh = new SshShell($server->getIp(), $sshAuth);
-
-            // establish ssh connection to server prematurely
-            Messenger::send(sprintf(
-                'connecting to %s@%s with private key %s',
-                $user, $server->getIp(), $keyFile
-            ));
-            $ssh->connect();
-
             foreach ($directories as $dir) {
-                $taskRunner->addTask(TaskFactory::create('filesystem.create_directory', array(
+                $taskRunner->addTask($this->taskFactory->create('filesystem.create_directory', array(
                     'appEnvironment' => $appEnvironment,
-                    'shell' => $ssh,
+                    'host' => $server->getIp(),
+                    'user' => $user,
+                    'keyfile' => $keyFile,
                     'directory' => $dir,
                 )));
             }
             foreach ($links as $name => $target) {
-                $taskRunner->addTask(TaskFactory::create('filesystem.link', array(
+                $taskRunner->addTask($this->taskFactory->create('filesystem.link', array(
                     'appEnvironment' => $appEnvironment,
-                    'shell' => $ssh,
+                    'host' => $server->getIp(),
+                    'user' => $user,
+                    'keyfile' => $keyFile,
                     'name' => $name,
                     'target' => $target,
                 )));

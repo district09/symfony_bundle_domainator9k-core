@@ -3,10 +3,12 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Ssh;
 
 use DigipolisGent\Domainator9k\CoreBundle\Ssh\Auth\AbstractAuth;
-use phpseclib\Net\SSH2;
+use DigipolisGent\Domainator9k\CoreBundle\Ssh\Factory\SshFactoryInterface;
 use phpseclib\Net\SFTP;
+use phpseclib\Net\SSH2;
+use RuntimeException;
 
-class SshShell implements ShellInterface
+class SshShell implements SshShellInterface
 {
     /**
      * @var string
@@ -24,7 +26,7 @@ class SshShell implements ShellInterface
     protected $auth;
 
     /**
-     * @var \phpseclib\Net\SSH2
+     * @var SSH2
      */
     protected $connection;
 
@@ -39,13 +41,19 @@ class SshShell implements ShellInterface
     protected $timeout = 10;
 
     /**
+     * @var SshFactoryInterface
+     */
+    protected $sshFactory;
+
+    /**
      * @param string       $host
      * @param AbstractAuth $auth
      */
-    public function __construct($host, AbstractAuth $auth)
+    public function __construct($host, AbstractAuth $auth, SshFactoryInterface $sshFactory)
     {
         $this->host = $host;
         $this->auth = $auth;
+        $this->sshFactory = $sshFactory;
     }
 
     /**
@@ -137,19 +145,10 @@ class SshShell implements ShellInterface
             return;
         }
 
-        //First try a direct ping
-//        $exec = exec("ping -c 3 -s 64 -t 64 ".$this->host);
-//        $pings = explode("=", $exec);
-//        $pingVal = explode("/", end($pings));
-//        if (!isset($pingVal[1])) {
-//            throw new \RuntimeException("ping to host failed");
-//        }
-
-        $this->connection = new SSH2($this->host, $this->port, $this->timeout);
-        $this->connection->_connect();
+        $this->connection = $this->sshFactory->getSshConnection($this->host, $this->port, $this->timeout);
 
         if (!$this->connection->isConnected()) {
-            throw new \RuntimeException(sprintf(
+            throw new RuntimeException(sprintf(
                 'ssh: unable to establish connection to %s on port %s',
                 $this->host,
                 $this->port
@@ -162,24 +161,24 @@ class SshShell implements ShellInterface
     }
 
     /**
-     * @throws \RuntimeException
+     * @throws RuntimeException
      */
     protected function assertConnection()
     {
         if (!($this->connection instanceof SSH2)) {
-            throw new \RuntimeException('no connection available');
+            throw new RuntimeException('No connection available.');
         }
     }
 
     /**
-     * @return \phpseclib\Net\SFTP
+     * @return SFTP
      */
     public function getSFtp()
     {
         $this->assertConnection();
 
         if (!$this->sftp) {
-            $this->sftp = new SFTP($this->host, $this->port, $this->timeout);
+            $this->sftp = $this->sshFactory->getSftpConnection($this->host, $this->port, $this->timeout);
             $this->auth->authenticate($this->sftp);
         }
 
@@ -206,20 +205,9 @@ class SshShell implements ShellInterface
     public function exec($command, &$stdout = null, &$exitStatus = null, &$stderr = null)
     {
         $this->assertConnection();
-
-        // @see http://stackoverflow.com/questions/10478491/php-ssh2-exec-channel-exit-status
-        $exitCatcher = '__CATCH__EXIT_CODE__';
-        $cmd = "($command); echo \"$exitCatcher\"\$?";
-        $stdout = $this->connection->exec($cmd);
+        $stdout = $this->connection->exec($command);
         $stderr = $this->connection->getStdError();
-
-        $match = preg_match('/'.$exitCatcher.'(\d*)$/', $stdout, $statusSearch);
-        $exitStatus = null;
-        if ($match === 1) {
-            $exitStatus = (int) $statusSearch[1];
-            $stdout = explode($exitCatcher, $stdout);
-            $stdout = $stdout[0];
-        }
+        $exitStatus = $this->connection->getExitStatus();
 
         return $exitStatus === 0;
     }

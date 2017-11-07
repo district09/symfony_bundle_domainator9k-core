@@ -2,58 +2,85 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Task;
 
+use DigipolisGent\Domainator9k\CoreBundle\Ssh\Factory\ShellFactoryInterface;
+use InvalidArgumentException;
+
 class Factory implements FactoryInterface
 {
-    protected static $map = array(
-        'provision.filesystem' => '\DigipolisGent\Domainator9k\CoreBundle\Task\Provision\Filesystem',
-        'provision.config_files' => '\DigipolisGent\Domainator9k\CoreBundle\Task\Provision\ConfigFiles',
-        'provision.cron' => '\DigipolisGent\Domainator9k\CoreBundle\Task\Provision\Cron',
-        'filesystem.create_directory' => '\DigipolisGent\Domainator9k\CoreBundle\Task\Filesystem\CreateDirectory',
-        'filesystem.create_file' => '\DigipolisGent\Domainator9k\CoreBundle\Task\Filesystem\CreateFile',
-        'filesystem.link' => '\DigipolisGent\Domainator9k\CoreBundle\Task\Filesystem\Link',
-        //'console.jenkins'               => '\DigipolisGent\Domainator9k\CoreBundle\Task\Console\Jenkins',
-        'console.cron' => '\DigipolisGent\Domainator9k\CoreBundle\Task\Console\Cron',
-    );
 
-    protected static $defaultOptions = array();
+    protected $defaultOptions = array();
 
-    public static function setDefaultOptions(array $options = array())
+    /**
+     * @var ShellFactoryInterface
+     */
+    protected $shellFactory;
+
+
+    public function __construct(ShellFactoryInterface $shellFactory)
     {
-        self::$defaultOptions = $options;
+        $this->shellFactory = $shellFactory;
+    }
+
+    public function setDefaultOptions(array $options = array())
+    {
+        $this->defaultOptions = $options;
+    }
+
+    public function addTaskDefinition($class)
+    {
+        if (!is_subclass_of($class, TaskInterface::class))
+        {
+            throw new InvalidArgumentException(sprintf(
+                'Task %s does not implement %s.', $class, TaskInterface::class
+            ));
+        }
+        $this->map[call_user_func([$class, 'getName'])] = $class;
+
+        return $this;
     }
 
     /**
      * @param string $name
      * @param array  $options
      *
-     * @return AbstractTask
+     * @return AbstractSshTask
      */
-    public static function create($name, array $options = array())
+    public function create($name, array $options = array())
     {
-        if (class_exists($name)) {
-            return new $name(array_merge(self::$defaultOptions, $options));
+        $class = $this->resolveTask($name);
+
+        $task = new $class(array_merge($this->defaultOptions, $options));
+        $task->setShellFactory($this->shellFactory);
+        if (is_subclass_of($class, TaskFactoryAwareInterface::class)) {
+            $task->setTaskFactory($this);
+        }
+        return $task;
+    }
+
+    protected function resolveTask($class)
+    {
+        if (!class_exists($class))
+        {
+            if (!array_key_exists($class, $this->map))
+            {
+                throw new InvalidArgumentException(sprintf(
+                    'unknown task: %s', $class
+                ));
+            }
+            $class = $this->map[$class];
         }
 
-        if (!array_key_exists($name, self::$map)) {
-            throw new \InvalidArgumentException(sprintf(
-                'unknown task: %s', $name
-            ));
-        }
-
-        $options = array_merge(self::$defaultOptions, $options);
-
-        $class = self::$map[$name];
-
-        return new $class($options);
+        return $class;
     }
 
     /**
      * @return TaskRunner
      */
-    public static function createRunner()
+    public function createRunner()
     {
         $runner = new TaskRunner();
 
         return $runner;
     }
+
 }

@@ -10,7 +10,7 @@ class Link extends AbstractSshTask
     /**
      * @return string
      */
-    public function getName()
+    public static function getName()
     {
         return 'filesystem.link';
     }
@@ -33,8 +33,6 @@ class Link extends AbstractSshTask
         $result = parent::execute();
         $name = $this->options['name'];
         $target = $this->options['target'];
-
-        $this->shell->connect();
 
         $cmd = "ln -sfn $target $name";
         $this->doExec($result, $cmd);

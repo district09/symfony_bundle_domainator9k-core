@@ -4,18 +4,21 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Task\Provision;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Server;
-use DigipolisGent\Domainator9k\CoreBundle\Ssh\Auth\KeyFile;
-use DigipolisGent\Domainator9k\CoreBundle\Ssh\SshShell;
 use DigipolisGent\Domainator9k\CoreBundle\Task\AbstractTask;
-use DigipolisGent\Domainator9k\CoreBundle\Task\Factory as TaskFactory;
+use DigipolisGent\Domainator9k\CoreBundle\Task\TaskFactoryAware;
+use DigipolisGent\Domainator9k\CoreBundle\Task\TaskFactoryAwareInterface;
+use RuntimeException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Cron extends AbstractTask
+class Cron extends AbstractTask implements TaskFactoryAwareInterface
 {
+
+    use TaskFactoryAware;
+
     /**
      * @return string
      */
-    public function getName()
+    public static function getName()
     {
         return 'provision.cron';
     }
@@ -38,24 +41,23 @@ class Cron extends AbstractTask
         $user = $this->appEnvironment->getServerSettings()->getUser();
         $appFolder = $this->appEnvironment->getApplication()->getNameForFolder();
         $appPath = "/home/$user/apps/$appFolder/current";
-        $taskRunner = TaskFactory::createRunner();
+        $taskRunner = $this->taskFactory->createRunner();
         $keyFilePath = $this->getHomeDirectory().'/.ssh/id_rsa';
         $keyFile = realpath($keyFilePath);
 
         if (!file_exists($keyFile)) {
-            throw new \RuntimeException(sprintf("private keyfile '%s' doesn't seem to exist", $keyFilePath));
+            throw new RuntimeException(sprintf("private keyfile '%s' doesn't seem to exist", $keyFilePath));
         }
 
-        $sshAuth = new KeyFile($user, $keyFile);
         foreach ($servers as $server) {
             if (!$server->isTaskServer()) {
                 continue;
             }
-
-            $ssh = new SshShell($server->getIp(), $sshAuth);
-            $taskRunner->addTask(TaskFactory::create('console.cron', array(
+            $taskRunner->addTask($this->taskFactory->create('console.cron', array(
                 'AppEnvironment' => $appEnvironment,
-                'shell' => $ssh,
+                'host' => $server->getIp(),
+                'user' => $user,
+                'keyfile' => $keyFile,
                 'cron' => str_replace('__APP__', $appPath, $appEnvironment->getApplication()->getCron()),
                 'check' => true,
             )));

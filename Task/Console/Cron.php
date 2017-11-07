@@ -10,7 +10,7 @@ class Cron extends AbstractSshTask
     /**
      * @return string
      */
-    public function getName()
+    public static function getName()
     {
         return 'console.cron';
     }
@@ -47,8 +47,6 @@ class Cron extends AbstractSshTask
         } elseif ($check !== false) {
             $check = "| grep -vE \"$check\"";
         }
-
-        $this->shell->connect();
 
         $cmd = "(crontab -l $check; echo \"$cron\") | crontab";
         $this->doExec($result, $cmd);

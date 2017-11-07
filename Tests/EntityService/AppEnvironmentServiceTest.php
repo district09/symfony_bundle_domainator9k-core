@@ -11,6 +11,7 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
 use DigipolisGent\Domainator9k\CoreBundle\EntityService\AppEnvironmentService;
 use DigipolisGent\Domainator9k\CoreBundle\Interfaces\ApplicationTypeInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Service\ApplicationTypeBuilder;
+use DigipolisGent\Domainator9k\CoreBundle\Task\FactoryInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Task\TaskInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Task\TaskResult;
 use DigipolisGent\Domainator9k\CoreBundle\Task\TaskRunnerInterface;
@@ -49,11 +50,17 @@ class AppEnvironmentServiceTest extends TestCase
      */
     protected $applicationTypeBuilder;
 
+    /**
+     * @var PHPUnit_Framework_MockObject_MockObject
+     */
+    protected $taskFactory;
+
     protected function setUp()
     {
         parent::setUp();
         $this->settings = $this->getMockBuilder(Settings::class)->disableOriginalConstructor()->getMock();
         $this->applicationTypeBuilder = $this->getMockBuilder(ApplicationTypeBuilder::class)->getMock();
+        $this->taskFactory = new TestTaskFactory();
     }
 
     public function testGetEntityClass()
@@ -393,9 +400,9 @@ class AppEnvironmentServiceTest extends TestCase
             $this->getMockBuilder(Server::class)->disableOriginalConstructor()->getMock(),
         ];
 
-        TestTaskFactory::setRunner($runner);
-        TestTaskFactory::setTask($task);
-        TestTaskFactory::setExpectedArguments(
+        $this->taskFactory->setRunner($runner);
+        $this->taskFactory->setTask($task);
+        $this->taskFactory->setExpectedArguments(
             [
                 'provision.filesystem',
                 [
@@ -407,7 +414,6 @@ class AppEnvironmentServiceTest extends TestCase
             ]
         );
 
-        $service->setTaskFactoryClass(TestTaskFactory::class);
         $service->createServerFilesystem($appEnvironment, $servers);
     }
 
@@ -433,9 +439,9 @@ class AppEnvironmentServiceTest extends TestCase
             $this->getMockBuilder(Server::class)->disableOriginalConstructor()->getMock(),
         ];
 
-        TestTaskFactory::setRunner($runner);
-        TestTaskFactory::setTask($task);
-        TestTaskFactory::setExpectedArguments(
+        $this->taskFactory->setRunner($runner);
+        $this->taskFactory->setTask($task);
+        $this->taskFactory->setExpectedArguments(
             [
                 'provision.filesystem',
                 [
@@ -447,7 +453,6 @@ class AppEnvironmentServiceTest extends TestCase
             ]
         );
 
-        $service->setTaskFactoryClass(TestTaskFactory::class);
         $service->createServerFilesystem($appEnvironment, $servers);
     }
 
@@ -469,9 +474,9 @@ class AppEnvironmentServiceTest extends TestCase
             $this->getMockBuilder(Server::class)->disableOriginalConstructor()->getMock(),
         ];
 
-        TestTaskFactory::setRunner($runner);
-        TestTaskFactory::setTask($task);
-        TestTaskFactory::setExpectedArguments(
+        $this->taskFactory->setRunner($runner);
+        $this->taskFactory->setTask($task);
+        $this->taskFactory->setExpectedArguments(
             [
                 'provision.config_files',
                 [
@@ -483,7 +488,6 @@ class AppEnvironmentServiceTest extends TestCase
             ]
         );
 
-        $service->setTaskFactoryClass(TestTaskFactory::class);
         $service->createServerConfigFiles($appEnvironment, $servers);
     }
 
@@ -509,9 +513,9 @@ class AppEnvironmentServiceTest extends TestCase
             $this->getMockBuilder(Server::class)->disableOriginalConstructor()->getMock(),
         ];
 
-        TestTaskFactory::setRunner($runner);
-        TestTaskFactory::setTask($task);
-        TestTaskFactory::setExpectedArguments(
+        $this->taskFactory->setRunner($runner);
+        $this->taskFactory->setTask($task);
+        $this->taskFactory->setExpectedArguments(
             [
                 'provision.config_files',
                 [
@@ -523,7 +527,6 @@ class AppEnvironmentServiceTest extends TestCase
             ]
         );
 
-        $service->setTaskFactoryClass(TestTaskFactory::class);
         $service->createServerConfigFiles($appEnvironment, $servers);
     }
 
@@ -549,9 +552,9 @@ class AppEnvironmentServiceTest extends TestCase
             $this->getMockBuilder(Server::class)->disableOriginalConstructor()->getMock(),
         ];
 
-        TestTaskFactory::setRunner($runner);
-        TestTaskFactory::setTask($task);
-        TestTaskFactory::setExpectedArguments(
+        $this->taskFactory->setRunner($runner);
+        $this->taskFactory->setTask($task);
+        $this->taskFactory->setExpectedArguments(
             [
                 'provision.cron',
                 [
@@ -561,7 +564,6 @@ class AppEnvironmentServiceTest extends TestCase
             ]
         );
 
-        $service->setTaskFactoryClass(TestTaskFactory::class);
         $service->createCronJob($appEnvironment, $servers);
     }
 
@@ -591,9 +593,9 @@ class AppEnvironmentServiceTest extends TestCase
             $this->getMockBuilder(Server::class)->disableOriginalConstructor()->getMock(),
         ];
 
-        TestTaskFactory::setRunner($runner);
-        TestTaskFactory::setTask($task);
-        TestTaskFactory::setExpectedArguments(
+        $this->taskFactory->setRunner($runner);
+        $this->taskFactory->setTask($task);
+        $this->taskFactory->setExpectedArguments(
             [
                 'provision.cron',
                 [
@@ -603,7 +605,6 @@ class AppEnvironmentServiceTest extends TestCase
             ]
         );
 
-        $service->setTaskFactoryClass(TestTaskFactory::class);
         $service->createCronJob($appEnvironment, $servers);
     }
 
@@ -624,21 +625,12 @@ class AppEnvironmentServiceTest extends TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Task Factory \stdClass does not implement DigipolisGent\Domainator9k\CoreBundle\Task\FactoryInterface.
-     */
-    public function testSetTaskFactoryClassInvalid() {
-        $service = $this->getService();
-        $service->setTaskFactoryClass('\stdClass');
-    }
-
-    /**
      *
      * @return AppEnvironmentService
      */
     protected function getService()
     {
-        return new AppEnvironmentService($this->settings, $this->applicationTypeBuilder);
+        return new AppEnvironmentService($this->settings, $this->applicationTypeBuilder, $this->taskFactory);
     }
 
 }

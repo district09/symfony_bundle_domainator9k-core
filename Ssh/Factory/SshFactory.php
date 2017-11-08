@@ -24,7 +24,6 @@ class SshFactory implements SshFactoryInterface
     public function getSshConnection($host, $port = 22, $timeout = 10)
     {
         $connection = new SSH2($host, $port, $timeout);
-        $connection->_connect();
         return $connection;
     }
 }

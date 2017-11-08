@@ -35,7 +35,7 @@ class SshShellFactory implements SshShellFactoryInterface
             case static::AUTH_TYPE_KEY:
                 $auth = new KeyFile($user, $password);
                 break;
-            case static::AUTH_TYPE_USER:
+            case static::AUTH_TYPE_CREDENTIALS:
             default:
                 $auth = new Password($user, $password);
                 break;

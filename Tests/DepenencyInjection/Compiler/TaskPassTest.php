@@ -68,7 +68,6 @@ class TaskPassTest extends TestCase
 
         $taskFactoryDefinition->expects($this->once())->method('addMethodCall')->with('addTaskDefinition', [Filesystem::class]);
 
-
         $container
             ->expects($this->at(2))
             ->method('findTaggedServiceIds')

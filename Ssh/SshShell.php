@@ -146,6 +146,7 @@ class SshShell implements SshShellInterface
         }
 
         $this->connection = $this->sshFactory->getSshConnection($this->host, $this->port, $this->timeout);
+        $this->connection->_connect();
 
         if (!$this->connection->isConnected()) {
             throw new RuntimeException(sprintf(

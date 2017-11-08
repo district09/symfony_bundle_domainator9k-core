@@ -27,5 +27,4 @@ class SshFactory implements SshFactoryInterface
         $connection->_connect();
         return $connection;
     }
-
 }

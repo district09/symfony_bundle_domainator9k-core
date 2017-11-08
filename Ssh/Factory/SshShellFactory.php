@@ -13,6 +13,7 @@ use DigipolisGent\Domainator9k\CoreBundle\Ssh\SshShell;
  */
 class SshShellFactory implements SshShellFactoryInterface
 {
+
     const AUTH_TYPE_KEY = 'key';
     const AUTH_TYPE_CREDENTIALS = 'credentials';
 
@@ -20,7 +21,6 @@ class SshShellFactory implements SshShellFactoryInterface
      * @var SshFactoryInterface
      */
     protected $sshFactory;
-
 
     public function __construct(SshFactoryInterface $sshFactory)
     {
@@ -43,5 +43,4 @@ class SshShellFactory implements SshShellFactoryInterface
 
         return new SshShell($host, $auth, $this->sshFactory);
     }
-
 }

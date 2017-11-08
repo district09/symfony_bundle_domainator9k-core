@@ -10,11 +10,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class AbstractSshTask extends AbstractTask
 {
+
     /**
      * @var bool
      */
     protected $executed = false;
-
     protected $options = array();
 
     /**
@@ -47,7 +47,12 @@ abstract class AbstractSshTask extends AbstractTask
                 ? SshShellFactory::AUTH_TYPE_KEY
                 : SshShellFactory::AUTH_TYPE_CREDENTIALS
             );
-        $this->shell = $this->sshShellFactory->create($this->options['host'], $authType, $this->options['user'], $password);
+        $this->shell = $this->sshShellFactory->create(
+            $this->options['host'],
+            $authType,
+            $this->options['user'],
+            $password
+        );
     }
 
     protected function configure(OptionsResolver $options)

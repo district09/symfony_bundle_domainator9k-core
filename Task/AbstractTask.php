@@ -8,11 +8,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class AbstractTask implements TaskInterface
 {
+
     /**
      * @var bool
      */
     protected $executed = false;
-
     protected $options = array();
 
     /**
@@ -45,8 +45,14 @@ abstract class AbstractTask implements TaskInterface
         $options->setAllowedTypes('appEnvironment', ['DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment']);
     }
 
-    public static function getName() {
-        throw new \LogicException(sprintf('Classes implementing %s should override the static getName() method.', AbstractTask::class));
+    public static function getName()
+    {
+        throw new \LogicException(
+            sprintf(
+                'Classes implementing %s should override the static getName() method.',
+                AbstractTask::class
+            )
+        );
     }
 
     /**
@@ -110,7 +116,6 @@ abstract class AbstractTask implements TaskInterface
 
         return isset($_SERVER['HOME']) ? $_SERVER['HOME'] : realpath('~');
     }
-
 
     /**
      * @param SshShellFactoryInterface $sshShellFactory

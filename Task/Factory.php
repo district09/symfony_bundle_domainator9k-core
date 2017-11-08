@@ -15,7 +15,6 @@ class Factory implements FactoryInterface
      */
     protected $shellFactory;
 
-
     public function __construct(ShellFactoryInterface $shellFactory)
     {
         $this->shellFactory = $shellFactory;
@@ -28,10 +27,11 @@ class Factory implements FactoryInterface
 
     public function addTaskDefinition($class)
     {
-        if (!is_subclass_of($class, TaskInterface::class))
-        {
+        if (!is_subclass_of($class, TaskInterface::class)) {
             throw new InvalidArgumentException(sprintf(
-                'Task %s does not implement %s.', $class, TaskInterface::class
+                'Task %s does not implement %s.',
+                $class,
+                TaskInterface::class
             ));
         }
         $this->map[call_user_func([$class, 'getName'])] = $class;
@@ -59,12 +59,11 @@ class Factory implements FactoryInterface
 
     protected function resolveTask($class)
     {
-        if (!class_exists($class))
-        {
-            if (!array_key_exists($class, $this->map))
-            {
+        if (!class_exists($class)) {
+            if (!array_key_exists($class, $this->map)) {
                 throw new InvalidArgumentException(sprintf(
-                    'unknown task: %s', $class
+                    'unknown task: %s',
+                    $class
                 ));
             }
             $class = $this->map[$class];
@@ -82,5 +81,4 @@ class Factory implements FactoryInterface
 
         return $runner;
     }
-
 }

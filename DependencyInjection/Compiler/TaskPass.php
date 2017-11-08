@@ -13,8 +13,7 @@ class TaskPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         // always first check if the primary service is defined
-        if (!$container->has('digip_deploy.task_factory'))
-        {
+        if (!$container->has('digip_deploy.task_factory')) {
             return;
         }
 
@@ -22,19 +21,20 @@ class TaskPass implements CompilerPassInterface
 
         $taggedServices = $container->findTaggedServiceIds('digip_deploy.task');
 
-        foreach ($taggedServices as $id => $tags)
-        {
+        foreach ($taggedServices as $id => $tags) {
             $task = $container->findDefinition($id);
 
             $class = $task->getClass();
-            if (!is_subclass_of($class, TaskInterface::class))
-            {
-                throw new InvalidArgumentException(sprintf('Class %s does not implement %s.', $class, TaskInterface::class));
+            if (!is_subclass_of($class, TaskInterface::class)) {
+                throw new InvalidArgumentException(
+                    sprintf(
+                        'Class %s does not implement %s.',
+                        $class,
+                        TaskInterface::class
+                    )
+                );
             }
-            $definition->addMethodCall('addTaskDefinition', [
-                $class,
-            ]);
+            $definition->addMethodCall('addTaskDefinition', [$class]);
         }
     }
-
 }

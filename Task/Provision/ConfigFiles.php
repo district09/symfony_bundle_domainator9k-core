@@ -3,15 +3,12 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Task\Provision;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Server;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
 use DigipolisGent\Domainator9k\CoreBundle\Service\ApplicationTypeBuilder;
-use DigipolisGent\Domainator9k\CoreBundle\Ssh\Auth\KeyFile;
 use DigipolisGent\Domainator9k\CoreBundle\Task\AbstractTask;
 use DigipolisGent\Domainator9k\CoreBundle\Task\TaskFactoryAware;
 use DigipolisGent\Domainator9k\CoreBundle\Task\TaskFactoryAwareInterface;
-use DigipolisGent\Domainator9k\CoreBundle\Task\TaskRunner;
-use RuntimeException;
+use DigipolisGent\SockAPIBundle\JsonModel\Server;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ConfigFiles extends AbstractTask implements TaskFactoryAwareInterface
@@ -50,29 +47,35 @@ class ConfigFiles extends AbstractTask implements TaskFactoryAwareInterface
         $servers = $this->options['servers'];
         $user = $this->appEnvironment->getServerSettings()->getUser();
         $taskRunner = $this->taskFactory->createRunner();
-        $keyFilePath = $this->getHomeDirectory().'/.ssh/id_rsa';
+        $keyFilePath = $this->getHomeDirectory() . '/.ssh/id_rsa';
         $keyFile = realpath($keyFilePath);
 
         if (!file_exists($keyFile)) {
             throw new RuntimeException(sprintf("private keyfile '%s' doesn't seem to exist", $keyFilePath));
         }
 
-        $files = $appTypeBuilder->getType($appEnvironment->getApplication()->getAppTypeSlug())->getConfigFiles($appEnvironment, $servers, $settings);
+        $files = $appTypeBuilder
+            ->getType($appEnvironment->getApplication()->getAppTypeSlug())
+            ->getConfigFiles($appEnvironment, $servers, $settings);
 
         foreach ($servers as $server) {
             foreach ($files as $path => $content) {
-                $taskRunner->addTask($this->taskFactory->create('filesystem.create_file', array(
-                    'appEnvironment' => $appEnvironment,
-                    'host' => $server->getIp(),
-                    'user' => $user,
-                    'keyfile' => $keyFile,
-                    'path' => $path,
-                    'content' => $content,
-                )));
+                $taskRunner->addTask(
+                    $this->taskFactory->create(
+                        'filesystem.create_file',
+                        array(
+                            'appEnvironment' => $appEnvironment,
+                            'host' => $server->getIp(),
+                            'user' => $user,
+                            'keyfile' => $keyFile,
+                            'path' => $path,
+                            'content' => $content,
+                        )
+                    )
+                );
             }
         }
 
         return $taskRunner->run();
     }
-
 }

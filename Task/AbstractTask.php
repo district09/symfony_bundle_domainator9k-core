@@ -45,7 +45,9 @@ abstract class AbstractTask implements TaskInterface
         $options->setAllowedTypes('appEnvironment', ['DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment']);
     }
 
-    abstract public static function getName();
+    public static function getName() {
+        throw new \LogicException(sprintf('Classes implementing %s should override the static getName() method.', AbstractTask::class));
+    }
 
     /**
      * @return TaskResult

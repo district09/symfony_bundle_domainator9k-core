@@ -161,13 +161,10 @@ class SshShell implements SshShellInterface
         }
     }
 
-    /**
-     * @throws RuntimeException
-     */
-    protected function assertConnection()
+    protected function assertConnection($auth = true)
     {
         if (!($this->connection instanceof SSH2)) {
-            throw new RuntimeException('No connection available.');
+            $this->connect($auth);
         }
     }
 
@@ -188,7 +185,7 @@ class SshShell implements SshShellInterface
 
     public function authenticate()
     {
-        $this->assertConnection();
+        $this->assertConnection(false);
 
         $this->auth->authenticate($this->connection);
     }
@@ -224,7 +221,7 @@ class SshShell implements SshShellInterface
 
         $stat = $sftp->stat($file);
         if ($stat) {
-            $stat['type'] = ($stat['mode'] & 040000) ? 'dir' : 'file';
+            $stat['type'] = ($stat['type'] === NET_SFTP_TYPE_DIRECTORY) ? 'dir' : 'file';
         }
 
         return $stat;

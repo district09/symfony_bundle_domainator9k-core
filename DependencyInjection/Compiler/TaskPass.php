@@ -21,7 +21,7 @@ class TaskPass implements CompilerPassInterface
 
         $taggedServices = $container->findTaggedServiceIds('digip_deploy.task');
 
-        foreach ($taggedServices as $id => $tags) {
+        foreach (array_keys($taggedServices) as $id) {
             $task = $container->findDefinition($id);
 
             $class = $task->getClass();

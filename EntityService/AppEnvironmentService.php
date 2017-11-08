@@ -50,11 +50,11 @@ class AppEnvironmentService extends AbstractDoctrineService
 
     public function __construct(
         Settings $settings,
-        ApplicationTypeBuilder $applicationTypeBuilder,
+        ApplicationTypeBuilder $appTypeBuilder,
         FactoryInterface $taskFactory
     ) {
         $this->settings = $settings;
-        $this->applicationTypeBuilder = $applicationTypeBuilder;
+        $this->applicationTypeBuilder = $appTypeBuilder;
         $this->taskFactory = $taskFactory;
     }
 

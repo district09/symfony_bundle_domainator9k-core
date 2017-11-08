@@ -9,6 +9,7 @@ use DigipolisGent\Domainator9k\CoreBundle\Task\AbstractTask;
 use DigipolisGent\Domainator9k\CoreBundle\Task\TaskFactoryAware;
 use DigipolisGent\Domainator9k\CoreBundle\Task\TaskFactoryAwareInterface;
 use DigipolisGent\SockAPIBundle\JsonModel\Server;
+use RuntimeException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ConfigFiles extends AbstractTask implements TaskFactoryAwareInterface

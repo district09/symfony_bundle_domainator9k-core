@@ -41,8 +41,6 @@ class Filesystem extends AbstractTask implements TaskFactoryAwareInterface
         /** @var ApplicationTypeBuilder $appTypeBuilder */
         $appTypeBuilder = $this->options['applicationTypeBuilder'];
 
-        /** @var Settings $settings */
-        $settings = $this->options['settings'];
         /** @var AppEnvironment $appEnvironment */
         $appEnvironment = $this->options['appEnvironment'];
         /** @var Server[] $servers */

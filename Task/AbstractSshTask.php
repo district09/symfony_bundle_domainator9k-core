@@ -21,6 +21,9 @@ abstract class AbstractSshTask extends AbstractTask implements SshTaskInterface
      */
     protected $shell;
 
+    /**
+     * Assert a shell has been created, create one if not.
+     */
     protected function assertShell()
     {
         if (!$this->shell instanceof SshShellInterface) {
@@ -45,6 +48,10 @@ abstract class AbstractSshTask extends AbstractTask implements SshTaskInterface
         }
     }
 
+    /**
+     *
+     * @param OptionsResolver $options
+     */
     protected function configure(OptionsResolver $options)
     {
         parent::configure($options);

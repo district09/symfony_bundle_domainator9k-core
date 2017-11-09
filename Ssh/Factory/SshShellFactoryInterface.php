@@ -5,11 +5,13 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Ssh\Factory;
 use DigipolisGent\Domainator9k\CoreBundle\Ssh\SshShellInterface;
 
 /**
+ * Description of SshShellFactoryInterface.
  *
  * @author Jelle Sebreghts
  */
 interface SshShellFactoryInterface
 {
+
     /**
      *
      * @param string $host

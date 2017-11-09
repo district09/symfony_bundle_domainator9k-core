@@ -8,6 +8,14 @@ use phpseclib\Net\SFTP;
 use phpseclib\Net\SSH2;
 use RuntimeException;
 
+if (!defined('NET_SFTP_TYPE_DIRECTORY')) {
+    define('NET_SFTP_TYPE_DIRECTORY', 'dir');
+}
+
+if (!defined('NET_SFTP_TYPE_REGULAR')) {
+    define('NET_SFTP_TYPE_REGULAR', 'file');
+}
+
 class SshShell implements SshShellInterface
 {
     /**
@@ -46,8 +54,9 @@ class SshShell implements SshShellInterface
     protected $sshFactory;
 
     /**
-     * @param string       $host
+     * @param string $host
      * @param AbstractAuth $auth
+     * @param SshFactoryInterface $sshFactory
      */
     public function __construct($host, AbstractAuth $auth, SshFactoryInterface $sshFactory)
     {

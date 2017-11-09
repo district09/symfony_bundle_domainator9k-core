@@ -22,6 +22,9 @@ class SshShellFactory implements SshShellFactoryInterface
      */
     protected $sshFactory;
 
+    /**
+     * @param SshFactoryInterface $sshFactory
+     */
     public function __construct(SshFactoryInterface $sshFactory)
     {
         $this->sshFactory = $sshFactory;

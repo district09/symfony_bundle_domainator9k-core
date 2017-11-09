@@ -3,6 +3,7 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Task;
 
 /**
+ * Description of TaskFactoryAware.
  *
  * @author Jelle Sebreghts
  */

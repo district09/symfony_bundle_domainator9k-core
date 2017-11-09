@@ -7,13 +7,18 @@ use phpseclib\Net\SFTP;
 
 interface SshShellInterface
 {
+
     /**
-     * @param string    $command
-     * @param string    &$stdout     will be filled with the command output STDOUT
-     * @param bool|null &$exitStatus will be filled with the command exit status or null of unknown
-     * @param string    &$stderr     will be filled with the command error output STDERR
+     * @param string $command
+     * @param string $stdout
+     *     Will be filled with the command output STDOUT.
+     * @param bool|null $exitStatus
+     *     Will be filled with the command exit status or null of unknown.
+     * @param string $stderr
+     *     Will be filled with the command error output STDERR.
      *
-     * @return bool true if exit code === 0
+     * @return bool
+     *     True if exit code === 0, false otherwise.
      */
     public function exec($command, &$stdout = null, &$exitStatus = null, &$stderr = null);
 
@@ -75,8 +80,14 @@ interface SshShellInterface
      */
     public function getSFtp();
 
+    /**
+     * Login to the remote shell.
+     */
     public function authenticate();
 
+    /**
+     * Disconnect from the remote shell.
+     */
     public function disconnect();
 
     /**
@@ -87,7 +98,8 @@ interface SshShellInterface
     public function stat($file);
 
     /**
-     * @param string $file absolute path to file
+     * @param string $file
+     *     Absolute path to a file.
      *
      * @return array|false
      */
@@ -102,7 +114,8 @@ interface SshShellInterface
     public function filePutContent($file, $content);
 
     /**
-     * @param string $directory absolute path to file
+     * @param string $directory
+     *     Absolute path to a directory
      * @param int    $mode
      * @param bool   $recursive
      *
@@ -111,8 +124,9 @@ interface SshShellInterface
     public function mkdir($directory, $mode = 0777, $recursive = false);
 
     /**
-     * @param string $path absolute path to file or directory
-     * @param int    $mode
+     * @param string $path
+     *     Absolute path to a file or a directory.
+     * @param int $mode
      *
      * @return bool
      */

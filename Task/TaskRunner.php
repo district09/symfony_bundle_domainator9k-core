@@ -93,7 +93,7 @@ class TaskRunner implements TaskRunnerInterface
     }
 
     /**
-     * @param array|AbstractSshTask[] $tasks
+     * @param array|AbstractTask[] $tasks
      */
     public function revert(array $tasks)
     {

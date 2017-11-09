@@ -12,6 +12,10 @@ abstract class AbstractTask implements TaskInterface
      * @var bool
      */
     protected $executed = false;
+
+    /**
+     * @var array
+     */
     protected $options = array();
 
     /**
@@ -19,6 +23,12 @@ abstract class AbstractTask implements TaskInterface
      */
     protected $appEnvironment;
 
+    /**
+     * Creates a new task.
+     *
+     * @param array $options
+     *     Options for this task.
+     */
     public function __construct(array $options = array())
     {
         $optionsResolver = new OptionsResolver();
@@ -30,6 +40,11 @@ abstract class AbstractTask implements TaskInterface
         }
     }
 
+    /**
+     * Configure options for this task.
+     *
+     * @param OptionsResolver $options
+     */
     protected function configure(OptionsResolver $options)
     {
         $options->setRequired(array(
@@ -37,16 +52,6 @@ abstract class AbstractTask implements TaskInterface
         ));
 
         $options->setAllowedTypes('appEnvironment', ['DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment']);
-    }
-
-    public static function getName()
-    {
-        throw new \LogicException(
-            sprintf(
-                'Classes implementing %s should override the static getName() method.',
-                AbstractTask::class
-            )
-        );
     }
 
     /**

@@ -10,9 +10,12 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 class TaskPass implements CompilerPassInterface
 {
 
+    /**
+     * {@inheritdoc}
+     */
     public function process(ContainerBuilder $container)
     {
-        // always first check if the primary service is defined
+        // Always check if the primary service is defined first.
         if (!$container->has('digip_deploy.task_factory')) {
             return;
         }

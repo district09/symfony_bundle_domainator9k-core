@@ -15,16 +15,34 @@ class Factory implements FactoryInterface
      */
     protected $shellFactory;
 
+    /**
+     * Creates a new task factory.
+     *
+     * @param SshShellFactoryInterface $shellFactory
+     */
     public function __construct(SshShellFactoryInterface $shellFactory)
     {
         $this->shellFactory = $shellFactory;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setDefaultOptions(array $options = array())
     {
         $this->defaultOptions = $options;
     }
 
+    /**
+     * Add a new task definition.
+     *
+     * @param string $class
+     *
+     * @return $this
+     *
+     * @throws InvalidArgumentException
+     *     If the class does not implement the TaskInterface.
+     */
     public function addTaskDefinition($class)
     {
         if (!is_subclass_of($class, TaskInterface::class)) {
@@ -59,6 +77,16 @@ class Factory implements FactoryInterface
         return $task;
     }
 
+    /**
+     * Gets the task class based on the class name or task name.
+     *
+     * @param string $class
+     *
+     * @return string
+     *
+     * @throws InvalidArgumentException
+     *     If the task class or name does not exist.
+     */
     protected function resolveTask($class)
     {
         if (!class_exists($class)) {

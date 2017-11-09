@@ -8,6 +8,11 @@ use DigipolisGent\Domainator9k\CoreBundle\Ssh\Factory\SshShellFactoryInterface;
 interface TaskInterface
 {
 
+    /**
+     * Returns a unique name for this task.
+     *
+     * @return string
+     */
     public static function getName();
 
     /**

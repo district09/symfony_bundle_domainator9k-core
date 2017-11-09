@@ -48,6 +48,11 @@ class AppEnvironmentService extends AbstractDoctrineService
      */
     protected $taskFactory;
 
+    /**
+     * @param Settings $settings
+     * @param ApplicationTypeBuilder $appTypeBuilder
+     * @param FactoryInterface $taskFactory
+     */
     public function __construct(
         Settings $settings,
         ApplicationTypeBuilder $appTypeBuilder,

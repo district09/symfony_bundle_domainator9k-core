@@ -11,11 +11,11 @@ use DigipolisGent\Domainator9k\CoreBundle\Tests\TestTools\DataGenerator;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of CronTest
+ * Description of CronTaskTest
  *
  * @author Jelle Sebreghts
  */
-class CronTest extends TestCase
+class CronTaskTest extends TestCase
 {
 
     use DataGenerator;

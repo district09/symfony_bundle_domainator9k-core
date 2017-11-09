@@ -311,7 +311,7 @@ class CronTest extends TestCase
     protected function getCronTask()
     {
         $cron = new Cron($this->options);
-        $cron->setShellFactory($this->sshShellFactory);
+        $cron->setSshShellFactory($this->sshShellFactory);
         return $cron;
     }
 }

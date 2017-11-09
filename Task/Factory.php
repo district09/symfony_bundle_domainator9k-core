@@ -2,7 +2,7 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Task;
 
-use DigipolisGent\Domainator9k\CoreBundle\Ssh\Factory\ShellFactoryInterface;
+use DigipolisGent\Domainator9k\CoreBundle\Ssh\Factory\SshShellFactoryInterface;
 use InvalidArgumentException;
 
 class Factory implements FactoryInterface
@@ -15,7 +15,7 @@ class Factory implements FactoryInterface
      */
     protected $shellFactory;
 
-    public function __construct(ShellFactoryInterface $shellFactory)
+    public function __construct(SshShellFactoryInterface $shellFactory)
     {
         $this->shellFactory = $shellFactory;
     }
@@ -50,7 +50,9 @@ class Factory implements FactoryInterface
         $class = $this->resolveTask($name);
 
         $task = new $class(array_merge($this->defaultOptions, $options));
-        $task->setShellFactory($this->shellFactory);
+        if (is_subclass_of($class, SshTaskInterface::class)) {
+            $task->setSshShellFactory($this->shellFactory);
+        }
         if (is_subclass_of($class, TaskFactoryAwareInterface::class)) {
             $task->setTaskFactory($this);
         }

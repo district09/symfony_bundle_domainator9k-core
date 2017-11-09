@@ -27,6 +27,9 @@ class SshShellFactory implements SshShellFactoryInterface
         $this->sshFactory = $sshFactory;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function create($host, $authType, $user, $password = null)
     {
         $auth = null;

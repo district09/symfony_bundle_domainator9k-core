@@ -43,9 +43,4 @@ interface TaskInterface
      * @return string
      */
     public function getHomeDirectory();
-
-    /**
-     * @param SshShellFactoryInterface $sshShellFactory
-     */
-    public function setShellFactory(SshShellFactoryInterface $sshShellFactory);
 }

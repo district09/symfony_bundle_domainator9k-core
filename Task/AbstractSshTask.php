@@ -8,24 +8,13 @@ use DigipolisGent\Domainator9k\CoreBundle\Ssh\Factory\SshShellFactoryInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Ssh\SshShellInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-abstract class AbstractSshTask extends AbstractTask
+abstract class AbstractSshTask extends AbstractTask implements SshTaskInterface
 {
-
-    /**
-     * @var bool
-     */
-    protected $executed = false;
-    protected $options = array();
 
     /**
      * @var SshShellFactoryInterface
      */
     protected $sshShellFactory;
-
-    /**
-     * @var AppEnvironment
-     */
-    protected $appEnvironment;
 
     /**
      * @var SshShellInterface
@@ -85,5 +74,15 @@ abstract class AbstractSshTask extends AbstractTask
         }
 
         return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setSshShellFactory(SshShellFactoryInterface $sshShellFactory)
+    {
+        $this->sshShellFactory = $sshShellFactory;
+
+        return $this;
     }
 }

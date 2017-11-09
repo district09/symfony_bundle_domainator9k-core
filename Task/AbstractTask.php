@@ -3,7 +3,6 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Task;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
-use DigipolisGent\Domainator9k\CoreBundle\Ssh\Factory\SshShellFactoryInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class AbstractTask implements TaskInterface
@@ -14,11 +13,6 @@ abstract class AbstractTask implements TaskInterface
      */
     protected $executed = false;
     protected $options = array();
-
-    /**
-     * @var SshShellFactoryInterface
-     */
-    protected $sshShellFactory;
 
     /**
      * @var AppEnvironment
@@ -115,17 +109,5 @@ abstract class AbstractTask implements TaskInterface
         }
 
         return isset($_SERVER['HOME']) ? $_SERVER['HOME'] : realpath('~');
-    }
-
-    /**
-     * @param SshShellFactoryInterface $sshShellFactory
-     *
-     * @return $this
-     */
-    public function setShellFactory(SshShellFactoryInterface $sshShellFactory)
-    {
-        $this->sshShellFactory = $sshShellFactory;
-
-        return $this;
     }
 }

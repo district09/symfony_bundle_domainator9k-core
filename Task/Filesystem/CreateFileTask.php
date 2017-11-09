@@ -5,14 +5,14 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Task\Filesystem;
 use DigipolisGent\Domainator9k\CoreBundle\Task\AbstractSshTask;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Link extends AbstractSshTask
+class CreateFileTask extends AbstractSshTask
 {
     /**
      * @return string
      */
     public static function getName()
     {
-        return 'filesystem.link';
+        return 'filesystem.create_file';
     }
 
     protected function configure(OptionsResolver $options)
@@ -20,23 +20,23 @@ class Link extends AbstractSshTask
         parent::configure($options);
 
         $options->setRequired(array(
-            'name',
-            'target',
+            'path',
+            'content',
         ));
 
-        $options->setAllowedTypes('name', 'string');
-        $options->setAllowedTypes('target', 'string');
+        $options->setAllowedTypes('path', 'string');
+        $options->setAllowedTypes('content', 'string');
     }
 
     public function execute()
     {
         $result = parent::execute();
-        $name = $this->options['name'];
-        $target = $this->options['target'];
+        $path = escapeshellarg($this->options['path']);
+        $content = escapeshellarg($this->options['content']);
 
-        $cmd = "ln -sfn $target $name";
+        $cmd = "echo $content > $path";
         $this->doExec($result, $cmd);
-        $result->addMessage(sprintf('%s linking from %s to %s', $result->isSuccess() ? 'SUCCESS' : 'FAILED', $name, $target));
+        $result->addMessage(sprintf('%s creating %s', $result->isSuccess() ? 'SUCCESS' : 'FAILED', $path));
 
         return $result;
     }

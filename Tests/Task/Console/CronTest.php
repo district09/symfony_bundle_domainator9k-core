@@ -6,7 +6,7 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Ssh\Factory\SshShellFactory;
 use DigipolisGent\Domainator9k\CoreBundle\Ssh\Factory\SshShellFactoryInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Ssh\SshShellInterface;
-use DigipolisGent\Domainator9k\CoreBundle\Task\Console\Cron;
+use DigipolisGent\Domainator9k\CoreBundle\Task\Console\CronTask;
 use DigipolisGent\Domainator9k\CoreBundle\Tests\TestTools\DataGenerator;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
@@ -42,7 +42,7 @@ class CronTest extends TestCase
 
     public function testGetName()
     {
-        $this->assertEquals('console.cron', Cron::getName());
+        $this->assertEquals('console.cron', CronTask::getName());
     }
 
     public function testExecute()
@@ -310,7 +310,7 @@ class CronTest extends TestCase
 
     protected function getCronTask()
     {
-        $cron = new Cron($this->options);
+        $cron = new CronTask($this->options);
         $cron->setSshShellFactory($this->sshShellFactory);
         return $cron;
     }

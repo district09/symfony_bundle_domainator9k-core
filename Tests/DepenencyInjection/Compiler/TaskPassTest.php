@@ -3,7 +3,7 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Tests\DependencyInjection\Compiler;
 
 use DigipolisGent\Domainator9k\CoreBundle\DependencyInjection\Compiler\TaskPass;
-use DigipolisGent\Domainator9k\CoreBundle\Task\Provision\Filesystem;
+use DigipolisGent\Domainator9k\CoreBundle\Task\Provision\FilesystemTask;
 use InvalidArgumentException;
 use Symfony\Bundle\WebProfilerBundle\Tests\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -64,9 +64,9 @@ class TaskPassTest extends TestCase
             ->with('digip_deploy.provision_filesystem_task')
             ->willReturn($taskDefinition);
 
-        $taskDefinition->expects($this->once())->method('getClass')->willReturn(Filesystem::class);
+        $taskDefinition->expects($this->once())->method('getClass')->willReturn(FilesystemTask::class);
 
-        $taskFactoryDefinition->expects($this->once())->method('addMethodCall')->with('addTaskDefinition', [Filesystem::class]);
+        $taskFactoryDefinition->expects($this->once())->method('addMethodCall')->with('addTaskDefinition', [FilesystemTask::class]);
 
         $container
             ->expects($this->at(2))

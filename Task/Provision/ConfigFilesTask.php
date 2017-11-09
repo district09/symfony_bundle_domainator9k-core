@@ -12,7 +12,7 @@ use DigipolisGent\SockAPIBundle\JsonModel\Server;
 use RuntimeException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ConfigFiles extends AbstractTask implements TaskFactoryAwareInterface
+class ConfigFilesTask extends AbstractTask implements TaskFactoryAwareInterface
 {
 
     use TaskFactoryAware;

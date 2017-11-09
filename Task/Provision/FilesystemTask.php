@@ -13,7 +13,7 @@ use DigipolisGent\Domainator9k\CoreBundle\Task\TaskFactoryAwareInterface;
 use RuntimeException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Filesystem extends AbstractTask implements TaskFactoryAwareInterface
+class FilesystemTask extends AbstractTask implements TaskFactoryAwareInterface
 {
 
     use TaskFactoryAware;

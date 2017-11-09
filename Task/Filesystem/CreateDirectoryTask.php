@@ -5,7 +5,7 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Task\Filesystem;
 use DigipolisGent\Domainator9k\CoreBundle\Task\AbstractSshTask;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CreateDirectory extends AbstractSshTask
+class CreateDirectoryTask extends AbstractSshTask
 {
     /**
      * @return string

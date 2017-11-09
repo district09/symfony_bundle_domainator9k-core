@@ -10,7 +10,7 @@ use DigipolisGent\Domainator9k\CoreBundle\Task\TaskFactoryAwareInterface;
 use RuntimeException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Cron extends AbstractTask implements TaskFactoryAwareInterface
+class CronTask extends AbstractTask implements TaskFactoryAwareInterface
 {
 
     use TaskFactoryAware;

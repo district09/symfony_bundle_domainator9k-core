@@ -34,7 +34,7 @@ services:
 
     digip_deploy.shell_factory:
       arguments: []
-      class: DigipolisGent\Domainator9k\CoreBundle\Ssh\Factory\ShellFactory
+      class: DigipolisGent\Domainator9k\CoreBundle\Ssh\Factory\SshShellFactory
 
     digip_deploy.task_factory:
       arguments: ["@digip_deploy.shell_factory"]
@@ -42,37 +42,37 @@ services:
 
     digip_deploy.provision_filesystem_task:
       arguments: []
-      class: DigipolisGent\Domainator9k\CoreBundle\Task\Provision\Filesystem
+      class: DigipolisGent\Domainator9k\CoreBundle\Task\Provision\FilesystemTask
       tags: [digip_deploy.task]
 
     digip_deploy.provision_configfiles_task:
       arguments: []
-      class: DigipolisGent\Domainator9k\CoreBundle\Task\Provision\ConfigFiles
+      class: DigipolisGent\Domainator9k\CoreBundle\Task\Provision\ConfigFilesTask
       tags: [digip_deploy.task]
 
     digip_deploy.provision_cron_task:
       arguments: []
-      class: DigipolisGent\Domainator9k\CoreBundle\Task\Provision\Cron
+      class: DigipolisGent\Domainator9k\CoreBundle\Task\Provision\CronTask
       tags: [digip_deploy.task]
 
     digip_deploy.filesystem_createdirectory:
       arguments: []
-      class: DigipolisGent\Domainator9k\CoreBundle\Task\Filesystem\CreateDirectory
+      class: DigipolisGent\Domainator9k\CoreBundle\Task\Filesystem\CreateDirectoryTask
       tags: [digip_deploy.task]
 
     digip_deploy.filesystem_createfile:
       arguments: []
-      class: DigipolisGent\Domainator9k\CoreBundle\Task\Filesystem\CreateFile
+      class: DigipolisGent\Domainator9k\CoreBundle\Task\Filesystem\CreateFileTask
       tags: [digip_deploy.task]
 
     digip_deploy.filesystem_createlink:
       arguments: []
-      class: DigipolisGent\Domainator9k\CoreBundle\Task\Filesystem\CreateLink
+      class: DigipolisGent\Domainator9k\CoreBundle\Task\Filesystem\CreateLinkTask
       tags: [digip_deploy.task]
 
     digip_deploy.console_cron:
       arguments: []
-      class: DigipolisGent\Domainator9k\CoreBundle\Task\Console\Cron
+      class: DigipolisGent\Domainator9k\CoreBundle\Task\Console\CronTask
       tags: [digip_deploy.task]
     #
     # entity services

@@ -32,27 +32,28 @@ abstract class AbstractSshTask extends AbstractTask
      */
     protected $shell;
 
-    public function __construct(array $options = array())
+    protected function assertShell()
     {
-        parent::__construct($options);
-        $password = isset($this->options['password'])
-            ? $this->options['password']
-            : (isset($this->options['keyfile'])
-                ? $this->options['keyfile']
-                : null
+        if (!$this->shell instanceof SshShellInterface) {
+            $password = isset($this->options['password'])
+                ? $this->options['password']
+                : (isset($this->options['keyfile'])
+                    ? $this->options['keyfile']
+                    : null
+                );
+            $authType = isset($this->options['authtype'])
+                ? $this->options['authtype']
+                : (isset($this->options['password'])
+                    ? SshShellFactory::AUTH_TYPE_CREDENTIALS
+                    : SshShellFactory::AUTH_TYPE_KEY
+                );
+            $this->shell = $this->sshShellFactory->create(
+                $this->options['host'],
+                $authType,
+                $this->options['user'],
+                $password
             );
-        $authType = isset($this->options['authtype'])
-            ? $this->options['authtype']
-            : (isset($this->options['keyfile'])
-                ? SshShellFactory::AUTH_TYPE_KEY
-                : SshShellFactory::AUTH_TYPE_CREDENTIALS
-            );
-        $this->shell = $this->sshShellFactory->create(
-            $this->options['host'],
-            $authType,
-            $this->options['user'],
-            $password
-        );
+        }
     }
 
     protected function configure(OptionsResolver $options)
@@ -62,6 +63,7 @@ abstract class AbstractSshTask extends AbstractTask
             'user',
             'host',
         ));
+        $options->setDefined(['authtype', 'password', 'keyfile']);
         $options->setAllowedTypes('user', ['string']);
         $options->setAllowedTypes('host', ['string']);
         $options->setAllowedTypes('authtype', ['string']);
@@ -72,7 +74,7 @@ abstract class AbstractSshTask extends AbstractTask
     protected function doExec(TaskResult $result, $command, &$stdout = null, &$exitStatus = null, &$stderr = null)
     {
         $result->addMessage(sprintf('EXEC %s', $command));
-
+        $this->assertShell();
         $this->shell->exec($command, $stdout, $exitStatus, $stderr);
 
         $result->setSuccess($exitStatus === 0);

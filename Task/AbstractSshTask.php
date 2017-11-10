@@ -67,10 +67,17 @@ abstract class AbstractSshTask extends AbstractTask implements SshTaskInterface
         $options->setAllowedTypes('keyfile', ['string']);
     }
 
+    public function execute()
+    {
+        $result = parent::execute();
+        $this->assertShell();
+
+        return $result;
+    }
+
     protected function doExec(TaskResult $result, $command, &$stdout = null, &$exitStatus = null, &$stderr = null)
     {
         $result->addMessage(sprintf('EXEC %s', $command));
-        $this->assertShell();
         $this->shell->exec($command, $stdout, $exitStatus, $stderr);
 
         $result->setSuccess($exitStatus === 0);

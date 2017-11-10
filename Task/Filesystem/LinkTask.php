@@ -31,8 +31,8 @@ class LinkTask extends AbstractSshTask
     public function execute()
     {
         $result = parent::execute();
-        $name = $this->options['name'];
-        $target = $this->options['target'];
+        $name = escapeshellarg($this->options['name']);
+        $target = escapeshellarg($this->options['target']);
 
         $cmd = "ln -sfn $target $name";
         $this->doExec($result, $cmd);

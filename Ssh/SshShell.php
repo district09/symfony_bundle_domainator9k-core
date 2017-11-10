@@ -8,6 +8,7 @@ use phpseclib\Net\SFTP;
 use phpseclib\Net\SSH2;
 use RuntimeException;
 
+// @codeCoverageIgnoreStart
 if (!defined('NET_SFTP_TYPE_DIRECTORY')) {
     define('NET_SFTP_TYPE_DIRECTORY', 'dir');
 }
@@ -16,8 +17,11 @@ if (!defined('NET_SFTP_TYPE_REGULAR')) {
     define('NET_SFTP_TYPE_REGULAR', 'file');
 }
 
+//@codeCoverageIgnoreEnd
+
 class SshShell implements SshShellInterface
 {
+
     /**
      * @var string
      */
@@ -159,9 +163,7 @@ class SshShell implements SshShellInterface
 
         if (!$this->connection->isConnected()) {
             throw new RuntimeException(sprintf(
-                'ssh: unable to establish connection to %s on port %s',
-                $this->host,
-                $this->port
+                'ssh: unable to establish connection to %s on port %s', $this->host, $this->port
             ));
         }
 

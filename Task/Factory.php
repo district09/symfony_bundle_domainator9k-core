@@ -61,7 +61,7 @@ class Factory implements FactoryInterface
      * @param string $name
      * @param array  $options
      *
-     * @return AbstractSshTask
+     * @return TaskInterface
      */
     public function create($name, array $options = array())
     {

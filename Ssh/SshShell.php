@@ -16,7 +16,6 @@ if (!defined('NET_SFTP_TYPE_DIRECTORY')) {
 if (!defined('NET_SFTP_TYPE_REGULAR')) {
     define('NET_SFTP_TYPE_REGULAR', 'file');
 }
-
 //@codeCoverageIgnoreEnd
 
 class SshShell implements SshShellInterface
@@ -172,10 +171,13 @@ class SshShell implements SshShellInterface
         }
     }
 
-    protected function assertConnection($auth = true)
+    /**
+     * @param bool $authenticate
+     */
+    protected function assertConnection($authenticate = true)
     {
         if (!($this->connection instanceof SSH2)) {
-            $this->connect($auth);
+            $this->connect($authenticate);
         }
     }
 

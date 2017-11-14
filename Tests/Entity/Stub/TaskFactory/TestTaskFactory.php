@@ -49,6 +49,12 @@ class TestTaskFactory implements FactoryInterface
     public function setDefaultOptions(array $options = array())
     {
         $this->defaultOptions = $options;
+
+        return $this;
     }
 
+    public function getDefaultOptions()
+    {
+        return $this->defaultOptions;
+    }
 }

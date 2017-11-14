@@ -1,6 +1,6 @@
 <?php
 
-namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Task\Console;
+namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Task\Filesystem;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Ssh\Factory\SshShellFactory;

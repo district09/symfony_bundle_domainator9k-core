@@ -1,12 +1,11 @@
 <?php
 
-namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Task\Console;
+namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Task\Filesystem;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Ssh\Factory\SshShellFactory;
 use DigipolisGent\Domainator9k\CoreBundle\Ssh\Factory\SshShellFactoryInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Ssh\SshShellInterface;
-use DigipolisGent\Domainator9k\CoreBundle\Task\Filesystem\CreateFileTask;
 use DigipolisGent\Domainator9k\CoreBundle\Task\Filesystem\LinkTask;
 use DigipolisGent\Domainator9k\CoreBundle\Tests\TestTools\DataGenerator;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;

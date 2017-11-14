@@ -11,19 +11,21 @@ use DigipolisGent\Domainator9k\CoreBundle\Interfaces\ApplicationTypeInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Service\ApplicationTypeBuilder;
 use DigipolisGent\Domainator9k\CoreBundle\Ssh\SshShellInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Task\FactoryInterface;
-use DigipolisGent\Domainator9k\CoreBundle\Task\Provision\ConfigFilesTask;
+use DigipolisGent\Domainator9k\CoreBundle\Task\Provision\FilesystemTask;
 use DigipolisGent\Domainator9k\CoreBundle\Task\TaskInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Task\TaskResult;
 use DigipolisGent\Domainator9k\CoreBundle\Task\TaskRunner;
 use DigipolisGent\Domainator9k\CoreBundle\Tests\TestTools\DataGenerator;
+use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
+use Webmozart\PathUtil\Path;
 
 /**
- * Description of ConfigFilesTaskTest
+ * Description of FilesystemTaskTest
  *
  * @author Jelle Sebreghts
  */
-class ConfigFilesTaskTest extends TestCase
+class FilesystemTaskTest extends TestCase
 {
 
     use DataGenerator;
@@ -49,7 +51,7 @@ class ConfigFilesTaskTest extends TestCase
 
     public function testGetName()
     {
-        $this->assertEquals('provision.config_files', ConfigFilesTask::getName());
+        $this->assertEquals('provision.filesystem', FilesystemTask::getName());
     }
 
     public function testExecute()
@@ -65,17 +67,17 @@ class ConfigFilesTaskTest extends TestCase
         $serverSettings = $this->getMockBuilder(ServerSettings::class)->disableOriginalConstructor()->getMock();
         $serverSettings->expects($this->once())->method('getUser')->willReturn($user);
 
-        $typeSlug = $this->getAlphaNumeric();
+        $typeSlug = $this->getAlphaNumeric();$folder = $this->getAlphaNumeric();
         $application = $this->getMockBuilder(Application::class)->disableOriginalConstructor()->getMock();
         $application->expects($this->once())->method('getAppTypeSlug')->willReturn($typeSlug);
+        $application->expects($this->once())->method('getNameForFolder')->willReturn($folder);
 
         $this->options['appEnvironment']->expects($this->once())->method('getServerSettings')->willReturn($serverSettings);
         $this->options['appEnvironment']->expects($this->once())->method('getApplication')->willReturn($application);
 
-        $configFilePath = $this->getAlphaNumeric();
-        $configFileContent = $this->getAlphaNumeric();
+        $userFolder = $this->getAlphaNumeric();
         $appType = $this->getMockBuilder(ApplicationTypeInterface::class)->getMock();
-        $appType->expects($this->once())->method('getConfigFiles')->willReturn([$configFilePath => $configFileContent]);
+        $appType->expects($this->once())->method('getDirectories')->with($user)->willReturn([$userFolder]);
 
         $this->options['applicationTypeBuilder']->expects($this->once())->method('getType')->with($typeSlug)->willReturn($appType);
 
@@ -84,28 +86,64 @@ class ConfigFilesTaskTest extends TestCase
 
         $createFileTask = $this->getMockBuilder(TaskInterface::class)->getMock();
 
-        $this->taskFactory->expects($this->once())->method('create')->with(
-            'filesystem.create_file',
-            [
-                'appEnvironment' => $this->options['appEnvironment'],
-                'host' => $ip,
-                'user' => $user,
-                'keyfile' => realpath($home . '/.ssh/id_rsa'),
-                'path' => $configFilePath,
-                'content' => $configFileContent,
-            ]
-        )->willReturn($createFileTask);
+        $directories = [
+            "/dist/$user/$folder/files/public",
+            "/dist/$user/$folder/files/private",
+            "/dist/$user/$folder/config",
+            "/home/$user/apps/$folder/releases",
+            "/home/$user/apps/$folder/backups",
+            "/home/$user/apps/$folder/files/tmp",
+            $userFolder,
+        ];
+        $i = 1;
+
+        foreach ($directories as $dir) {
+            $this->taskFactory->expects($this->at($i++))->method('create')->with(
+                'filesystem.create_directory',
+                [
+                    'appEnvironment' => $this->options['appEnvironment'],
+                    'host' => $ip,
+                    'user' => $user,
+                    'keyfile' => realpath($home . '/.ssh/id_rsa'),
+                    'directory' => $dir,
+                ]
+            )->willReturn($createFileTask);
+        }
+
+        $links = [
+            "/home/$user/apps/$folder/files/public" => "/dist/$user/$folder/files/public",
+            "/home/$user/apps/$folder/files/private" => "/dist/$user/$folder/files/private",
+            "/home/$user/apps/$folder/config" => "/dist/$user/$folder/config",
+            "/home/$user/apps/$folder/current" => "/home/$user/apps/$folder/releases/current",
+        ];
+
+        foreach ($links as $name => $target) {
+            $this->taskFactory->expects($this->at($i++))->method('create')->with(
+                'filesystem.link',
+                [
+                    'appEnvironment' => $this->options['appEnvironment'],
+                    'host' => $ip,
+                    'user' => $user,
+                    'keyfile' => realpath($home . '/.ssh/id_rsa'),
+                    'name' => $name,
+                    'target' => $target,
+                ]
+            )->willReturn($createFileTask);
+        }
 
         $result = $this->getMockBuilder(TaskResult::class)->disableOriginalConstructor()->getMock();
 
-        $taskRunner->expects($this->once())->method('addTask')->with($createFileTask);
+        $taskRunner->expects($this->exactly(count($directories) + count($links)))->method('addTask')->with($createFileTask);
         $taskRunner->expects($this->once())->method('run')->willReturn($result);
 
         $this->assertEquals($result, $task->execute());
+        $this->assertTrue($task->isExecuted());
+        $this->assertEquals($this->options['appEnvironment'], $task->getAppEnvironment());
+        $this->assertTrue($task->revert());
     }
 
     /**
-     * @expectedException \RuntimeException
+     * @expectedException RuntimeException
      */
     public function testNoKeyFile() {
         $task = $this->getTask();
@@ -116,17 +154,27 @@ class ConfigFilesTaskTest extends TestCase
         $this->taskFactory->expects($this->once())->method('createRunner')->willReturn($taskRunner);
 
         $user = $this->getAlphaNumeric();
+        $folder = $this->getAlphaNumeric();
         $serverSettings = $this->getMockBuilder(ServerSettings::class)->disableOriginalConstructor()->getMock();
         $serverSettings->expects($this->once())->method('getUser')->willReturn($user);
+        $application = $this->getMockBuilder(Application::class)->disableOriginalConstructor()->getMock();
+        $application->expects($this->once())->method('getNameForFolder')->willReturn($folder);
+
         $this->options['appEnvironment']->expects($this->once())->method('getServerSettings')->willReturn($serverSettings);
+        $this->options['appEnvironment']->expects($this->once())->method('getApplication')->willReturn($application);
 
         $task->execute();
 
     }
 
+    public function testGetHomeDirectory() {
+        $task = $this->getTask();
+        $this->assertEquals(Path::getHomeDirectory(), $task->getHomeDirectory());
+    }
+
     protected function getTask()
     {
-        $task = new ConfigFilesTask($this->options);
+        $task = new FilesystemTask($this->options);
         $task->setTaskFactory($this->taskFactory);
         return $task;
     }

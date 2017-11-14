@@ -13,4 +13,6 @@ interface ApplicationTypeInterface
     public function getPublicFolder();
 
     public function getSlug();
+
+    public function getDirectories($user);
 }

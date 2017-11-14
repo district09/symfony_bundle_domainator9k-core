@@ -23,7 +23,7 @@ class TaskRunner implements TaskRunnerInterface
     }
 
     /**
-     * @param array $tasks
+     * @param TaskInterface[] $tasks
      *
      * @return $this
      */
@@ -93,16 +93,13 @@ class TaskRunner implements TaskRunnerInterface
     }
 
     /**
-     * @param array|AbstractTask[] $tasks
+     * @param array|TaskInterface[] $tasks
      */
     public function revert(array $tasks)
     {
-        // revert in reverse order of execution
-        $tasks = array_reverse($tasks);
-
-        /** @var TaskInterface[] $tasks */
-        foreach ($tasks as $task) {
-            // only revert executed tasks
+        // Revert in reverse order of execution.
+        foreach (array_reverse($tasks) as $task) {
+            // Only revert executed tasks.
             if ($task->isExecuted()) {
                 $task->revert();
             }

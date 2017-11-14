@@ -9,8 +9,17 @@ interface FactoryInterface
      * Set the default options for this task.
      *
      * @param array $options
+     *
+     * @return $this
      */
     public function setDefaultOptions(array $options = array());
+
+    /**
+     * Get the default options for this task.
+     *
+     * @return array
+     */
+    public function getDefaultOptions();
 
     /**
      * @param string $name

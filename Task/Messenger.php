@@ -35,7 +35,8 @@ class Messenger
 
         foreach ($messages as $msg) {
             if (!is_string($msg)) {
-                throw new \Exception('Messenger can only send strings');
+                $type = gettype($msg);
+                throw new \Exception(sprintf('Messenger can only send strings, got %s.', $type === 'object' ? get_class($msg) : $type));
             }
 
             foreach (self::$listeners as $listener) {

@@ -7,7 +7,6 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\Server;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
 use DigipolisGent\Domainator9k\CoreBundle\Service\ApplicationTypeBuilder;
 use DigipolisGent\Domainator9k\CoreBundle\Task\AbstractTask;
-use DigipolisGent\Domainator9k\CoreBundle\Task\Factory as TaskFactory;
 use DigipolisGent\Domainator9k\CoreBundle\Task\TaskFactoryAware;
 use DigipolisGent\Domainator9k\CoreBundle\Task\TaskFactoryAwareInterface;
 use RuntimeException;
@@ -31,7 +30,7 @@ class FilesystemTask extends AbstractTask implements TaskFactoryAwareInterface
         parent::configure($options);
 
         $options->setRequired(array('servers', 'settings', 'applicationTypeBuilder'));
-        $options->setAllowedTypes('settings', 'DigipolisGent\Domainator9k\CoreBundle\Entity\Settings');
+        $options->setAllowedTypes('settings', Settings::class);
     }
 
     public function execute()
@@ -45,8 +44,9 @@ class FilesystemTask extends AbstractTask implements TaskFactoryAwareInterface
         $appEnvironment = $this->options['appEnvironment'];
         /** @var Server[] $servers */
         $servers = $this->options['servers'];
-        $user = $this->appEnvironment->getServerSettings()->getUser();
-        $appFolder = $this->appEnvironment->getApplication()->getNameForFolder();
+        $user = $appEnvironment->getServerSettings()->getUser();
+        $application = $appEnvironment->getApplication();
+        $appFolder = $application->getNameForFolder();
         $taskRunner = $this->taskFactory->createRunner();
         $keyFilePath = $this->getHomeDirectory().'/.ssh/id_rsa';
         $keyFile = realpath($keyFilePath);
@@ -55,7 +55,7 @@ class FilesystemTask extends AbstractTask implements TaskFactoryAwareInterface
             throw new RuntimeException(sprintf("private keyfile '%s' doesn't seem to exist", $keyFilePath));
         }
 
-        $appType = $appTypeBuilder->getType($appEnvironment->getApplication()->getAppTypeSlug());
+        $appType = $appTypeBuilder->getType($application->getAppTypeSlug());
 
         // directory structure
         $directories = array_merge(
@@ -79,10 +79,11 @@ class FilesystemTask extends AbstractTask implements TaskFactoryAwareInterface
         );
 
         foreach ($servers as $server) {
+            $ip = $server->getIp();
             foreach ($directories as $dir) {
                 $taskRunner->addTask($this->taskFactory->create('filesystem.create_directory', array(
                     'appEnvironment' => $appEnvironment,
-                    'host' => $server->getIp(),
+                    'host' => $ip,
                     'user' => $user,
                     'keyfile' => $keyFile,
                     'directory' => $dir,
@@ -91,7 +92,7 @@ class FilesystemTask extends AbstractTask implements TaskFactoryAwareInterface
             foreach ($links as $name => $target) {
                 $taskRunner->addTask($this->taskFactory->create('filesystem.link', array(
                     'appEnvironment' => $appEnvironment,
-                    'host' => $server->getIp(),
+                    'host' => $ip,
                     'user' => $user,
                     'keyfile' => $keyFile,
                     'name' => $name,

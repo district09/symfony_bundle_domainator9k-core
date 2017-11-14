@@ -60,7 +60,9 @@ class BuildServiceTest extends TestCase
 
     public function testConstructor()
     {
-        $service = $this->getService();
+        $service = new BuildService($this->workspaceDirectory, $this->kernelDir);
+        $service->setDoctrine($this->doctrine);
+        $service->setContainer($this->container);
         $this->assertEquals($this->workspaceDirectory, $service->getWorkspaceDirectory());
         $this->assertEquals($this->kernelDir, $service->getKernelDir());
     }

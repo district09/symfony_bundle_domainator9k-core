@@ -38,8 +38,9 @@ class CronTask extends AbstractTask implements TaskFactoryAwareInterface
         $appEnvironment = $this->options['appEnvironment'];
         /** @var Server[] $servers */
         $servers = $this->options['servers'];
-        $user = $this->appEnvironment->getServerSettings()->getUser();
-        $appFolder = $this->appEnvironment->getApplication()->getNameForFolder();
+        $user = $appEnvironment->getServerSettings()->getUser();
+        $application = $appEnvironment->getApplication();
+        $appFolder = $application->getNameForFolder();
         $appPath = "/home/$user/apps/$appFolder/current";
         $taskRunner = $this->taskFactory->createRunner();
         $keyFilePath = $this->getHomeDirectory().'/.ssh/id_rsa';
@@ -54,11 +55,11 @@ class CronTask extends AbstractTask implements TaskFactoryAwareInterface
                 continue;
             }
             $taskRunner->addTask($this->taskFactory->create('console.cron', array(
-                'AppEnvironment' => $appEnvironment,
+                'appEnvironment' => $appEnvironment,
                 'host' => $server->getIp(),
                 'user' => $user,
                 'keyfile' => $keyFile,
-                'cron' => str_replace('__APP__', $appPath, $appEnvironment->getApplication()->getCron()),
+                'cron' => str_replace('__APP__', $appPath, $application->getCron()),
                 'check' => true,
             )));
         }

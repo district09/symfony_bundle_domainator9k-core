@@ -8,12 +8,20 @@ use InvalidArgumentException;
 class Factory implements FactoryInterface
 {
 
+    /**
+     * @var array
+     */
     protected $defaultOptions = array();
 
     /**
      * @var ShellFactoryInterface
      */
     protected $shellFactory;
+
+    /**
+     * @var array
+     */
+    protected $map;
 
     /**
      * Creates a new task factory.
@@ -23,6 +31,7 @@ class Factory implements FactoryInterface
     public function __construct(SshShellFactoryInterface $shellFactory)
     {
         $this->shellFactory = $shellFactory;
+        $this->map = [];
     }
 
     /**
@@ -31,6 +40,16 @@ class Factory implements FactoryInterface
     public function setDefaultOptions(array $options = array())
     {
         $this->defaultOptions = $options;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDefaultOptions(array $options = array())
+    {
+        return $this->defaultOptions;
     }
 
     /**

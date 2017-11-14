@@ -9,7 +9,6 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Task;
  */
 trait TaskFactoryAware
 {
-
     /**
      * @var FactoryInterface
      */
@@ -17,6 +16,7 @@ trait TaskFactoryAware
 
     /**
      * @param FactoryInterface $factory
+     *
      * @return $this
      */
     public function setTaskFactory(FactoryInterface $factory)

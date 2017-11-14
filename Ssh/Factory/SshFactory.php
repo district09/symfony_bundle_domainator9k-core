@@ -6,13 +6,12 @@ use phpseclib\Net\SFTP;
 use phpseclib\Net\SSH2;
 
 /**
- * Description of SshFactory
+ * Description of SshFactory.
  *
  * @author Jelle Sebreghts
  */
 class SshFactory implements SshFactoryInterface
 {
-
     /**
      * {@inheritdoc}
      */

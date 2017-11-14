@@ -2,8 +2,6 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
-use Ctrl\RadBundle\Entity\User;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Environment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\HasRoles;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\HasUsers;
 use DigipolisGent\Domainator9k\CoreBundle\Tools\StringHelper;
@@ -134,6 +132,7 @@ class AppEnvironment
      * @param string      $name
      * @param string      $urlScheme
      * @param bool $devPermissions
+     * @param mixed $prod
      */
     public function __construct(Application $application, $name, $devPermissions, $prod, $urlScheme = Application::URL_SCHEME_GENT_GRP_ENV)
     {
@@ -233,7 +232,7 @@ class AppEnvironment
      */
     public function getFullNameCanonical()
     {
-        return $this->getApplication()->getNameCanonical().'_'.StringHelper::canonicalize($this->getName());
+        return $this->getApplication()->getNameCanonical() . '_' . StringHelper::canonicalize($this->getName());
     }
 
     /**
@@ -288,6 +287,7 @@ class AppEnvironment
             foreach ($this->domains as $k => $d) {
                 if ($d === $domain) {
                     unset($this->domains[$k]);
+
                     break;
                 }
             }
@@ -303,13 +303,13 @@ class AppEnvironment
     /**
      * If no preferred domain is explicitly set, the first domain will be returned.
      *
-     * @return string
-     *
      * @throws \Exception
+     *
+     * @return string
      */
     public function getPreferredDomain()
     {
-        if ($this->preferredDomain === null) {
+        if (null === $this->preferredDomain) {
             if (!count($this->domains)) {
                 throw new \Exception('no domains configured');
             }
@@ -338,7 +338,6 @@ class AppEnvironment
 
     /**
      * @param Environment $env
-     *
      * @param string $scheme
      *
      * @return $this
@@ -503,7 +502,7 @@ class AppEnvironment
     {
         return new DatabaseSettings(
             $this,
-            substr($this->getApplication()->getNameCanonical(), 0, 14).'_'.substr($this->getNameCanonical(), 0, 1)
+            substr($this->getApplication()->getNameCanonical(), 0, 14) . '_' . substr($this->getNameCanonical(), 0, 1)
         );
     }
 
@@ -519,15 +518,13 @@ class AppEnvironment
         return $this;
     }
 
-
-
     /**
      * @param $content
      * @param array|Server[] $servers
      *
-     * @return string
-     *
      * @throws \Exception
+     *
+     * @return string
      */     //TODO: move out of environment ..
 
     public function replaceConfigPlaceholders($content, array $servers = array())
@@ -536,6 +533,7 @@ class AppEnvironment
         foreach ($servers as $server) {
             if ($server->isTaskServer() && $server->getEnvironment() === $this->getNameCanonical()) {
                 $ip = $server->getIp();
+
                 break;
             }
         }

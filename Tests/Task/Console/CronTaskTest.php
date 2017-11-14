@@ -11,13 +11,12 @@ use DigipolisGent\Domainator9k\CoreBundle\Tests\TestTools\DataGenerator;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of CronTaskTest
+ * Description of CronTaskTest.
  *
  * @author Jelle Sebreghts
  */
 class CronTaskTest extends TestCase
 {
-
     use DataGenerator;
 
     protected $options = [];
@@ -67,11 +66,11 @@ class CronTaskTest extends TestCase
             ->expects($this->once())
             ->method('exec')
             ->with($cmd, null, null, null)
-            ->willReturnCallback(function($cmd, &$stdout, &$exitStatus, &$stderr) use ($expectedStdout, $expectedExitStatus, $expectedStderr)
-            {
+            ->willReturnCallback(function ($cmd, &$stdout, &$exitStatus, &$stderr) use ($expectedStdout, $expectedExitStatus, $expectedStderr) {
                 $stdout = $expectedStdout;
                 $stderr = $expectedStderr;
                 $exitStatus = $expectedExitStatus;
+
                 return true;
             });
 
@@ -81,7 +80,7 @@ class CronTaskTest extends TestCase
         $this->assertContains(sprintf('%s installed cron job %s', 'SUCCESS', $this->options['cron']), $result->getMessages());
     }
 
-     public function testExecuteFails()
+    public function testExecuteFails()
     {
         $cron = $this->getCronTask();
 
@@ -103,11 +102,11 @@ class CronTaskTest extends TestCase
             ->expects($this->once())
             ->method('exec')
             ->with($cmd, null, null, null)
-            ->willReturnCallback(function($cmd, &$stdout, &$exitStatus, &$stderr) use ($expectedStdout, $expectedExitStatus, $expectedStderr)
-            {
+            ->willReturnCallback(function ($cmd, &$stdout, &$exitStatus, &$stderr) use ($expectedStdout, $expectedExitStatus, $expectedStderr) {
                 $stdout = $expectedStdout;
                 $stderr = $expectedStderr;
                 $exitStatus = $expectedExitStatus;
+
                 return true;
             });
 
@@ -143,11 +142,11 @@ class CronTaskTest extends TestCase
             ->expects($this->once())
             ->method('exec')
             ->with($cmd, null, null, null)
-            ->willReturnCallback(function($cmd, &$stdout, &$exitStatus, &$stderr) use ($expectedStdout, $expectedExitStatus, $expectedStderr)
-            {
+            ->willReturnCallback(function ($cmd, &$stdout, &$exitStatus, &$stderr) use ($expectedStdout, $expectedExitStatus, $expectedStderr) {
                 $stdout = $expectedStdout;
                 $stderr = $expectedStderr;
                 $exitStatus = $expectedExitStatus;
+
                 return true;
             });
 
@@ -181,11 +180,11 @@ class CronTaskTest extends TestCase
             ->expects($this->once())
             ->method('exec')
             ->with($cmd, null, null, null)
-            ->willReturnCallback(function($cmd, &$stdout, &$exitStatus, &$stderr) use ($expectedStdout, $expectedExitStatus, $expectedStderr)
-            {
+            ->willReturnCallback(function ($cmd, &$stdout, &$exitStatus, &$stderr) use ($expectedStdout, $expectedExitStatus, $expectedStderr) {
                 $stdout = $expectedStdout;
                 $stderr = $expectedStderr;
                 $exitStatus = $expectedExitStatus;
+
                 return true;
             });
 
@@ -195,7 +194,8 @@ class CronTaskTest extends TestCase
         $this->assertContains(sprintf('%s installed cron job %s', 'SUCCESS', $this->options['cron']), $result->getMessages());
     }
 
-    public function testKeyFile() {
+    public function testKeyFile()
+    {
         $this->options['authtype'] = SshShellFactory::AUTH_TYPE_KEY;
         $this->options['keyfile'] = $this->getAlphaNumeric();
         unset($this->options['password']);
@@ -219,11 +219,11 @@ class CronTaskTest extends TestCase
             ->expects($this->once())
             ->method('exec')
             ->with($cmd, null, null, null)
-            ->willReturnCallback(function($cmd, &$stdout, &$exitStatus, &$stderr) use ($expectedStdout, $expectedExitStatus, $expectedStderr)
-            {
+            ->willReturnCallback(function ($cmd, &$stdout, &$exitStatus, &$stderr) use ($expectedStdout, $expectedExitStatus, $expectedStderr) {
                 $stdout = $expectedStdout;
                 $stderr = $expectedStderr;
                 $exitStatus = $expectedExitStatus;
+
                 return true;
             });
 
@@ -233,7 +233,8 @@ class CronTaskTest extends TestCase
         $this->assertContains(sprintf('%s installed cron job %s', 'SUCCESS', $this->options['cron']), $result->getMessages());
     }
 
-    public function testNoAuthTypePassword() {
+    public function testNoAuthTypePassword()
+    {
         unset($this->options['authtype']);
         $cron = $this->getCronTask();
 
@@ -255,11 +256,11 @@ class CronTaskTest extends TestCase
             ->expects($this->once())
             ->method('exec')
             ->with($cmd, null, null, null)
-            ->willReturnCallback(function($cmd, &$stdout, &$exitStatus, &$stderr) use ($expectedStdout, $expectedExitStatus, $expectedStderr)
-            {
+            ->willReturnCallback(function ($cmd, &$stdout, &$exitStatus, &$stderr) use ($expectedStdout, $expectedExitStatus, $expectedStderr) {
                 $stdout = $expectedStdout;
                 $stderr = $expectedStderr;
                 $exitStatus = $expectedExitStatus;
+
                 return true;
             });
 
@@ -269,7 +270,8 @@ class CronTaskTest extends TestCase
         $this->assertContains(sprintf('%s installed cron job %s', 'SUCCESS', $this->options['cron']), $result->getMessages());
     }
 
-    public function testNoAuthTypeKeyFile() {
+    public function testNoAuthTypeKeyFile()
+    {
         unset($this->options['authtype']);
         unset($this->options['password']);
         $this->options['keyfile'] = $this->getAlphaNumeric();
@@ -294,11 +296,11 @@ class CronTaskTest extends TestCase
             ->expects($this->once())
             ->method('exec')
             ->with($cmd, null, null, null)
-            ->willReturnCallback(function($cmd, &$stdout, &$exitStatus, &$stderr) use ($expectedStdout, $expectedExitStatus, $expectedStderr)
-            {
+            ->willReturnCallback(function ($cmd, &$stdout, &$exitStatus, &$stderr) use ($expectedStdout, $expectedExitStatus, $expectedStderr) {
                 $stdout = $expectedStdout;
                 $stderr = $expectedStderr;
                 $exitStatus = $expectedExitStatus;
+
                 return true;
             });
 
@@ -312,6 +314,7 @@ class CronTaskTest extends TestCase
     {
         $cron = new CronTask($this->options);
         $cron->setSshShellFactory($this->sshShellFactory);
+
         return $cron;
     }
 }

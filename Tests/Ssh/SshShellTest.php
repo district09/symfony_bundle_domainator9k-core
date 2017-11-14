@@ -16,15 +16,13 @@ if (!defined('NET_SFTP_TYPE_DIRECTORY')) {
     define('NET_SFTP_TYPE_DIRECTORY', 2);
 }
 
-
 /**
- * Description of SshShellTest
+ * Description of SshShellTest.
  *
  * @author Jelle Sebreghts
  */
 class SshShellTest extends EntityTest
 {
-
     protected $host;
     protected $auth;
     protected $sshFactory;
@@ -71,7 +69,8 @@ class SshShellTest extends EntityTest
         $shell->connect();
     }
 
-    public function testGetSftp() {
+    public function testGetSftp()
+    {
         $shell = $this->getShell();
 
         $ssh = $this->getMockBuilder(SSH2::class)->disableOriginalConstructor()->getMock();
@@ -89,7 +88,8 @@ class SshShellTest extends EntityTest
         $shell->getSFtp();
     }
 
-    public function testDisconnect() {
+    public function testDisconnect()
+    {
         $shell = $this->getShell();
 
         $ssh = $this->getMockBuilder(SSH2::class)->disableOriginalConstructor()->getMock();
@@ -104,7 +104,8 @@ class SshShellTest extends EntityTest
         $shell->disconnect();
     }
 
-    public function testExec() {
+    public function testExec()
+    {
         $shell = $this->getShell();
 
         $command = $this->getAlphaNumeric();
@@ -131,7 +132,8 @@ class SshShellTest extends EntityTest
         $this->assertEquals($expectedStdErr, $stdErr);
     }
 
-    public function testExecFail() {
+    public function testExecFail()
+    {
         $shell = $this->getShell();
 
         $command = $this->getAlphaNumeric();
@@ -158,7 +160,8 @@ class SshShellTest extends EntityTest
         $this->assertEquals($expectedStdErr, $stdErr);
     }
 
-    public function testStatFile() {
+    public function testStatFile()
+    {
         $shell = $this->getShell();
 
         $file = $this->getAlphaNumeric();
@@ -179,7 +182,8 @@ class SshShellTest extends EntityTest
         $this->assertEquals(['type' => 'file'], $shell->stat($file));
     }
 
-    public function testStatDir() {
+    public function testStatDir()
+    {
         $shell = $this->getShell();
 
         $file = $this->getAlphaNumeric();
@@ -200,7 +204,8 @@ class SshShellTest extends EntityTest
         $this->assertEquals(['type' => 'dir'], $shell->stat($file));
     }
 
-    public function testStatFail() {
+    public function testStatFail()
+    {
         $shell = $this->getShell();
 
         $file = $this->getAlphaNumeric();
@@ -221,7 +226,8 @@ class SshShellTest extends EntityTest
         $this->assertFalse($shell->stat($file));
     }
 
-    public function testFileExists() {
+    public function testFileExists()
+    {
         $shell = $this->getShell();
 
         $file1 = $this->getAlphaNumeric();
@@ -245,7 +251,8 @@ class SshShellTest extends EntityTest
         $this->assertFalse($shell->fileExists($file2));
     }
 
-    public function testFilePutContent() {
+    public function testFilePutContent()
+    {
         $shell = $this->getShell();
 
         $file1 = $this->getAlphaNumeric();
@@ -270,7 +277,8 @@ class SshShellTest extends EntityTest
         $this->assertFalse($shell->filePutContent($file2, $content));
     }
 
-    public function testMkdir() {
+    public function testMkdir()
+    {
         $shell = $this->getShell();
 
         $dir1 = $this->getAlphaNumeric();
@@ -294,7 +302,8 @@ class SshShellTest extends EntityTest
         $this->assertFalse($shell->mkdir($dir2, 0777, false));
     }
 
-    public function testChmod() {
+    public function testChmod()
+    {
         $shell = $this->getShell();
 
         $dir1 = $this->getAlphaNumeric();

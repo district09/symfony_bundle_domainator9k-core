@@ -18,32 +18,28 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
- * Description of BuildServiceTest
+ * Description of BuildServiceTest.
  *
  * @author Jelle Sebreghts
  */
 class BuildServiceTest extends TestCase
 {
-
     use DataGenerator;
 
     protected $workspaceDirectory;
     protected $kernelDir;
 
     /**
-     *
      * @var PHPUnit_Framework_MockObject_MockObject
      */
     protected $doctrine;
 
     /**
-     *
      * @var PHPUnit_Framework_MockObject_MockObject
      */
     protected $container;
 
     /**
-     *
      * @var PHPUnit_Framework_MockObject_MockObject
      */
     protected $processBuilder;
@@ -87,7 +83,8 @@ class BuildServiceTest extends TestCase
         $this->assertEquals($workspaceDirectory, $service->getWorkspaceDirectory());
     }
 
-    public function testUpdateBuildLog() {
+    public function testUpdateBuildLog()
+    {
         $service = $this->getService();
         $build = $this->getMockBuilder(Build::class)->disableOriginalConstructor()->getMock();
         $buildId = uniqid();
@@ -96,14 +93,13 @@ class BuildServiceTest extends TestCase
         $newMessage = $this->getAlphaNumeric();
         $build->expects($this->once())->method('getLog')->willReturn($originalLog);
         $build->expects($this->once())->method('setLog')->with($this->callback(function ($log) use ($originalLog, $newMessage) {
-            return strpos($log, $originalLog) !== false && strpos($log, $newMessage) !== false;
+            return false !== strpos($log, $originalLog) && false !== strpos($log, $newMessage);
         }));
         $this->doctrine
             ->expects($this->once())->method('persist')
             ->with(
                 $this->callback(
-                    function (Build $build) use ($buildId)
-                    {
+                    function (Build $build) use ($buildId) {
                         return $build->getId() === $buildId;
                     }
                 )
@@ -125,7 +121,7 @@ class BuildServiceTest extends TestCase
             function (Build $build) use ($user, $app) {
                 return $build->getUser() === $user
                     && $build->getApplication() === $app
-                    && $build->getType() === Build::TYPE_PROVISION;
+                    && Build::TYPE_PROVISION === $build->getType();
             }
         ));
 
@@ -143,20 +139,19 @@ class BuildServiceTest extends TestCase
             ->expects($this->once())->method('persist')
             ->with(
                 $this->callback(
-                    function (Build $build) use ($user, $app)
-                    {
-                        return $build->getType() === Build::TYPE_PROVISION
+                    function (Build $build) use ($user, $app) {
+                        return Build::TYPE_PROVISION === $build->getType()
                             && $build->getApplication() === $app
                             && $build->getUser() === $user;
                     }
                 )
             )
-            ->willReturnCallback(function (Build $build) use ($buildId)
-            {
+            ->willReturnCallback(function (Build $build) use ($buildId) {
                 $refObject = new ReflectionObject($build);
                 $refProperty = $refObject->getProperty('id');
                 $refProperty->setAccessible(true);
                 $refProperty->setValue($build, $buildId);
+
                 return $build;
             });
 
@@ -178,13 +173,14 @@ class BuildServiceTest extends TestCase
 
     /**
      * @dataProvider provisionOptionsProvider
+     *
+     * @param mixed $options
      */
     public function testCreateNewBackgroundProvisionOptions($options)
     {
         $expectedMask = 0;
         $commandOptions = [];
-        foreach ($options as $option => $mask)
-        {
+        foreach ($options as $option => $mask) {
             $expectedMask |= $mask;
             $commandOptions[] = $option;
         }
@@ -203,7 +199,7 @@ class BuildServiceTest extends TestCase
             function (Build $build) use ($user, $app) {
                 return $build->getUser() === $user
                     && $build->getApplication() === $app
-                    && $build->getType() === Build::TYPE_PROVISION;
+                    && Build::TYPE_PROVISION === $build->getType();
             }
         ));
 
@@ -221,20 +217,19 @@ class BuildServiceTest extends TestCase
             ->expects($this->once())->method('persist')
             ->with(
                 $this->callback(
-                    function (Build $build) use ($user, $app)
-                    {
-                        return $build->getType() === Build::TYPE_PROVISION
+                    function (Build $build) use ($user, $app) {
+                        return Build::TYPE_PROVISION === $build->getType()
                             && $build->getApplication() === $app
                             && $build->getUser() === $user;
                     }
                 )
             )
-            ->willReturnCallback(function (Build $build) use ($buildId)
-            {
+            ->willReturnCallback(function (Build $build) use ($buildId) {
                 $refObject = new ReflectionObject($build);
                 $refProperty = $refObject->getProperty('id');
                 $refProperty->setAccessible(true);
                 $refProperty->setValue($build, $buildId);
+
                 return $build;
             });
 
@@ -252,7 +247,6 @@ class BuildServiceTest extends TestCase
         $this->assertEquals($buildId, $build->getId());
         $this->assertEquals(Build::TYPE_PROVISION, $build->getType());
         $this->assertEquals($app, $build->getApplication());
-
     }
 
     public function provisionOptionsProvider()
@@ -268,25 +262,23 @@ class BuildServiceTest extends TestCase
         );
         $data = array();
         // Test each option individually
-        foreach ($options as $name => $mask)
-        {
+        foreach ($options as $name => $mask) {
             $data[] = array(array($name => $mask));
         }
 
         unset($options['a']);
 
         // Test random combinations.
-        for ($i = 0; $i < 10; $i++)
-        {
+        for ($i = 0; $i < 10; ++$i) {
             $randomOptions = array_rand($options, mt_rand(2, count($options) - 1));
             $keys = array_combine($randomOptions, $randomOptions);
             $data[] = array(array_intersect_key($options, $keys));
         }
+
         return $data;
     }
 
     /**
-     *
      * @return BuildService
      */
     protected function getService()
@@ -294,7 +286,7 @@ class BuildServiceTest extends TestCase
         $service = new BuildService($this->workspaceDirectory, $this->kernelDir, $this->processBuilder);
         $service->setDoctrine($this->doctrine);
         $service->setContainer($this->container);
+
         return $service;
     }
-
 }

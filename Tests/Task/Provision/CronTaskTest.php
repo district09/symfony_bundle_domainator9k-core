@@ -6,8 +6,6 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Application;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Server;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\ServerSettings;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
-use DigipolisGent\Domainator9k\CoreBundle\Interfaces\ApplicationTypeInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Service\ApplicationTypeBuilder;
 use DigipolisGent\Domainator9k\CoreBundle\Ssh\SshShellInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Task\FactoryInterface;
@@ -16,17 +14,15 @@ use DigipolisGent\Domainator9k\CoreBundle\Task\TaskInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Task\TaskResult;
 use DigipolisGent\Domainator9k\CoreBundle\Task\TaskRunner;
 use DigipolisGent\Domainator9k\CoreBundle\Tests\TestTools\DataGenerator;
-use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of CronTaskTest
+ * Description of CronTaskTest.
  *
  * @author Jelle Sebreghts
  */
 class CronTaskTest extends TestCase
 {
-
     use DataGenerator;
 
     protected $options = [];
@@ -79,7 +75,6 @@ class CronTaskTest extends TestCase
         $this->options['servers'][0]->expects($this->once())->method('isTaskServer')->willReturn(true);
         $this->options['servers'][0]->expects($this->once())->method('getIp')->willReturn($ip);
 
-
         $this->options['servers'][1]->expects($this->once())->method('isTaskServer')->willReturn(false);
         $this->options['servers'][1]->expects($this->never())->method('getIp');
 
@@ -106,9 +101,10 @@ class CronTaskTest extends TestCase
     }
 
     /**
-     * @expectedException RuntimeException
+     * @expectedException \RuntimeException
      */
-    public function testNoKeyFile() {
+    public function testNoKeyFile()
+    {
         $task = $this->getTask();
         $home = $this->getAlphaNumeric();
         $task->setHomeDirectory($home);
@@ -128,13 +124,13 @@ class CronTaskTest extends TestCase
         $this->options['appEnvironment']->expects($this->once())->method('getApplication')->willReturn($application);
 
         $task->execute();
-
     }
 
     protected function getTask()
     {
         $task = new CronTask($this->options);
         $task->setTaskFactory($this->taskFactory);
+
         return $task;
     }
 }

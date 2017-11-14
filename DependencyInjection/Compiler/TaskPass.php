@@ -9,7 +9,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 class TaskPass implements CompilerPassInterface
 {
-
     /**
      * {@inheritdoc}
      */

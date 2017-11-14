@@ -7,7 +7,6 @@ use InvalidArgumentException;
 
 class Factory implements FactoryInterface
 {
-
     /**
      * @var array
      */
@@ -57,10 +56,10 @@ class Factory implements FactoryInterface
      *
      * @param string $class
      *
-     * @return $this
-     *
      * @throws InvalidArgumentException
      *     If the class does not implement the TaskInterface.
+     *
+     * @return $this
      */
     public function addTaskDefinition($class)
     {
@@ -93,6 +92,7 @@ class Factory implements FactoryInterface
         if (is_subclass_of($class, TaskFactoryAwareInterface::class)) {
             $task->setTaskFactory($this);
         }
+
         return $task;
     }
 
@@ -101,10 +101,10 @@ class Factory implements FactoryInterface
      *
      * @param string $class
      *
-     * @return string
-     *
      * @throws InvalidArgumentException
      *     If the task class or name does not exist.
+     *
+     * @return string
      */
     protected function resolveTask($class)
     {

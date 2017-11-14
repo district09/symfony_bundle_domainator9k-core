@@ -4,30 +4,25 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Entity;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\ServerSettings;
-use DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\EntityTest;
 
 /**
- * Description of ServerSettingsTest
+ * Description of ServerSettingsTest.
  *
  * @author Jelle Sebreghts
  */
 class ServerSettingsTest extends EntityTest
 {
-
     /**
-     *
      * @var AppEnvironment
      */
     protected $env;
 
     /**
-     *
      * @var string
      */
     protected $user;
 
     /**
-     *
      * @var string
      */
     protected $password;
@@ -72,12 +67,10 @@ class ServerSettingsTest extends EntityTest
     }
 
     /**
-     *
      * @return ServerSeettings
      */
     protected function getEntity()
     {
         return new ServerSettings($this->env, $this->user, $this->password);
     }
-
 }

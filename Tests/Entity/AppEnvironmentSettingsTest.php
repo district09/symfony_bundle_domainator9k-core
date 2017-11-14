@@ -4,10 +4,9 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Entity;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironmentSettings;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
-use DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\EntityTest;
 
 /**
- * Description of AppEnvironmentSettingsTest
+ * Description of AppEnvironmentSettingsTest.
  *
  * @author Jelle Sebreghts
  */
@@ -38,5 +37,4 @@ class AppEnvironmentSettingsTest extends EntityTest
     {
         return new AppEnvironmentSettings();
     }
-
 }

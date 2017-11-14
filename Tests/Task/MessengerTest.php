@@ -8,16 +8,16 @@ use stdClass;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of MessengerTest
+ * Description of MessengerTest.
  *
  * @author Jelle Sebreghts
  */
 class MessengerTest extends TestCase
 {
-
     use DataGenerator;
 
-    public function testMessenger() {
+    public function testMessenger()
+    {
         $message = $this->getAlphaNumeric();
         $key = $this->getAlphaNumeric();
 
@@ -39,7 +39,8 @@ class MessengerTest extends TestCase
     /**
      * @expectedException \Exception
      */
-    public function testMessengerNoString() {
+    public function testMessengerNoString()
+    {
         $message = new \stdClass();
         $key = $this->getAlphaNumeric();
 
@@ -49,5 +50,4 @@ class MessengerTest extends TestCase
         Messenger::addListener($callback);
         Messenger::send($message);
     }
-
 }

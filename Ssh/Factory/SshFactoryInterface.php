@@ -6,7 +6,7 @@ use phpseclib\Net\SFTP;
 use phpseclib\Net\SSH2;
 
 /**
- * Description of SshFactoryInterface
+ * Description of SshFactoryInterface.
  *
  * @author Jelle Sebreghts
  */

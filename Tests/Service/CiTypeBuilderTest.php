@@ -8,13 +8,12 @@ use DigipolisGent\Domainator9k\CoreBundle\Tests\TestTools\DataGenerator;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of CiTypeBuilderTest
+ * Description of CiTypeBuilderTest.
  *
  * @author Jelle Sebreghts
  */
 class CiTypeBuilderTest extends TestCase
 {
-
     use DataGenerator;
 
     public function testAddGetType()
@@ -40,5 +39,4 @@ class CiTypeBuilderTest extends TestCase
     {
         return new CiTypeBuilder();
     }
-
 }

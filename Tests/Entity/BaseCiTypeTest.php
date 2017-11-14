@@ -4,19 +4,16 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Entity;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Interfaces\CiTypeSettingsInterface;
-use DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\EntityTest;
 use DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\Stub\CiType\TestCiType;
-use LogicException;
 use ReflectionObject;
 
 /**
- * Description of BaseCiTypeTest
+ * Description of BaseCiTypeTest.
  *
  * @author Jelle Sebreghts
  */
 class BaseCiTypeTest extends EntityTest
 {
-
     public function testBuildCiUrl()
     {
         $ciType = $this->getEntity();
@@ -59,7 +56,7 @@ class BaseCiTypeTest extends EntityTest
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      * @expectedExceptionMessage SettingsFormClass in CiType DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\Stub\CiType\TestCiType cannot be false
      */
     public function testGetSettingsFormClass()
@@ -69,7 +66,7 @@ class BaseCiTypeTest extends EntityTest
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      * @expectedExceptionMessage SettingsEntityClass in CiType DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\Stub\CiType\TestCiType cannot be false
      */
     public function testGetSettingsEntityClass()
@@ -79,7 +76,7 @@ class BaseCiTypeTest extends EntityTest
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      * @expectedExceptionMessage ProcessorServiceClass in CiType DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\Stub\CiType\TestCiType cannot be false
      */
     public function testGetProcessorServiceClass()
@@ -89,7 +86,7 @@ class BaseCiTypeTest extends EntityTest
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      * @expectedExceptionMessage AppTypeSettingsFormClass in CiType DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\Stub\CiType\TestCiType cannot be false
      */
     public function testGetAppTypeSettingsFormClass()
@@ -99,7 +96,7 @@ class BaseCiTypeTest extends EntityTest
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      * @expectedExceptionMessage AppTypeSettingsEntityClass in CiType DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\Stub\CiType\TestCiType cannot be false
      */
     public function testGetAppTypeSettingsEntityClass()
@@ -109,7 +106,7 @@ class BaseCiTypeTest extends EntityTest
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      * @expectedExceptionMessage Name in CiType DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\Stub\CiType\TestCiType cannot be false
      */
     public function testGetName()
@@ -119,7 +116,7 @@ class BaseCiTypeTest extends EntityTest
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      * @expectedExceptionMessage Slug in CiType DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\Stub\CiType\TestCiType cannot be false
      */
     public function testGetSlug()
@@ -146,6 +143,11 @@ class BaseCiTypeTest extends EntityTest
 
     /**
      * @dataProvider setterTestDataProvider
+     *
+     * @param mixed $prop
+     * @param mixed $val
+     * @param mixed $isBool
+     * @param mixed $boolVerb
      */
     public function testSetter($prop, $val, $isBool = false, $boolVerb = 'is')
     {
@@ -158,12 +160,10 @@ class BaseCiTypeTest extends EntityTest
     }
 
     /**
-     *
      * @return TestCiType
      */
     protected function getEntity()
     {
         return new TestCiType();
     }
-
 }

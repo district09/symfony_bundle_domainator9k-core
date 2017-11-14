@@ -7,7 +7,6 @@ use phpseclib\Net\SFTP;
 
 interface SshShellInterface
 {
-
     /**
      * @param string $command
      * @param string $stdout

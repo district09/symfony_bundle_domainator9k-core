@@ -4,19 +4,18 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Entity;
 
 use DigipolisGent\Domainator9k\CoreBundle\Service\AppTypeSettingsService;
 use DigipolisGent\Domainator9k\CoreBundle\Service\EnvironmentService;
-use DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\EntityTest;
 use DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\Stub\AppType\TestAppType;
 use ReflectionObject;
 
 /**
- * Description of AppEnvironmentSettingsTest
+ * Description of AppEnvironmentSettingsTest.
  *
  * @author Jelle Sebreghts
  */
 class BaseAppTypeTest extends EntityTest
 {
-
-    public function testParseYamlConfig() {
+    public function testParseYamlConfig()
+    {
         $type = $this->getEntity();
         $type->parseYamlConfig();
         $this->assertEquals('config123', $type->getSiteConfig());
@@ -46,7 +45,8 @@ class BaseAppTypeTest extends EntityTest
         $this->assertEquals('custom config123', $type->getSiteConfig());
     }
 
-    public function testGetDirectories() {
+    public function testGetDirectories()
+    {
         $type = $this->getEntity();
         $user = $this->getAlphaNumeric();
         $refObject = new ReflectionObject($type);
@@ -54,7 +54,6 @@ class BaseAppTypeTest extends EntityTest
         $refProperty->setAccessible(true);
         $refProperty->setValue($type, ['/home/[[user]]/stubfolder']);
         $this->assertEquals(['/home/' . $user . '/stubfolder'], $type->getDirectories($user));
-
     }
 
     public function getterTestDataProvider()
@@ -62,11 +61,11 @@ class BaseAppTypeTest extends EntityTest
         return [
             ['environmentService', $this->getMockBuilder(EnvironmentService::class)->disableOriginalConstructor()->getMock()],
             ['appTypeSettingsService', $this->getMockBuilder(AppTypeSettingsService::class)->disableOriginalConstructor()->getMock()],
-            ['name' , $this->getAlphaNumeric()],
-            ['slug' , $this->getAlphaNumeric()],
-            ['cron' , $this->getAlphaNumeric()],
-            ['publicFolder' , $this->getAlphaNumeric()],
-            ['databaseRequired' , (bool) mt_rand(0, 1), true],
+            ['name', $this->getAlphaNumeric()],
+            ['slug', $this->getAlphaNumeric()],
+            ['cron', $this->getAlphaNumeric()],
+            ['publicFolder', $this->getAlphaNumeric()],
+            ['databaseRequired', (bool) mt_rand(0, 1), true],
             ['siteConfig', $this->getAlphaNumeric()],
             ['settingsFormClass', $this->getAlphaNumeric()],
             ['settingsEntityClass', $this->getAlphaNumeric()],
@@ -82,12 +81,10 @@ class BaseAppTypeTest extends EntityTest
     }
 
     /**
-     *
      * @return TestAppType
      */
     protected function getEntity()
     {
         return new TestAppType();
     }
-
 }

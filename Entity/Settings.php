@@ -2,9 +2,7 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -12,7 +10,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Settings
 {
-
     /**
      * @var int
      * @ORM\Column(type="integer")
@@ -210,20 +207,16 @@ class Settings
      */
     public function getAppEnvironmentSettings($appEnvironment = null)
     {
-        if ($appEnvironment === null)
-        {
+        if (null === $appEnvironment) {
             return $this->appEnvironmentSettings;
         }
 
-        if ($appEnvironment instanceof AppEnvironment)
-        {
+        if ($appEnvironment instanceof AppEnvironment) {
             $appEnvironment = $appEnvironment->getNameCanonical();
         }
 
-        foreach ($this->appEnvironmentSettings as $settings)
-        {
-            if ($settings->getEnvironment() === $appEnvironment)
-            {
+        foreach ($this->appEnvironmentSettings as $settings) {
+            if ($settings->getEnvironment() === $appEnvironment) {
                 return $settings;
             }
         }
@@ -242,5 +235,4 @@ class Settings
 
         return $this;
     }
-
 }

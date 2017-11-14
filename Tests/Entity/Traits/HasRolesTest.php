@@ -6,6 +6,7 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\Role;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\HasRoles;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -13,20 +14,18 @@ use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
  */
 
 /**
- * Description of HasRolesTest
+ * Description of HasRolesTest.
  *
  * @author Jelle Sebreghts
  */
 class HasRolesTest extends TestCase
 {
     /**
-     *
      * @var HasRoles|PHPUnit_Framework_MockObject_MockObject
      */
     protected $mockedTrait;
 
     /**
-     *
      * @var Role[]
      */
     protected $roles;
@@ -42,14 +41,16 @@ class HasRolesTest extends TestCase
         ];
     }
 
-    public function testGetRoles() {
+    public function testGetRoles()
+    {
         $result = $this->mockedTrait->setRoles($this->roles);
         $this->assertEquals($this->roles, $this->mockedTrait->getRoles()->toArray());
         $this->assertEquals(['role1', 'role2', 'role3'], $this->mockedTrait->getRoles(true));
         $this->assertEquals($result, $this->mockedTrait);
     }
 
-    public function testSetRoles() {
+    public function testSetRoles()
+    {
         $result = $this->mockedTrait->setRoles($this->roles);
         $this->assertEquals($this->roles, $this->mockedTrait->getRoles()->toArray());
         $this->assertEquals($result, $this->mockedTrait);
@@ -59,7 +60,8 @@ class HasRolesTest extends TestCase
         $this->assertEquals($result, $this->mockedTrait);
     }
 
-    public function testAddRole() {
+    public function testAddRole()
+    {
         foreach ($this->roles as $role) {
             $result = $this->mockedTrait->addRole($role);
             $this->assertEquals($result, $this->mockedTrait);
@@ -74,7 +76,8 @@ class HasRolesTest extends TestCase
         $this->assertEquals($this->roles, $this->mockedTrait->getRoles()->toArray());
     }
 
-    public function testRemoveRole() {
+    public function testRemoveRole()
+    {
         $this->mockedTrait->setRoles($this->roles);
         $this->mockedTrait->removeRole('role2');
         $this->assertEquals(['role1', 'role3'], $this->mockedTrait->getRoles(true));
@@ -84,7 +87,8 @@ class HasRolesTest extends TestCase
         $this->assertEquals(['role1', 'role3'], $this->mockedTrait->getRoles(true));
     }
 
-    public function testHasRole() {
+    public function testHasRole()
+    {
         $this->mockedTrait->setRoles($this->roles);
         $this->assertTrue($this->mockedTrait->hasRole('role1'));
         $this->assertTrue($this->mockedTrait->hasRole('role2'));
@@ -97,7 +101,8 @@ class HasRolesTest extends TestCase
         $this->assertFalse($this->mockedTrait->hasRole(new Role('role4')));
     }
 
-    public function testHasAnyRole() {
+    public function testHasAnyRole()
+    {
         $this->mockedTrait->setRoles($this->roles);
         $this->assertTrue($this->mockedTrait->hasAnyRole(['role1', 'role4']));
         $this->assertTrue($this->mockedTrait->hasAnyRole([$this->roles[0], 'role4']));
@@ -109,5 +114,4 @@ class HasRolesTest extends TestCase
         $this->assertFalse($this->mockedTrait->hasAnyRole([new Role('role4'), new Role('role5')]));
         $this->assertFalse($this->mockedTrait->hasAnyRole(['role4', new Role('role5')]));
     }
-
 }

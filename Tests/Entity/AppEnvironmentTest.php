@@ -12,17 +12,14 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\Server;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\ServerSettings;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
-use InvalidArgumentException;
-use ReflectionObject;
 
 /**
- * Description of AppEnvironmentTest
+ * Description of AppEnvironmentTest.
  *
  * @author Jelle Sebreghts
  */
 class AppEnvironmentTest extends EntityTest
 {
-
     public function testContstructor()
     {
         $name = str_repeat($this->getAlphaNumeric(false, 13), mt_rand(1, 5));
@@ -127,14 +124,14 @@ class AppEnvironmentTest extends EntityTest
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException \Exception
      * @expectedExceptionMessage no domains configured
      */
     public function testPreferredDomain()
     {
         $appEnv = $this->getAppEnv();
-        try
-        {
+
+        try {
             $appEnv->setDomains(['http://facebook.com', 'http://twitter.com']);
             $this->assertEquals('http://facebook.com', $appEnv->getPreferredDomain());
 
@@ -143,9 +140,7 @@ class AppEnvironmentTest extends EntityTest
 
             $appEnv->removeDomain('http://google.com');
             $this->assertEquals('http://facebook.com', $appEnv->getPreferredDomain());
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $this->fail($e->getMessage());
         }
 
@@ -154,20 +149,18 @@ class AppEnvironmentTest extends EntityTest
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage the domain 'http://google.com' is not a configured domain for this environment.
      */
     public function testSetPreferredDomain()
     {
         $appEnv = $this->getAppEnv();
-        try
-        {
+
+        try {
             $appEnv->setDomains(['http://google.com', 'http://facebook.com']);
             $appEnv->setPreferredDomain('http://google.com');
             $this->assertEquals('http://google.com', $appEnv->getPreferredDomain());
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $this->fail($e->getMessage());
         }
         $appEnv->setDomains([]);
@@ -315,5 +308,4 @@ class AppEnvironmentTest extends EntityTest
     {
         return $this->getAppEnv();
     }
-
 }

@@ -7,13 +7,12 @@ use DigipolisGent\Domainator9k\CoreBundle\Ssh\Auth\Password;
 use DigipolisGent\Domainator9k\CoreBundle\Ssh\SshShell;
 
 /**
- * Description of ShellFactory
+ * Description of ShellFactory.
  *
  * @author Jelle Sebreghts
  */
 class SshShellFactory implements SshShellFactoryInterface
 {
-
     const AUTH_TYPE_KEY = 'key';
     const AUTH_TYPE_CREDENTIALS = 'credentials';
 
@@ -40,10 +39,12 @@ class SshShellFactory implements SshShellFactoryInterface
         switch ($authType) {
             case static::AUTH_TYPE_KEY:
                 $auth = new KeyFile($user, $password);
+
                 break;
             case static::AUTH_TYPE_CREDENTIALS:
             default:
                 $auth = new Password($user, $password);
+
                 break;
         }
 

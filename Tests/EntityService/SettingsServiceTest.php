@@ -15,13 +15,12 @@ use ReflectionObject;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of SettingsServiceTest
+ * Description of SettingsServiceTest.
  *
  * @author Jelle Sebreghts
  */
 class SettingsServiceTest extends TestCase
 {
-
     use DataGenerator;
 
     protected $doctrine;
@@ -89,14 +88,13 @@ class SettingsServiceTest extends TestCase
     }
 
     /**
-     *
      * @return SettingsService
      */
     protected function getService()
     {
         $service = new SettingsService();
         $service->setDoctrine($this->doctrine);
+
         return $service;
     }
-
 }

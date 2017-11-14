@@ -121,7 +121,7 @@ abstract class BaseAppType implements ApplicationTypeInterface
         $class_info = new ReflectionClass($this);
         if ($this->ymlConfigName) {
             //todo: parse @ notation or something
-            $path = dirname($class_info->getFileName()) . '/' .$this->ymlConfigName;
+            $path = dirname($class_info->getFileName()) . '/' . $this->ymlConfigName;
         } else {
             $path = dirname($class_info->getFileName()) . '/type_config.yml';
         }

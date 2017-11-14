@@ -10,7 +10,6 @@ use Doctrine\Bundle\DoctrineBundle\Registry;
 
 class CiAppTypeSettingsService
 {
-
     /**
      * @var Registry
      */
@@ -49,8 +48,7 @@ class CiAppTypeSettingsService
     public function getSettings(CiTypeInterface $ciType, ApplicationTypeInterface $appType)
     {
         $settings = $this->doctrine->getManager()->getRepository($ciType->getAppTypeSettingsEntityClass())->findOneBy(['appTypeSlug' => $appType->getSlug(), 'ciTypeSlug' => $ciType->getSlug()]);
-        if (!$settings)
-        {
+        if (!$settings) {
             $className = $ciType->getAppTypeSettingsEntityClass();
             $class = new $className($ciType->getSlug(), $appType->getSlug());
             $class->setAdditionalConfig($ciType->getAdditionalConfig());
@@ -65,8 +63,7 @@ class CiAppTypeSettingsService
 
     public function getSettingsForApp(Application $app)
     {
-        if ($app->getCiAppTypeSettings())
-        {
+        if ($app->getCiAppTypeSettings()) {
             return $app->getCiAppTypeSettings();
         }
 
@@ -74,8 +71,7 @@ class CiAppTypeSettingsService
         $appType = $this->applicationTypeBuilder->getType($app->getAppTypeSlug());
 
         $ciAppTypeSettings = $this->doctrine->getManager()->getRepository($ciType->getAppTypeSettingsEntityClass())->findOneBy(['appId' => $app->getId()]);
-        if ($ciAppTypeSettings)
-        {
+        if ($ciAppTypeSettings) {
             return $ciAppTypeSettings;
         }
 
@@ -87,5 +83,4 @@ class CiAppTypeSettingsService
         $this->doctrine->getManager()->persist($settings);
         $this->doctrine->getManager()->flush();
     }
-
 }

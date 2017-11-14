@@ -27,7 +27,6 @@ define('SOCK_MAX_SECONDS', '900');
 
 class AppEnvironmentService extends AbstractDoctrineService
 {
-
     /**
      * @var Settings
      */
@@ -70,6 +69,7 @@ class AppEnvironmentService extends AbstractDoctrineService
     {
         return AppEnvironment::class;
     }
+
     // SOCK
 
     /**
@@ -80,10 +80,10 @@ class AppEnvironmentService extends AbstractDoctrineService
      * @param Server         $server
      * @param AccountService $sockAccountService
      *
-     * @return EntityCreatePromise
-     *
      * @throws InvalidArgumentException
      * @throws Exception
+     *
+     * @return EntityCreatePromise
      *
      * @todo Shouldn't this be in a separate sock bundle??
      */
@@ -110,6 +110,7 @@ class AppEnvironmentService extends AbstractDoctrineService
                 ->setDidExist(true);
 
             $appEnvironment->getServerSettings()->setSockAccountId($account->getId());
+
             return $promise;
         }
         $account = new Account();
@@ -141,10 +142,10 @@ class AppEnvironmentService extends AbstractDoctrineService
      * @param AppEnvironment $appEnvironment
      * @param SockAppService $sockAppService
      *
-     * @return EntityCreatePromise
-     *
      * @throws InvalidArgumentException
      * @throws Exception
+     *
+     * @return EntityCreatePromise
      */
     public function createSockApplication(AppEnvironment $appEnvironment, SockAppService $sockAppService)
     {
@@ -174,6 +175,7 @@ class AppEnvironmentService extends AbstractDoctrineService
                 ->setDidExist(true);
 
             $appEnvironment->setSockApplicationId($app->getId());
+
             return $promise;
         }
         $appType = $this->applicationTypeBuilder->getType($appEnvironment->getApplication()->getAppTypeSlug());
@@ -205,10 +207,10 @@ class AppEnvironmentService extends AbstractDoctrineService
      * @param AppEnvironment  $appEnvironment
      * @param DatabaseService $sockDatabaseService
      *
-     * @return EntityCreatePromise
-     *
      * @throws InvalidArgumentException
      * @throws Exception
+     *
+     * @return EntityCreatePromise
      */
     public function createSockDatabase(AppEnvironment $appEnvironment, DatabaseService $sockDatabaseService)
     {
@@ -258,6 +260,7 @@ class AppEnvironmentService extends AbstractDoctrineService
 
         return $promise;
     }
+
     // FILES AND DIRECTORIES
 
     /**

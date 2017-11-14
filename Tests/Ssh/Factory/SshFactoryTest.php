@@ -9,13 +9,12 @@ use phpseclib\Net\SSH2;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of SshFactoryTest
+ * Description of SshFactoryTest.
  *
  * @author Jelle Sebreghts
  */
 class SshFactoryTest extends TestCase
 {
-
     use DataGenerator;
 
     protected $host;
@@ -30,7 +29,8 @@ class SshFactoryTest extends TestCase
         $this->timeout = mt_rand(0, 100);
     }
 
-    public function testGetSftpConnection() {
+    public function testGetSftpConnection()
+    {
         $factory = $this->getSshFactory();
 
         $connection = $factory->getSftpConnection($this->host, $this->port, $this->timeout);
@@ -40,8 +40,8 @@ class SshFactoryTest extends TestCase
         $this->assertEquals($this->timeout, $connection->timeout);
     }
 
-
-    public function testGetSshConnection() {
+    public function testGetSshConnection()
+    {
         $factory = $this->getSshFactory();
 
         $connection = $factory->getSshConnection($this->host, $this->port, $this->timeout);
@@ -55,5 +55,4 @@ class SshFactoryTest extends TestCase
     {
         return new SshFactory();
     }
-
 }

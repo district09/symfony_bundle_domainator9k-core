@@ -19,13 +19,12 @@ use DigipolisGent\Domainator9k\CoreBundle\Tests\TestTools\DataGenerator;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of ConfigFilesTaskTest
+ * Description of ConfigFilesTaskTest.
  *
  * @author Jelle Sebreghts
  */
 class ConfigFilesTaskTest extends TestCase
 {
-
     use DataGenerator;
 
     protected $options = [];
@@ -107,7 +106,8 @@ class ConfigFilesTaskTest extends TestCase
     /**
      * @expectedException \RuntimeException
      */
-    public function testNoKeyFile() {
+    public function testNoKeyFile()
+    {
         $task = $this->getTask();
         $home = $this->getAlphaNumeric();
         $task->setHomeDirectory($home);
@@ -121,13 +121,13 @@ class ConfigFilesTaskTest extends TestCase
         $this->options['appEnvironment']->expects($this->once())->method('getServerSettings')->willReturn($serverSettings);
 
         $task->execute();
-
     }
 
     protected function getTask()
     {
         $task = new ConfigFilesTask($this->options);
         $task->setTaskFactory($this->taskFactory);
+
         return $task;
     }
 }

@@ -2,7 +2,6 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Task;
 
-use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Ssh\Factory\SshShellFactory;
 use DigipolisGent\Domainator9k\CoreBundle\Ssh\Factory\SshShellFactoryInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Ssh\SshShellInterface;
@@ -10,7 +9,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class AbstractSshTask extends AbstractTask implements SshTaskInterface
 {
-
     /**
      * @var SshShellFactoryInterface
      */
@@ -49,7 +47,6 @@ abstract class AbstractSshTask extends AbstractTask implements SshTaskInterface
     }
 
     /**
-     *
      * @param OptionsResolver $options
      */
     protected function configure(OptionsResolver $options)
@@ -80,7 +77,7 @@ abstract class AbstractSshTask extends AbstractTask implements SshTaskInterface
         $result->addMessage(sprintf('EXEC %s', $command));
         $this->shell->exec($command, $stdout, $exitStatus, $stderr);
 
-        $result->setSuccess($exitStatus === 0);
+        $result->setSuccess(0 === $exitStatus);
         $result->setData($stdout);
         if (!$result->isSuccess()) {
             $result->addMessage($stdout);

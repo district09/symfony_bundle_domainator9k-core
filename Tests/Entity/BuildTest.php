@@ -7,31 +7,25 @@ use DateTime;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Application;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Build;
-use DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\EntityTest;
-use InvalidArgumentException;
 
 /**
- * Description of BuildTest
+ * Description of BuildTest.
  *
  * @author Jelle Sebreghts
  */
 class BuildTest extends EntityTest
 {
-
     /**
-     *
      * @var Application
      */
     protected $app;
 
     /**
-     *
      * @var string
      */
     protected $type;
 
     /**
-     *
      * @var AppEnvironment
      */
     protected $env;
@@ -54,7 +48,7 @@ class BuildTest extends EntityTest
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage environment is required when creating a DEPLOY build
      */
     public function testDeployBuildNoAppEnv()
@@ -124,12 +118,10 @@ class BuildTest extends EntityTest
     }
 
     /**
-     *
      * @return Build
      */
     protected function getEntity()
     {
         return new Build($this->app, $this->type, $this->env);
     }
-
 }

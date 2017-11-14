@@ -5,12 +5,12 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Task\Filesystem;
 use DigipolisGent\Domainator9k\CoreBundle\Task\AbstractSshTask;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CreateDirectory extends AbstractSshTask
+class CreateDirectoryTask extends AbstractSshTask
 {
     /**
      * @return string
      */
-    public function getName()
+    public static function getName()
     {
         return 'filesystem.create_directory';
     }
@@ -31,7 +31,6 @@ class CreateDirectory extends AbstractSshTask
         $result = parent::execute();
 
         $result->addMessage(sprintf('creating directory %s', $this->options['directory']));
-        $this->shell->connect();
         if (!$this->shell->fileExists($this->options['directory'])) {
             $result->setData($this->shell->mkdir($this->options['directory'], 0755, true));
 

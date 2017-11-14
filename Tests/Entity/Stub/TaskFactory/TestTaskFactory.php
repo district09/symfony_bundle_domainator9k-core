@@ -13,42 +13,42 @@ use Exception;
 class TestTaskFactory implements FactoryInterface
 {
 
-    protected static $runner;
-    protected static $task;
-    protected static $defaultOptions;
-    protected static $expectedArguments;
+    protected $runner;
+    protected $task;
+    protected $defaultOptions;
+    protected $expectedArguments;
 
-    public static function setExpectedArguments($expectedArguments)
+    public function setExpectedArguments($expectedArguments)
     {
-        self::$expectedArguments = $expectedArguments;
+        $this->expectedArguments = $expectedArguments;
     }
 
-    public static function setRunner($runner)
+    public function setRunner($runner)
     {
-        static::$runner = $runner;
+        $this->runner = $runner;
     }
 
-    public static function setTask($task)
+    public function setTask($task)
     {
-        static::$task = $task;
+        $this->task = $task;
     }
 
-    public static function create($name, array $options = array())
+    public function create($name, array $options = array())
     {
-        if (static::$expectedArguments != [$name, $options]) {
-            throw new Exception('Expected arguments ' . print_r(static::$expectedArguments, true) . ' got ' . print_r(func_get_args(), true));
+        if ($this->expectedArguments != [$name, $options]) {
+            throw new Exception('Expected arguments ' . print_r($this->expectedArguments, true) . ' got ' . print_r(func_get_args(), true));
         }
-        return static::$task;
+        return $this->task;
     }
 
-    public static function createRunner()
+    public function createRunner()
     {
-        return static::$runner;
+        return $this->runner;
     }
 
-    public static function setDefaultOptions(array $options = array())
+    public function setDefaultOptions(array $options = array())
     {
-        static::$defaultOptions = $options;
+        $this->defaultOptions = $options;
     }
 
 }

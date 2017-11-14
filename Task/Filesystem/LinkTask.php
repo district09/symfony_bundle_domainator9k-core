@@ -5,12 +5,12 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Task\Filesystem;
 use DigipolisGent\Domainator9k\CoreBundle\Task\AbstractSshTask;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Link extends AbstractSshTask
+class LinkTask extends AbstractSshTask
 {
     /**
      * @return string
      */
-    public function getName()
+    public static function getName()
     {
         return 'filesystem.link';
     }
@@ -31,10 +31,8 @@ class Link extends AbstractSshTask
     public function execute()
     {
         $result = parent::execute();
-        $name = $this->options['name'];
-        $target = $this->options['target'];
-
-        $this->shell->connect();
+        $name = escapeshellarg($this->options['name']);
+        $target = escapeshellarg($this->options['target']);
 
         $cmd = "ln -sfn $target $name";
         $this->doExec($result, $cmd);

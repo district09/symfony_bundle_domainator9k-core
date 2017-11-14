@@ -4,14 +4,19 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Task;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Webmozart\PathUtil\Path;
 
 abstract class AbstractTask implements TaskInterface
 {
+
     /**
      * @var bool
      */
     protected $executed = false;
 
+    /**
+     * @var array
+     */
     protected $options = array();
 
     /**
@@ -19,6 +24,17 @@ abstract class AbstractTask implements TaskInterface
      */
     protected $appEnvironment;
 
+    /**
+     * @var string
+     */
+    protected $homeDirectory;
+
+    /**
+     * Creates a new task.
+     *
+     * @param array $options
+     *     Options for this task.
+     */
     public function __construct(array $options = array())
     {
         $optionsResolver = new OptionsResolver();
@@ -30,16 +46,19 @@ abstract class AbstractTask implements TaskInterface
         }
     }
 
+    /**
+     * Configure options for this task.
+     *
+     * @param OptionsResolver $options
+     */
     protected function configure(OptionsResolver $options)
     {
         $options->setRequired(array(
             'appEnvironment',
         ));
 
-        $options->setAllowedTypes('appEnvironment', 'DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment');
+        $options->setAllowedTypes('appEnvironment', ['DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment']);
     }
-
-    abstract public function getName();
 
     /**
      * @return TaskResult
@@ -90,16 +109,23 @@ abstract class AbstractTask implements TaskInterface
     }
 
     /**
+     * @return $this
+     */
+    public function setHomeDirectory($dir)
+    {
+        $this->homeDirectory = $dir;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getHomeDirectory()
     {
-        if (function_exists('posix_getpwuid')) {
-            $info = posix_getpwuid(posix_getuid());
-
-            return $info['dir'];
+        if (null !== $this->homeDirectory) {
+            return $this->homeDirectory;
         }
-
-        return isset($_SERVER['HOME']) ? $_SERVER['HOME'] : realpath('~');
+        return Path::getHomeDirectory();
     }
 }

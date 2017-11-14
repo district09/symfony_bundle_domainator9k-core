@@ -5,12 +5,12 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Task\Filesystem;
 use DigipolisGent\Domainator9k\CoreBundle\Task\AbstractSshTask;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CreateFile extends AbstractSshTask
+class CreateFileTask extends AbstractSshTask
 {
     /**
      * @return string
      */
-    public function getName()
+    public static function getName()
     {
         return 'filesystem.create_file';
     }
@@ -33,8 +33,6 @@ class CreateFile extends AbstractSshTask
         $result = parent::execute();
         $path = escapeshellarg($this->options['path']);
         $content = escapeshellarg($this->options['content']);
-
-        $this->shell->connect();
 
         $cmd = "echo $content > $path";
         $this->doExec($result, $cmd);

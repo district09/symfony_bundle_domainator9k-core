@@ -3,11 +3,17 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Task;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
+use DigipolisGent\Domainator9k\CoreBundle\Ssh\Factory\SshShellFactoryInterface;
 
 interface TaskInterface
 {
 
-    public function getName();
+    /**
+     * Returns a unique name for this task.
+     *
+     * @return string
+     */
+    public static function getName();
 
     /**
      * @return TaskResult

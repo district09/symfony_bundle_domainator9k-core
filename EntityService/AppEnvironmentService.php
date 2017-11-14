@@ -8,7 +8,6 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Server;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
 use DigipolisGent\Domainator9k\CoreBundle\Service\ApplicationTypeBuilder;
-use DigipolisGent\Domainator9k\CoreBundle\Task\Factory as TaskFactory;
 use DigipolisGent\Domainator9k\CoreBundle\Task\FactoryInterface;
 use DigipolisGent\SockAPIBundle\JsonModel\Account;
 use DigipolisGent\SockAPIBundle\JsonModel\Application as SockApp;
@@ -23,10 +22,12 @@ use InvalidArgumentException;
 
 // @codeCoverageIgnoreStart
 define('SOCK_MAX_SECONDS', '900');
+
 // @codeCoverageIgnoreEnd
 
 class AppEnvironmentService extends AbstractDoctrineService
 {
+
     /**
      * @var Settings
      */
@@ -43,15 +44,23 @@ class AppEnvironmentService extends AbstractDoctrineService
     protected $applicationTypeBuilder;
 
     /**
-     *
-     * @var string
+     * @var FactoryInterface
      */
-    protected $taskFactoryClass;
+    protected $taskFactory;
 
-    public function __construct(Settings $settings, ApplicationTypeBuilder $applicationTypeBuilder)
-    {
+    /**
+     * @param Settings $settings
+     * @param ApplicationTypeBuilder $appTypeBuilder
+     * @param FactoryInterface $taskFactory
+     */
+    public function __construct(
+        Settings $settings,
+        ApplicationTypeBuilder $appTypeBuilder,
+        FactoryInterface $taskFactory
+    ) {
         $this->settings = $settings;
-        $this->applicationTypeBuilder = $applicationTypeBuilder;
+        $this->applicationTypeBuilder = $appTypeBuilder;
+        $this->taskFactory = $taskFactory;
     }
 
     /**
@@ -61,26 +70,6 @@ class AppEnvironmentService extends AbstractDoctrineService
     {
         return AppEnvironment::class;
     }
-
-    /**
-     * Set the task factory class.
-     *
-     * @param string|FactoryInterface $class
-     *
-     * @return $this
-     */
-    public function setTaskFactoryClass($class) {
-        if (!is_subclass_of($class, FactoryInterface::class)) {
-            throw new InvalidArgumentException(sprintf(
-                'Task Factory %s does not implement %s.',
-                $class,
-                FactoryInterface::class
-            ));
-        }
-        $this->taskFactoryClass = $class;
-        return $this;
-    }
-
     // SOCK
 
     /**
@@ -113,34 +102,33 @@ class AppEnvironmentService extends AbstractDoctrineService
             $server->getSockId()
         );
 
-        if (!$account) {
-            $account = new Account();
-            $account
-                ->setServerId($server->getSockId())
-                ->setName($appEnvironment->getServerSettings()->getUser())
-            ;
-
-            if ($this->settings->getDefaultSockSshKeys()) {
-                $keys = explode(',', $this->settings->getDefaultSockSshKeys());
-                $account->setSshKeys($keys);
-            }
-
-            /** @var Account $account */
-            $account = $sockAccountService->create($account);
-
-            $promise = new EntityCreatePromise($account);
-            $promise
-                ->setEntity($account)
-                ->setPoller(new Poller($sockAccountService, $account->getId(), 'account create'))
-            ;
-        } else {
+        if ($account) {
             $promise = new EntityCreatePromise($account);
             $promise
                 ->setResolved(true)
                 ->setIsCreated(true)
-                ->setDidExist(true)
-            ;
+                ->setDidExist(true);
+
+            $appEnvironment->getServerSettings()->setSockAccountId($account->getId());
+            return $promise;
         }
+        $account = new Account();
+        $account
+            ->setServerId($server->getSockId())
+            ->setName($appEnvironment->getServerSettings()->getUser());
+
+        if ($this->settings->getDefaultSockSshKeys()) {
+            $keys = explode(',', $this->settings->getDefaultSockSshKeys());
+            $account->setSshKeys($keys);
+        }
+
+        /** @var Account $account */
+        $account = $sockAccountService->create($account);
+
+        $promise = new EntityCreatePromise($account);
+        $promise
+            ->setEntity($account)
+            ->setPoller(new Poller($sockAccountService, $account->getId(), 'account create'));
 
         $appEnvironment->getServerSettings()->setSockAccountId($account->getId());
 
@@ -178,36 +166,34 @@ class AppEnvironmentService extends AbstractDoctrineService
             $appName
         );
 
-        if (!$app) {
-            $appType = $this->applicationTypeBuilder->getType($appEnvironment->getApplication()->getAppTypeSlug());
-
-            $app = new SockApp();
-            $app
-                ->setAccountId($appEnvironment->getServerSettings()->getSockAccountId())
-                ->setName($appName)
-                ->setAliases($appEnvironment->getDomains())
-                ->setDocumentRoot(
-                    'current/'.$appType->getPublicFolder()
-                )
-            ;
-
-            /** @var SockApp $app */
-            $app = $sockAppService->create($app);
-
-            $promise = new EntityCreatePromise($app);
-            $promise
-                ->setEntity($app)
-                ->setPoller(new Poller($sockAppService, $app->getId(), 'application create'))
-            ;
-        } else {
+        if ($app) {
             $promise = new EntityCreatePromise($app);
             $promise
                 ->setResolved(true)
                 ->setIsCreated(true)
-                ->setDidExist(true)
-            ;
-        }
+                ->setDidExist(true);
 
+            $appEnvironment->setSockApplicationId($app->getId());
+            return $promise;
+        }
+        $appType = $this->applicationTypeBuilder->getType($appEnvironment->getApplication()->getAppTypeSlug());
+
+        $app = new SockApp();
+        $app
+            ->setAccountId($appEnvironment->getServerSettings()->getSockAccountId())
+            ->setName($appName)
+            ->setAliases($appEnvironment->getDomains())
+            ->setDocumentRoot(
+                'current/' . $appType->getPublicFolder()
+            );
+
+        /** @var SockApp $app */
+        $app = $sockAppService->create($app);
+
+        $promise = new EntityCreatePromise($app);
+        $promise
+            ->setEntity($app)
+            ->setPoller(new Poller($sockAppService, $app->getId(), 'application create'));
         $appEnvironment->setSockApplicationId($app->getId());
 
         return $promise;
@@ -243,38 +229,35 @@ class AppEnvironmentService extends AbstractDoctrineService
             $dbSettings->getName()
         );
 
-        if (!$db) {
-            $db = new Database();
-            $db
-                ->setAccountId($accountId)
-                ->setName($dbSettings->getName())
-                ->setLogin($dbSettings->getUser())
-                ->setPassword($dbSettings->getPassword())
-                ->setEngine($dbSettings->getEngine())
-            ;
-
-            /** @var Database $db */
-            $db = $sockDatabaseService->create($db);
-
-            $promise = new EntityCreatePromise($db);
-            $promise
-                ->setEntity($db)
-                ->setPoller(new Poller($sockDatabaseService, $db->getId(), 'database create'))
-            ;
-        } else {
+        if ($db) {
             $promise = new EntityCreatePromise($db);
             $promise
                 ->setResolved(true)
                 ->setIsCreated(true)
-                ->setDidExist(true)
-            ;
-        }
+                ->setDidExist(true);
+            $dbSettings->setSockDatabaseId($db->getId());
 
+            return $promise;
+        }
+        $db = new Database();
+        $db
+            ->setAccountId($accountId)
+            ->setName($dbSettings->getName())
+            ->setLogin($dbSettings->getUser())
+            ->setPassword($dbSettings->getPassword())
+            ->setEngine($dbSettings->getEngine());
+
+        /** @var Database $db */
+        $db = $sockDatabaseService->create($db);
+
+        $promise = new EntityCreatePromise($db);
+        $promise
+            ->setEntity($db)
+            ->setPoller(new Poller($sockDatabaseService, $db->getId(), 'database create'));
         $dbSettings->setSockDatabaseId($db->getId());
 
         return $promise;
     }
-
     // FILES AND DIRECTORIES
 
     /**
@@ -285,18 +268,17 @@ class AppEnvironmentService extends AbstractDoctrineService
      */
     public function createServerFilesystem(AppEnvironment $appEnvironment, array $servers)
     {
-        $taskRunner = call_user_func([$this->taskFactoryClass, 'createRunner']);
+        $taskRunner = $this->taskFactory->createRunner();
 
         $taskRunner->addTask(
-            call_user_func(
-                [$this->taskFactoryClass, 'create'],
+            $this->taskFactory->create(
                 'provision.filesystem',
-                array(
+                [
                     'appEnvironment' => $appEnvironment,
                     'settings' => $this->settings,
                     'servers' => $servers,
                     'applicationTypeBuilder' => $this->applicationTypeBuilder,
-                )
+                ]
             )
         );
 
@@ -315,18 +297,17 @@ class AppEnvironmentService extends AbstractDoctrineService
      */
     public function createServerConfigFiles(AppEnvironment $appEnvironment, array $servers)
     {
-        $taskRunner = call_user_func([$this->taskFactoryClass, 'createRunner']);
+        $taskRunner = $this->taskFactory->createRunner();
 
         $taskRunner->addTask(
-            call_user_func(
-                [$this->taskFactoryClass, 'create'],
+            $this->taskFactory->create(
                 'provision.config_files',
-                array(
+                [
                     'appEnvironment' => $appEnvironment,
                     'servers' => $servers,
                     'settings' => $this->settings,
                     'applicationTypeBuilder' => $this->applicationTypeBuilder,
-                )
+                ]
             )
         );
 
@@ -352,16 +333,15 @@ class AppEnvironmentService extends AbstractDoctrineService
             return false;
         }
 
-        $taskRunner = call_user_func([$this->taskFactoryClass, 'createRunner']);
+        $taskRunner = $this->taskFactory->createRunner();
 
         $taskRunner->addTask(
-            call_user_func(
-                [$this->taskFactoryClass, 'create'],
+            $this->taskFactory->create(
                 'provision.cron',
-                array(
+                [
                     'appEnvironment' => $appEnvironment,
                     'servers' => $servers,
-                )
+                ]
             )
         );
 

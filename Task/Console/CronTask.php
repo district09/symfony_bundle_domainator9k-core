@@ -5,12 +5,12 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Task\Console;
 use DigipolisGent\Domainator9k\CoreBundle\Task\AbstractSshTask;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Cron extends AbstractSshTask
+class CronTask extends AbstractSshTask
 {
     /**
      * @return string
      */
-    public function getName()
+    public static function getName()
     {
         return 'console.cron';
     }
@@ -47,8 +47,6 @@ class Cron extends AbstractSshTask
         } elseif ($check !== false) {
             $check = "| grep -vE \"$check\"";
         }
-
-        $this->shell->connect();
 
         $cmd = "(crontab -l $check; echo \"$cron\") | crontab";
         $this->doExec($result, $cmd);

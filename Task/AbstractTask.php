@@ -4,6 +4,7 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Task;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Webmozart\PathUtil\Path;
 
 abstract class AbstractTask implements TaskInterface
 {
@@ -22,6 +23,11 @@ abstract class AbstractTask implements TaskInterface
      * @var AppEnvironment
      */
     protected $appEnvironment;
+
+    /**
+     * @var string
+     */
+    protected $homeDirectory;
 
     /**
      * Creates a new task.
@@ -103,16 +109,23 @@ abstract class AbstractTask implements TaskInterface
     }
 
     /**
+     * @return $this
+     */
+    public function setHomeDirectory($dir)
+    {
+        $this->homeDirectory = $dir;
+
+        return $this;
+    }
+
+    /**
      * @return string
      */
     public function getHomeDirectory()
     {
-        if (function_exists('posix_getpwuid')) {
-            $info = posix_getpwuid(posix_getuid());
-
-            return $info['dir'];
+        if (null !== $this->homeDirectory) {
+            return $this->homeDirectory;
         }
-
-        return isset($_SERVER['HOME']) ? $_SERVER['HOME'] : realpath('~');
+        return Path::getHomeDirectory();
     }
 }

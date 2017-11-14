@@ -14,7 +14,8 @@
         "digipolisgent/sock-api-bundle": "dev-master",
         "doctrine/doctrine-bundle": "^1.6",
         "symfony/swiftmailer-bundle": "^2.3",
-        "phpseclib/phpseclib": "^2.0"
+        "phpseclib/phpseclib": "^2.0",
+        "webmozart/path-util": "^2.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.7"

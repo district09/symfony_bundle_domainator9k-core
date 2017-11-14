@@ -30,7 +30,7 @@ class ConfigFilesTask extends AbstractTask implements TaskFactoryAwareInterface
         parent::configure($options);
 
         $options->setRequired(array('servers', 'settings', 'applicationTypeBuilder'));
-        $options->setAllowedTypes('settings', 'DigipolisGent\Domainator9k\CoreBundle\Entity\Settings');
+        $options->setAllowedTypes('settings', Settings::class);
     }
 
     public function execute()
@@ -46,7 +46,7 @@ class ConfigFilesTask extends AbstractTask implements TaskFactoryAwareInterface
         $appEnvironment = $this->options['appEnvironment'];
         /** @var Server[] $servers */
         $servers = $this->options['servers'];
-        $user = $this->appEnvironment->getServerSettings()->getUser();
+        $user = $appEnvironment->getServerSettings()->getUser();
         $taskRunner = $this->taskFactory->createRunner();
         $keyFilePath = $this->getHomeDirectory() . '/.ssh/id_rsa';
         $keyFile = realpath($keyFilePath);

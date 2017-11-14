@@ -13,7 +13,7 @@ interface SshShellInterface
      * @param string $stdout
      *     Will be filled with the command output STDOUT.
      * @param bool|null $exitStatus
-     *     Will be filled with the command exit status or null of unknown.
+     *     Will be filled with the command exit status or null if unknown.
      * @param string $stderr
      *     Will be filled with the command error output STDERR.
      *

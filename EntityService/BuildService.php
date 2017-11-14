@@ -281,11 +281,8 @@ cron:               %s', $build->getApplication()->getName(), ($ciActive) ? 'On'
             }
 
             if (!$allowPartialBuilds && $this->isEnabled($options, self::PROVISION_CRON)) {
-                if ($envService->createCronJob($env, $envServers)) {
-                    Messenger::send('cron jobs installed');
-                } else {
-                    Messenger::send('no cron jobs installed');
-                }
+                $cronJobResult = $envService->createCronJob($env, $envServers);
+                Messenger::send($cronJobResult ? 'cron jobs installed' : 'no cron jobs installed');
             }
 
             if ($ciActive) {

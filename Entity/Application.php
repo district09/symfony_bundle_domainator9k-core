@@ -445,7 +445,9 @@ class Application
     {
         if ($user) {
             return $this->appEnvironments->filter(function (AppEnvironment $env) use ($user) {
-                return 'test' === $env->getNameCanonical() || $env->hasUser($user) || $env->hasAnyRole($user->getRoles());
+                return 'test' === $env->getNameCanonical()
+                    || $env->hasUser($user)
+                    || $env->hasAnyRole($user->getRoles());
             });
         }
 
@@ -453,7 +455,7 @@ class Application
     }
 
     /**
-     * @param string $name
+     * @param string|Environment $name
      *
      * @throws \Exception
      *
@@ -467,7 +469,11 @@ class Application
             $name = (string) $name;
         }
         foreach ($this->appEnvironments as $e) {
-            if (($e->getName() === $name || $e->getNameCanonical() === $name) || ($env && ($e->getName() === $env->getName() || $e->getNameCanonical() === $env->getName()))) {
+            $matches = ($e->getName() === $name || $e->getNameCanonical() === $name)
+                || ($env &&
+                    ($e->getName() === $env->getName() || $e->getNameCanonical() === $env->getName())
+                );
+            if ($matches) {
                 return $e;
             }
         }

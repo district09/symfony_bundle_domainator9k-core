@@ -155,12 +155,14 @@ class Application
     protected $cron;
 
     /**
+     * Creates a new Application.
+     *
      * @param ApplicationTypeInterface $type
-     * @param string                   $name
-     * @param Environment[]            $environments
-     * @param string                   $urlScheme    for production
-     * @param string|null              $siteConfig
-     * @param Application|null         $parent
+     * @param string $name
+     * @param Environment[] $environments
+     * @param string  $urlScheme
+     * @param string|null $siteConfig
+     * @param Application|null $parent
      */
     public function __construct(ApplicationTypeInterface $type, $name, $environments, $urlScheme = self::URL_SCHEME_STAD_GENT, $siteConfig = null, $parent = null)
     {
@@ -176,7 +178,7 @@ class Application
         $this->setParent($parent);
 
         foreach ($environments as $environment) {
-            $appEnv = new AppEnvironment($this, $environment->getName(), $environment->isDevPermissions(), $environment->isProd(), $urlScheme);
+            $appEnv = new AppEnvironment($this, $environment->getName(), $environment->isDevPermissions(), $environment->isProd());
             $appEnv->setDomainByDefault($environment, $urlScheme);
             $this->addAppEnvironment($appEnv);
         }
@@ -187,6 +189,8 @@ class Application
     }
 
     /**
+     * Gets the app type slug.
+     *
      * @return string
      */
     public function getAppTypeSlug()
@@ -199,6 +203,8 @@ class Application
     }
 
     /**
+     * Sets the app type slug.
+     *
      * @param string $appTypeSlug
      */
     public function setAppTypeSlug($appTypeSlug)
@@ -209,6 +215,8 @@ class Application
     }
 
     /**
+     * Gets the id.
+     *
      * @return int
      */
     public function getId()
@@ -217,6 +225,8 @@ class Application
     }
 
     /**
+     * Gets the name.
+     *
      * @return string
      */
     public function getName()
@@ -225,6 +235,8 @@ class Application
     }
 
     /**
+     * Gets the canonical name.
+     *
      * @return string
      */
     public function getNameCanonical()
@@ -233,6 +245,8 @@ class Application
     }
 
     /**
+     * Gets the name to use in the url.
+     *
      * @return string
      */
     public function getNameForUrl()
@@ -241,6 +255,8 @@ class Application
     }
 
     /**
+     * Gets the name to use in a folder.
+     *
      * @return string
      */
     public function getNameForFolder()
@@ -253,6 +269,8 @@ class Application
     }
 
     /**
+     * Sets the name.
+     *
      * @param string $name
      *
      * @return $this
@@ -265,11 +283,11 @@ class Application
     }
 
     /**
-     * Set parent.
+     * Sets the parent.
      *
      * @param \DigipolisGent\Domainator9k\CoreBundle\Entity\Application $parent
      *
-     * @return Application
+     * @return $this
      */
     public function setParent(Application $parent = null)
     {
@@ -279,7 +297,7 @@ class Application
     }
 
     /**
-     * Get parent.
+     * Gets the parent.
      *
      * @return \DigipolisGent\Domainator9k\CoreBundle\Entity\Application
      */
@@ -289,6 +307,8 @@ class Application
     }
 
     /**
+     * Gets the children.
+     *
      * @return array|ArrayCollection|Application[]
      */
     public function getChildren()
@@ -297,6 +317,8 @@ class Application
     }
 
     /**
+     * Gets the application type.
+     *
      * @return ApplicationTypeInterface
      */
     public function getType()
@@ -305,6 +327,8 @@ class Application
     }
 
     /**
+     * Sets the application type.
+     *
      * @param ApplicationTypeInterface $type
      *
      * @return $this
@@ -317,6 +341,8 @@ class Application
     }
 
     /**
+     * Gets the git repo.
+     *
      * @return string
      */
     public function getGitRepo()
@@ -325,6 +351,8 @@ class Application
     }
 
     /**
+     * Sets the git repo.
+     *
      * @param string $gitRepo
      *
      * @return $this
@@ -337,6 +365,8 @@ class Application
     }
 
     /**
+     * Gets the full git repo.
+     *
      * @return string
      */
     public function getGitRepoFull()
@@ -346,6 +376,8 @@ class Application
     }
 
     /**
+     * Gets whether or not this application has a database.
+     *
      * @return bool
      */
     public function hasDatabase()
@@ -354,10 +386,11 @@ class Application
     }
 
     /**
-     * Define if the application uses a databases
-     * If there are databases active, this function will ALWAYS set true.
+     * Define if the application uses a databases. If there are databases
+     * active, this function will ALWAYS set true.
      *
-     * @param bool $hasDatabase converted to TRUE if $this->hasActiveDatabases is TRUE
+     * @param bool $hasDatabase
+     *     Converted to TRUE if $this->hasActiveDatabases is TRUE
      *
      * @return $this
      */
@@ -387,6 +420,8 @@ class Application
     }
 
     /**
+     * Checks whether or not this application has a database.
+     *
      * @return bool
      */
     protected function hasActiveDatabases()
@@ -401,6 +436,8 @@ class Application
     }
 
     /**
+     * Checks if this application has solr.
+     *
      * @return bool
      */
     public function hasSolr()
@@ -409,6 +446,8 @@ class Application
     }
 
     /**
+     * Sets whether or not this application has solr.
+     *
      * @param bool $hasSolr
      *
      * @return $this
@@ -421,6 +460,8 @@ class Application
     }
 
     /**
+     * Gets the created at time.
+     *
      * @return \Datetime
      */
     public function getCreatedAt()
@@ -429,6 +470,8 @@ class Application
     }
 
     /**
+     * Gets the updated at time.
+     *
      * @return \DateTime
      */
     public function getUpdatedAt()
@@ -437,7 +480,10 @@ class Application
     }
 
     /**
-     * @param User|null $user filters out application not available for this user
+     * Get the app environments for a user.
+     *
+     * @param User|null $user
+     *     Filters out application not available for this user.
      *
      * @return AppEnvironment[]
      */
@@ -455,9 +501,12 @@ class Application
     }
 
     /**
+     * Gets the app environment by environment name.
+     *
      * @param string|Environment $name
      *
      * @throws \Exception
+     *     When no environment by the given name is found for this application.
      *
      * @return AppEnvironment
      */
@@ -469,10 +518,11 @@ class Application
             $name = (string) $name;
         }
         foreach ($this->appEnvironments as $e) {
-            $matches = ($e->getName() === $name || $e->getNameCanonical() === $name)
-                || ($env &&
-                    ($e->getName() === $env->getName() || $e->getNameCanonical() === $env->getName())
-                );
+            $matches = (
+                ($e->getName() === $name || $e->getNameCanonical() === $name)
+                ||
+                ($env && ($e->getName() === $env->getName() || $e->getNameCanonical() === $env->getName()))
+            );
             if ($matches) {
                 return $e;
             }
@@ -481,6 +531,15 @@ class Application
         throw new \Exception(sprintf("Application has no environment '%s'", $name));
     }
 
+    /**
+     * Gets the production app environment.
+     *
+     *
+     * @throws \Exception
+     *     When no production app environment is found for this app.
+     *
+     * @return AppEnvironment
+     */
     public function getProdAppEnvironment()
     {
         foreach ($this->appEnvironments as $e) {
@@ -493,6 +552,8 @@ class Application
     }
 
     /**
+     * Adds an app environment.
+     *
      * @param AppEnvironment $env
      *
      * @return $this
@@ -506,7 +567,9 @@ class Application
     }
 
     /**
-     * @return mixed
+     * Get the provision build.
+     *
+     * @return null|Build
      */
     public function getProvisionBuild()
     {
@@ -514,11 +577,13 @@ class Application
     }
 
     /**
-     * @param mixed $provisionBuild
+     * Set the provision build.
+     *
+     * @param Build $provisionBuild
      *
      * @return $this
      */
-    public function setProvisionBuild($provisionBuild)
+    public function setProvisionBuild(Build $provisionBuild)
     {
         $this->provisionBuild = $provisionBuild;
 
@@ -526,6 +591,8 @@ class Application
     }
 
     /**
+     * Checks whether or not the dns mail is sent.
+     *
      * @return bool
      */
     public function isDnsMailSent()
@@ -534,6 +601,8 @@ class Application
     }
 
     /**
+     * Sets whether or not the dns mail is sent.
+     *
      * @param bool $dnsMailSent
      *
      * @return $this
@@ -546,6 +615,8 @@ class Application
     }
 
     /**
+     * Gets the dns mail template.
+     *
      * @return null|string
      */
     public function getDnsMailTemplate()
@@ -554,6 +625,8 @@ class Application
     }
 
     /**
+     * Sets the dns mail template.
+     *
      * @param null|string $dnsMailTemplate
      *
      * @return $this
@@ -566,6 +639,8 @@ class Application
     }
 
     /**
+     * Gets the cron job.
+     *
      * @return null|string
      */
     public function getCron()
@@ -574,6 +649,8 @@ class Application
     }
 
     /**
+     * Sets the cron job.
+     *
      * @param null|string $cron
      *
      * @return $this
@@ -602,12 +679,16 @@ class Application
         return false;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function __toString()
     {
         return $this->name;
     }
 
     /**
+     * Gets the ci type slug.
      * @return string
      */
     public function getCiTypeSlug()
@@ -616,6 +697,8 @@ class Application
     }
 
     /**
+     * Sets the ci type slug.
+     *
      * @param string $ciTypeSlug
      */
     public function setCiTypeSlug($ciTypeSlug)
@@ -626,6 +709,8 @@ class Application
     }
 
     /**
+     * Gets the app type settings.
+     *
      * @return mixed
      */
     public function getAppTypeSettings()
@@ -634,6 +719,8 @@ class Application
     }
 
     /**
+     * Sets the app type settings.
+     *
      * @param mixed $appTypeSettings
      */
     public function setAppTypeSettings($appTypeSettings)
@@ -644,6 +731,8 @@ class Application
     }
 
     /**
+     * Gets the ci app type settings.
+     *
      * @return mixed
      */
     public function getCiAppTypeSettings()
@@ -652,6 +741,8 @@ class Application
     }
 
     /**
+     * Sets the ci app type settings.
+     * 
      * @param mixed $ciAppTypeSettings
      */
     public function setCiAppTypeSettings($ciAppTypeSettings)

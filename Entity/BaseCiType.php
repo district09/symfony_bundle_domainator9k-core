@@ -22,25 +22,33 @@ abstract class BaseCiType implements CiTypeInterface
     //which settings field should be used to build the menu of this citype // i dont like this, will change
     protected $menuUrlFieldName = 'url'; //i getter
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildCiUrl(CiTypeSettingsInterface $settings, AppEnvironment $env)
     {
         return rtrim($settings->getUrl(), '/') . '/job/' . $settings->getJobName($env);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function buildUrl(CiTypeSettingsInterface $ciTypeSettings)
     {
         return $ciTypeSettings->getUrl();
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getMenuUrlFieldName()
     {
         return $this->menuUrlFieldName;
     }
 
-    // todo, refactor, also used in basedeploytype
+    /**
+     * {@inheritdoc}
+     */
     public function parseYamlConfig()
     {
         $class_info = new ReflectionClass($this);
@@ -54,6 +62,9 @@ abstract class BaseCiType implements CiTypeInterface
         $this->mapYmlToProperties($content);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function mapYmlToProperties($content)
     {
         $this->additionalConfig = $content['additional_config'];
@@ -62,7 +73,7 @@ abstract class BaseCiType implements CiTypeInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getSettingsFormClass()
     {
@@ -74,7 +85,7 @@ abstract class BaseCiType implements CiTypeInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getSettingsEntityClass()
     {
@@ -86,7 +97,7 @@ abstract class BaseCiType implements CiTypeInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getProcessorServiceClass()
     {
@@ -98,7 +109,7 @@ abstract class BaseCiType implements CiTypeInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getAppTypeSettingsFormClass()
     {
@@ -110,7 +121,7 @@ abstract class BaseCiType implements CiTypeInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getAppTypeSettingsEntityClass()
     {
@@ -122,7 +133,7 @@ abstract class BaseCiType implements CiTypeInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -134,7 +145,7 @@ abstract class BaseCiType implements CiTypeInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getSlug()
     {
@@ -146,7 +157,7 @@ abstract class BaseCiType implements CiTypeInterface
     }
 
     /**
-     * @return mixed
+     * {@inheritdoc}
      */
     public function getAdditionalConfig()
     {
@@ -154,7 +165,7 @@ abstract class BaseCiType implements CiTypeInterface
     }
 
     /**
-     * @return null|string
+     * {@inheritdoc}
      */
     public function getYmlConfigName()
     {

@@ -14,6 +14,8 @@ trait HasRoles
     protected $roles = array();
 
     /**
+     * Gets the roles.
+     *
      * @param bool $asStrings
      *
      * @return array|Role[]|ArrayCollection
@@ -33,6 +35,8 @@ trait HasRoles
     }
 
     /**
+     * Sets the roles.
+     *
      * @param array|Role[]|ArrayCollection $roles
      *
      * @return $this
@@ -46,6 +50,13 @@ trait HasRoles
         return $this;
     }
 
+    /**
+     * Adds a role.
+     *
+     * @param Role $role
+     *
+     * @return $this
+     */
     public function addRole(Role $role)
     {
         if (!$this->roles instanceof ArrayCollection) {
@@ -58,6 +69,13 @@ trait HasRoles
         return $this;
     }
 
+    /**
+     * Removes a role.
+     *
+     * @param string|Role $role
+     *
+     * @return $this
+     */
     public function removeRole($role)
     {
         if ($role instanceof Role) {
@@ -75,6 +93,13 @@ trait HasRoles
         return $this;
     }
 
+    /**
+     * Checks if this entity has a role.
+     *
+     * @param string|Role $role
+     *
+     * @return boolean
+     */
     public function hasRole($role)
     {
         if (is_string($role)) {
@@ -90,6 +115,13 @@ trait HasRoles
         return $this->roles->contains($role);
     }
 
+    /**
+     * Checks if this entity has any of the given roles.
+     *
+     * @param string[]|Role[] $roles
+     *
+     * @return boolean
+     */
     public function hasAnyRole($roles)
     {
         foreach ($roles as $role) {

@@ -53,6 +53,8 @@ abstract class BaseCiAppTypeSettings
     }
 
     /**
+     * Gets the app type slug.
+     *
      * @return mixed
      */
     public function getAppTypeSlug()
@@ -61,6 +63,8 @@ abstract class BaseCiAppTypeSettings
     }
 
     /**
+     * Sets the app type slug.
+     *
      * @param mixed $appTypeSlug
      */
     public function setAppTypeSlug($appTypeSlug)
@@ -71,6 +75,8 @@ abstract class BaseCiAppTypeSettings
     }
 
     /**
+     * Gets the ci type slug.
+     *
      * @return string
      */
     public function getCiTypeSlug()
@@ -79,6 +85,8 @@ abstract class BaseCiAppTypeSettings
     }
 
     /**
+     * Sets the ci type slug.
+     *
      * @param string $ciTypeSlug
      */
     public function setCiTypeSlug($ciTypeSlug)
@@ -89,6 +97,8 @@ abstract class BaseCiAppTypeSettings
     }
 
     /**
+     * Checks if this is enabled.
+     *
      * @return bool
      */
     public function isEnabled()
@@ -97,6 +107,8 @@ abstract class BaseCiAppTypeSettings
     }
 
     /**
+     * Sets whether or not this is enabled.
+     *
      * @param bool $enabled
      */
     public function setEnabled($enabled)
@@ -107,6 +119,8 @@ abstract class BaseCiAppTypeSettings
     }
 
     /**
+     * Gets additional config.
+     *
      * @return mixed
      */
     public function getAdditionalConfig()
@@ -115,6 +129,8 @@ abstract class BaseCiAppTypeSettings
     }
 
     /**
+     * Sets additional config.
+     *
      * @param mixed $additionalConfig
      */
     public function setAdditionalConfig($additionalConfig)
@@ -125,6 +141,8 @@ abstract class BaseCiAppTypeSettings
     }
 
     /**
+     * Gets the app id.
+     *
      * @return string
      */
     public function getAppId()
@@ -133,6 +151,8 @@ abstract class BaseCiAppTypeSettings
     }
 
     /**
+     * Sets the app id.
+     * 
      * @param string $appId
      */
     public function setAppId($appId)

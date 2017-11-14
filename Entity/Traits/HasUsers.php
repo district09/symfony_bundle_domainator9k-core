@@ -14,6 +14,8 @@ trait HasUsers
     protected $users = array();
 
     /**
+     * Gets the users.
+     *
      * @return User[]
      */
     public function getUsers()
@@ -22,6 +24,8 @@ trait HasUsers
     }
 
     /**
+     * Sets the users.
+     *
      * @param User[] $users
      *
      * @return $this
@@ -36,6 +40,8 @@ trait HasUsers
     }
 
     /**
+     * Adds a user.
+     *
      * @param User $user
      *
      * @return $this
@@ -51,6 +57,8 @@ trait HasUsers
     }
 
     /**
+     * Removes a user.
+     *
      * @param User $user
      *
      * @return $this
@@ -63,6 +71,8 @@ trait HasUsers
     }
 
     /**
+     * Checks if the entity has a user.
+     *
      * @param User $user
      *
      * @return bool

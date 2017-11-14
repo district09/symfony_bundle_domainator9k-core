@@ -33,6 +33,9 @@ abstract class AbstractBuildCommand extends ContainerAwareCommand
      */
     protected $applicationService;
 
+    /**
+     * {@inheritdoc}
+     */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         parent::initialize($input, $output);
@@ -40,6 +43,17 @@ abstract class AbstractBuildCommand extends ContainerAwareCommand
         $this->applicationService = $this->getContainer()->get('digip_deploy.entity.application');
     }
 
+    /**
+     * Loads a build.
+     *
+     * @param int $id
+     *     The build id.
+     *
+     * @return \DigipolisGent\Domainator9k\CoreBundle\Entity\Build
+     *
+     * @throws \InvalidArgumentException
+     *     If the build has already started.
+     */
     public function loadBuild($id)
     {
         /** @var Build $build */
@@ -55,6 +69,11 @@ abstract class AbstractBuildCommand extends ContainerAwareCommand
         return $build;
     }
 
+    /**
+     * Loads all applications.
+     *
+     * @return \DigipolisGent\Domainator9k\CoreBundle\Entity\Application[]
+     */
     public function getApplications()
     {
         if (!$this->applications) {
@@ -64,16 +83,25 @@ abstract class AbstractBuildCommand extends ContainerAwareCommand
         return $this->applications;
     }
 
+    /**
+     * Loads an application.
+     *
+     * @param int $id
+     *
+     * @return \DigipolisGent\Domainator9k\CoreBundle\Entity\Application
+     */
     public function loadApplication($id)
     {
         return $this->applicationService->getFinder()->get($id);
     }
 
     /**
+     * Prompts the user to choose an application.
+     *
      * @param InputInterface  $input
      * @param OutputInterface $output
      *
-     * @return Application
+     * @return \DigipolisGent\Domainator9k\CoreBundle\Entity\Application
      */
     protected function askApplication(InputInterface $input, OutputInterface $output)
     {

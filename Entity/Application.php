@@ -3,7 +3,6 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
 use Ctrl\RadBundle\Entity\User;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Environment;
 use DigipolisGent\Domainator9k\CoreBundle\Interfaces\ApplicationTypeInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\HasRoles;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\HasUsers;
@@ -343,7 +342,7 @@ class Application
     public function getGitRepoFull()
     {
         // @TODO: Support multiple platforms.
-        return 'git@bitbucket.org:'.$this->gitRepo.'.git';
+        return 'git@bitbucket.org:' . $this->gitRepo . '.git';
     }
 
     /**
@@ -446,7 +445,7 @@ class Application
     {
         if ($user) {
             return $this->appEnvironments->filter(function (AppEnvironment $env) use ($user) {
-                return $env->getNameCanonical() === 'test' || $env->hasUser($user) || $env->hasAnyRole($user->getRoles());
+                return 'test' === $env->getNameCanonical() || $env->hasUser($user) || $env->hasAnyRole($user->getRoles());
             });
         }
 
@@ -456,9 +455,9 @@ class Application
     /**
      * @param string $name
      *
-     * @return AppEnvironment
-     *
      * @throws \Exception
+     *
+     * @return AppEnvironment
      */
     public function getAppEnvironment($name)
     {

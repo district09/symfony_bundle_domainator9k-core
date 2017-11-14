@@ -7,15 +7,13 @@ use DigipolisGent\Domainator9k\CoreBundle\Service\ApplicationTypeBuilder;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
 /**
- * Description of AppTypeInjectorListener
+ * Description of AppTypeInjectorListener.
  *
  * @author Jelle Sebreghts
  */
 class AppTypeInjectorListener
 {
-
     /**
-     *
      * @var ApplicationTypeBuilder
      */
     protected $appTypeBuilder;
@@ -28,10 +26,8 @@ class AppTypeInjectorListener
     public function postLoad(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
-        if ($entity instanceof Application)
-        {
+        if ($entity instanceof Application) {
             $entity->setType($this->appTypeBuilder->getType($entity->getAppTypeSlug()));
         }
     }
-
 }

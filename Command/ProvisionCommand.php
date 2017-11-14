@@ -12,15 +12,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ProvisionCommand extends AbstractBuildCommand
 {
-
     /**
-     *
      * @var \DigipolisGent\Domainator9k\CoreBundle\EntityService\SettingsService
      */
     protected $settingsService;
 
     /**
-     *
      * @var \DigipolisGent\Domainator9k\CoreBundle\EntityService\ServerService
      */
     protected $serverService;

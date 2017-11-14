@@ -91,7 +91,7 @@ class DatabaseSettings
     {
         $this->appEnvironment = $appEnvironment;
         $this->name = $name;
-        $this->user = substr($appEnvironment->getApplication()->getNameCanonical(), 0, 14).'_'.substr($appEnvironment->getNameCanonical(), 0, 1);
+        $this->user = substr($appEnvironment->getApplication()->getNameCanonical(), 0, 14) . '_' . substr($appEnvironment->getNameCanonical(), 0, 1);
 
         // generate a random string, hopefully, somebody will set a real password later on...
         $this->password = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 10);

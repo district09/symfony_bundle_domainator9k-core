@@ -11,13 +11,12 @@ use DigipolisGent\Domainator9k\CoreBundle\Tests\TestTools\DataGenerator;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of LinkTaskTest
+ * Description of LinkTaskTest.
  *
  * @author Jelle Sebreghts
  */
 class LinkTaskTest extends TestCase
 {
-
     use DataGenerator;
 
     protected $options = [];
@@ -67,11 +66,11 @@ class LinkTaskTest extends TestCase
             ->expects($this->once())
             ->method('exec')
             ->with($cmd, null, null, null)
-            ->willReturnCallback(function($cmd, &$stdout, &$exitStatus, &$stderr) use ($expectedStdout, $expectedExitStatus, $expectedStderr)
-            {
+            ->willReturnCallback(function ($cmd, &$stdout, &$exitStatus, &$stderr) use ($expectedStdout, $expectedExitStatus, $expectedStderr) {
                 $stdout = $expectedStdout;
                 $stderr = $expectedStderr;
                 $exitStatus = $expectedExitStatus;
+
                 return true;
             });
 
@@ -85,6 +84,7 @@ class LinkTaskTest extends TestCase
     {
         $task = new LinkTask($this->options);
         $task->setSshShellFactory($this->sshShellFactory);
+
         return $task;
     }
 }

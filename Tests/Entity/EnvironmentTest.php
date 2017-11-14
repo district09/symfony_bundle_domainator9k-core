@@ -2,18 +2,15 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Entity;
 
-use DigipolisGent\Domainator9k\CoreBundle\Entity\BaseCiAppTypeSettings;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Environment;
-use DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\EntityTest;
 
 /**
- * Description of AppEnvironmentSettingsTest
+ * Description of AppEnvironmentSettingsTest.
  *
  * @author Jelle Sebreghts
  */
 class EnvironmentTest extends EntityTest
 {
-
     public function testConstructor()
     {
         $env = $this->getEntity();
@@ -51,12 +48,10 @@ class EnvironmentTest extends EntityTest
     }
 
     /**
-     *
      * @return Environment
      */
     protected function getEntity()
     {
         return new Environment();
     }
-
 }

@@ -12,13 +12,12 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of EnvironmentServiceTests
+ * Description of EnvironmentServiceTests.
  *
  * @author Jelle Sebreghts
  */
 class EnvironmentServiceTest extends TestCase
 {
-
     use DataGenerator;
 
     protected $registry;
@@ -72,5 +71,4 @@ class EnvironmentServiceTest extends TestCase
     {
         return new EnvironmentService($this->registry);
     }
-
 }

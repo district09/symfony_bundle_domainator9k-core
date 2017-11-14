@@ -22,7 +22,6 @@ use Symfony\Component\Process\ProcessBuilder;
 
 class BuildService extends AbstractDoctrineService implements ContainerAwareInterface
 {
-
     const PROVISION_ALL = 63;
     const PROVISION_CI = 1;
     const PROVISION_CI_OVERRIDE = 2;
@@ -47,7 +46,6 @@ class BuildService extends AbstractDoctrineService implements ContainerAwareInte
     protected $kernelDir;
 
     /**
-     *
      * @var processBuilder
      */
     protected $processBuilder;
@@ -119,7 +117,6 @@ class BuildService extends AbstractDoctrineService implements ContainerAwareInte
         return $this->kernelDir;
     }
 
-
     /**
      * @param Build  $build
      * @param string $newMessage
@@ -133,8 +130,7 @@ class BuildService extends AbstractDoctrineService implements ContainerAwareInte
             $build->getLog() . PHP_EOL . $timestamp . $newMessage
         );
 
-        if ($persist)
-        {
+        if ($persist) {
             $this->persist($build);
         }
     }
@@ -145,9 +141,9 @@ class BuildService extends AbstractDoctrineService implements ContainerAwareInte
      * @param Settings $settings
      * @param int      $provision
      *
-     * @return bool
-     *
      * @throws RuntimeException
+     *
+     * @return bool
      *
      * @todo Very hard to test right now. This will switch to an event system
      * which will make it easier to test.
@@ -156,25 +152,21 @@ class BuildService extends AbstractDoctrineService implements ContainerAwareInte
      */
     public function execute(Build $build, array $servers, Settings $settings, $provision = self::PROVISION_ALL)
     {
-        try
-        {
+        try {
             $service = $this;
-            Messenger::addListener(function ($message) use ($build, $service)
-            {
+            Messenger::addListener(function ($message) use ($build, $service) {
                 $service->updateBuildLog($build, $message);
             }, 'db_update_build_log');
 
-            switch ($build->getType())
-            {
+            switch ($build->getType()) {
                 case Build::TYPE_PROVISION:
                     $this->executeProvision($build, $servers, $settings, $provision);
+
                     break;
             }
 
             return true;
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             Messenger::send([
                 'ERROR build failed',
                 sprintf('%s says: "%s"', get_class($e), $e->getMessage()),
@@ -195,9 +187,9 @@ class BuildService extends AbstractDoctrineService implements ContainerAwareInte
      * @param Settings       $settings
      * @param int            $options
      *
-     * @return bool
-     *
      * @throws Exception
+     *
+     * @return bool
      *
      * @todo Very hard to test right now. This will switch to an event system
      * which will make it easier to test.
@@ -232,41 +224,35 @@ sock:               %s
 cron:               %s', $build->getApplication()->getName(), ($ciActive) ? 'On' : 'Off', ($this->isEnabled($options, self::PROVISION_CI_OVERRIDE)) ? 'On' : 'Off', ($allActive || $this->isEnabled($options, self::PROVISION_FILESYSTEM)) ? 'On' : 'Off', ($allActive || $this->isEnabled($options, self::PROVISION_CONFIG_FILES)) ? 'On' : 'Off', ($allActive || $this->isEnabled($options, self::PROVISION_SOCK)) ? 'On' : 'Off', (($allActive || $this->isEnabled($options, self::PROVISION_CRON)) && $allowPartialBuilds) ? 'On' : 'Off'
         ));
 
-        if (!$allActive && !$allowPartialBuilds && $this->container->getParameter('kernel.environment') !== 'dev')
-        {
+        if (!$allActive && !$allowPartialBuilds && 'dev' !== $this->container->getParameter('kernel.environment')) {
             Messenger::send('a partial build was requested, but is seems we are missing required parts');
+
             throw new RuntimeException('Partial build not possible');
         }
 
         Messenger::send($this->getCliHeader('APPLICATION WIDE TASKS'));
 
         //TODO ciapptypesettings interface ?
-        if ($ciActive && $ciAppTypeSettings->isValidateJobEnabled())
-        {
+        if ($ciActive && $ciAppTypeSettings->isValidateJobEnabled()) {
             $ciProcessor->createValidateJob($app, $ciOverrideActive);
             //$envService->createJenkinsValidateJob($app, $ciOverrideActive);
         }
 
-        foreach ($app->getAppEnvironments() as $env)
-        {
+        foreach ($app->getAppEnvironments() as $env) {
             Messenger::send($this->getCliHeader(sprintf('ENVIRONMENT %s', $env->getName())));
 
             /** @var Server[] $envServers */
             $envServers = array();
-            foreach ($servers as $server)
-            {
-                if ($server->getEnvironment() !== $env->getNameCanonical())
-                {
+            foreach ($servers as $server) {
+                if ($server->getEnvironment() !== $env->getNameCanonical()) {
                     continue;
                 }
                 $envServers[] = $server;
-                if (!$server->manageSock())
-                {
+                if (!$server->manageSock()) {
                     continue;
                 }
 
-                if ($this->isEnabled($options, self::PROVISION_SOCK))
-                {
+                if ($this->isEnabled($options, self::PROVISION_SOCK)) {
                     Messenger::send($this->getCliHeader(sprintf('SOCK CONFIG FOR SERVER %s', $server->getName()), '-'));
                     $this->executeSockProvision($env, $server);
                 }
@@ -274,61 +260,46 @@ cron:               %s', $build->getApplication()->getName(), ($ciActive) ? 'On'
 
             $envServersCount = count($envServers);
 
-            if (!$envServersCount)
-            {
+            if (!$envServersCount) {
                 Messenger::send('no servers configured for this environment.');
+
                 continue;
             }
 
-            if ($this->isEnabled($options, self::PROVISION_FILESYSTEM))
-            {
+            if ($this->isEnabled($options, self::PROVISION_FILESYSTEM)) {
                 Messenger::send(sprintf('creating filesystem on %s servers', $envServersCount));
-                if ($envServersCount)
-                {
+                if ($envServersCount) {
                     $envService->createServerFilesystem($env, $envServers);
                 }
             }
 
-            if ($this->isEnabled($options, self::PROVISION_CONFIG_FILES))
-            {
+            if ($this->isEnabled($options, self::PROVISION_CONFIG_FILES)) {
                 Messenger::send(sprintf('creating config files on %s servers', $envServersCount));
-                if ($envServersCount)
-                {
+                if ($envServersCount) {
                     $envService->createServerConfigFiles($env, $envServers);
                 }
             }
 
-            if (!$allowPartialBuilds && $this->isEnabled($options, self::PROVISION_CRON))
-            {
-                if ($envService->createCronJob($env, $envServers))
-                {
+            if (!$allowPartialBuilds && $this->isEnabled($options, self::PROVISION_CRON)) {
+                if ($envService->createCronJob($env, $envServers)) {
                     Messenger::send('cron jobs installed');
-                }
-                else
-                {
+                } else {
                     Messenger::send('no cron jobs installed');
                 }
             }
 
-            if ($ciActive)
-            {
+            if ($ciActive) {
                 Messenger::send(sprintf('creating ci jobs for %s (%s servers)', $env->getNameCanonical(), $envServersCount));
                 $ciProcessor->createDeployJob($env, $envServers, $ciOverrideActive);
 
-                if ($ciAppTypeSettings->isRevertJobEnabled())
-                {
+                if ($ciAppTypeSettings->isRevertJobEnabled()) {
                     $ciProcessor->createRevertJob($env, $envServers, $ciOverrideActive);
                 }
-                if ($ciAppTypeSettings->isSyncJobEnabled())
-                {
-                    if (!$env->isProd())
-                    {
+                if ($ciAppTypeSettings->isSyncJobEnabled()) {
+                    if (!$env->isProd()) {
                         $ciProcessor->createSyncJob($app->getProdAppEnvironment(), $env, $servers, $ciOverrideActive);
-                    }
-                    else
-                    {
-                        if ($ciAppTypeSettings->isDumpJobEnabled())
-                        {
+                    } else {
+                        if ($ciAppTypeSettings->isDumpJobEnabled()) {
                             $ciProcessor->createDumpJob(
                                 $app->getProdAppEnvironment(), $envServers, $ciOverrideActive
                             );
@@ -342,12 +313,9 @@ cron:               %s', $build->getApplication()->getName(), ($ciActive) ? 'On'
 
         Messenger::send($this->getCliHeader('EXTRA TASKS'));
 
-        if ($app->isDnsMailSent())
-        {
+        if ($app->isDnsMailSent()) {
             Messenger::send(sprintf('DNS mail already sent, not sending it again'));
-        }
-        else
-        {
+        } else {
             Messenger::send(sprintf('sending DNS mail to %s', $settings->getDnsMailRecipients()));
             $this->container->get('digip_deploy.mailer')->sendDnsMail(
                 $settings, $app, $servers
@@ -398,17 +366,14 @@ cron:               %s', $build->getApplication()->getName(), ($ciActive) ? 'On'
         $sockDbService = $this->container->get('digip_deploy.sock_api.database');
         $queue = new PromiseQueue();
 
-        if ($app->getParent())
-        {
+        if ($app->getParent()) {
             Messenger::send(
                 sprintf(
                     'using existing account "%s" as parent on Sock Virtual Server %s', $app->getParent()->getName(), $server->getSockId()
                 )
             );
             $applicationName = $app->getName();
-        }
-        else
-        {
+        } else {
             Messenger::send(
                 sprintf(
                     'requesting account "%s" on Sock Virtual Server %s', $env->getServerSettings()->getUser(), $server->getSockId()
@@ -417,8 +382,7 @@ cron:               %s', $build->getApplication()->getName(), ($ciActive) ? 'On'
             $queue->addPromise(
                 $envService
                     ->createSockAccount($env, $server, $sockAccountService)
-                    ->then(function (EntityCreatePromise $promise) use ($env, $server)
-                    {
+                    ->then(function (EntityCreatePromise $promise) use ($env, $server) {
                         Messenger::send(
                             sprintf(
                                 $promise->getDidExist() ?
@@ -427,14 +391,13 @@ cron:               %s', $build->getApplication()->getName(), ($ciActive) ? 'On'
                             )
                         );
                     })
-                    ->error(function (EntityCreatePromise $promise)
-                    {
+                    ->error(function (EntityCreatePromise $promise) {
                         $msg = 'error creating account';
-                        if ($promise->getPoller() && $promise->getPoller()->getState() === Poller::STATE_EXPIRED)
-                        {
+                        if ($promise->getPoller() && Poller::STATE_EXPIRED === $promise->getPoller()->getState()) {
                             $msg .= ': polling event queue timed out';
                         }
                         Messenger::send($msg);
+
                         throw new RuntimeException($msg);
                     })
             );
@@ -448,8 +411,7 @@ cron:               %s', $build->getApplication()->getName(), ($ciActive) ? 'On'
         $queue->addPromise(
             $envService
                 ->createSockApplication($env, $sockAppService)
-                ->then(function (EntityCreatePromise $promise) use ($env, $server)
-                {
+                ->then(function (EntityCreatePromise $promise) use ($env, $server) {
                     Messenger::send(
                         sprintf(
                             $promise->getDidExist() ?
@@ -458,28 +420,25 @@ cron:               %s', $build->getApplication()->getName(), ($ciActive) ? 'On'
                         )
                     );
                 })
-                ->error(function (EntityCreatePromise $promise)
-                {
+                ->error(function (EntityCreatePromise $promise) {
                     $msg = 'error creating application';
-                    if ($promise->getPoller() && $promise->getPoller()->getState() === Poller::STATE_EXPIRED)
-                    {
+                    if ($promise->getPoller() && Poller::STATE_EXPIRED === $promise->getPoller()->getState()) {
                         $msg .= ': polling event queue timed out';
                     }
                     Messenger::send($msg);
+
                     throw new RuntimeException($msg);
                 })
         );
 
-        if ($env->getApplication()->hasDatabase())
-        {
+        if ($env->getApplication()->hasDatabase()) {
             Messenger::send(sprintf(
                     'requesting database "%s" on Sock Account %s', $env->getDatabaseSettings()->getName(), $env->getServerSettings()->getSockAccountId()
             ));
             $queue->addPromise(
                 $envService
                     ->createSockDatabase($env, $sockDbService)
-                    ->then(function (EntityCreatePromise $promise) use ($env, $server)
-                    {
+                    ->then(function (EntityCreatePromise $promise) use ($env, $server) {
                         Messenger::send(
                             sprintf(
                                 $promise->getDidExist() ?
@@ -488,14 +447,13 @@ cron:               %s', $build->getApplication()->getName(), ($ciActive) ? 'On'
                             )
                         );
                     })
-                    ->error(function (EntityCreatePromise $promise)
-                    {
+                    ->error(function (EntityCreatePromise $promise) {
                         $msg = 'error creating database';
-                        if ($promise->getPoller() && $promise->getPoller()->getState() === Poller::STATE_EXPIRED)
-                        {
+                        if ($promise->getPoller() && Poller::STATE_EXPIRED === $promise->getPoller()->getState()) {
                             $msg .= ': polling event queue timed out';
                         }
                         Messenger::send($msg);
+
                         throw new RuntimeException($msg);
                     })
             );
@@ -521,12 +479,9 @@ cron:               %s', $build->getApplication()->getName(), ($ciActive) ? 'On'
         $buildId = $build->getId();
 
         $options = '';
-        if ($this->isEnabled($provision, self::PROVISION_ALL))
-        {
+        if ($this->isEnabled($provision, self::PROVISION_ALL)) {
             $options .= 'a';
-        }
-        else
-        {
+        } else {
             $types = [
                 'C' => self::PROVISION_CRON,
                 'J' => self::PROVISION_CI_OVERRIDE,
@@ -542,8 +497,7 @@ cron:               %s', $build->getApplication()->getName(), ($ciActive) ? 'On'
             }
         }
 
-        if ($options)
-        {
+        if ($options) {
             $options = '-' . $options;
         }
 
@@ -567,5 +521,4 @@ cron:               %s', $build->getApplication()->getName(), ($ciActive) ? 'On'
     {
         return ($mask & $search) === $search;
     }
-
 }

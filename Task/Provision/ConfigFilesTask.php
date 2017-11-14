@@ -14,7 +14,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ConfigFilesTask extends AbstractTask implements TaskFactoryAwareInterface
 {
-
     use TaskFactoryAware;
 
     /**

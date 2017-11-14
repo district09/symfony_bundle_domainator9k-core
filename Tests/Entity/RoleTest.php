@@ -3,10 +3,9 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Entity;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Role;
-use DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\EntityTest;
 
 /**
- * Description of AppEnvironmentSettingsTest
+ * Description of AppEnvironmentSettingsTest.
  *
  * @author Jelle Sebreghts
  */
@@ -34,7 +33,8 @@ class RoleTest extends EntityTest
         ];
     }
 
-    public function testGetRole() {
+    public function testGetRole()
+    {
         $role = $this->getEntity();
         $this->assertEquals($role->getName(), $role->getRole());
         $this->assertEquals($this->name, $role->getRole());
@@ -48,12 +48,10 @@ class RoleTest extends EntityTest
     }
 
     /**
-     *
      * @return Role
      */
     protected function getEntity()
     {
         return new Role($this->name);
     }
-
 }

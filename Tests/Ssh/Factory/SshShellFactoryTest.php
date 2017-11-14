@@ -8,17 +8,15 @@ use DigipolisGent\Domainator9k\CoreBundle\Ssh\Factory\SshFactory;
 use DigipolisGent\Domainator9k\CoreBundle\Ssh\Factory\SshShellFactory;
 use DigipolisGent\Domainator9k\CoreBundle\Ssh\SshShell;
 use DigipolisGent\Domainator9k\CoreBundle\Tests\TestTools\DataGenerator;
-use phpseclib\Net\SSH2;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of SshShellFactoryTest
+ * Description of SshShellFactoryTest.
  *
  * @author Jelle Sebreghts
  */
 class SshShellFactoryTest extends TestCase
 {
-
     use DataGenerator;
 
     protected $host;
@@ -33,7 +31,8 @@ class SshShellFactoryTest extends TestCase
         $this->password = $this->getAlphaNumeric();
     }
 
-    public function testCreate() {
+    public function testCreate()
+    {
         $factory = $this->getSshShellFactory();
 
         $pwShell = $factory->create($this->host, SshShellFactory::AUTH_TYPE_CREDENTIALS, $this->user, $this->password);
@@ -56,5 +55,4 @@ class SshShellFactoryTest extends TestCase
     {
         return new SshShellFactory(new SshFactory());
     }
-
 }

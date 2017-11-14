@@ -19,7 +19,7 @@ class KeyFile extends AbstractAuth
     {
         $this->user = $user;
         $this->privateKeyFile = $privateKeyFile;
-        $this->publicKeyFile = $privateKeyFile.'.pub';
+        $this->publicKeyFile = $privateKeyFile . '.pub';
         $this->passphrase = $passphrase;
     }
 

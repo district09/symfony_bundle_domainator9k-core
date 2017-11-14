@@ -7,7 +7,7 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\BaseAppType;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
 
 /**
- * Description of TestAppType
+ * Description of TestAppType.
  *
  * @author Jelle Sebreghts
  */
@@ -17,5 +17,4 @@ class TestAppType extends BaseAppType
     {
         return '';
     }
-
 }

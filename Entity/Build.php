@@ -92,7 +92,7 @@ class Build
         $this->appEnvironment = $env;
         $this->type = $type;
 
-        if ($type === self::TYPE_DEPLOY && !$env) {
+        if (self::TYPE_DEPLOY === $type && !$env) {
             throw new InvalidArgumentException(sprintf(
                 'environment is required when creating a DEPLOY build'
             ));

@@ -12,23 +12,20 @@ use ReflectionObject;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of RoleServiceTest
+ * Description of RoleServiceTest.
  *
  * @author Jelle Sebreghts
  */
 class RoleServiceTest extends TestCase
 {
-
     use DataGenerator;
 
     /**
-     *
      * @var array
      */
     protected $roleHierarchy;
 
     /**
-     *
      * @var
      */
     protected $doctrine;
@@ -46,7 +43,8 @@ class RoleServiceTest extends TestCase
         $this->assertEquals(Role::class, $service->getEntityClass());
     }
 
-    public function testGetSetRoleHierarchy() {
+    public function testGetSetRoleHierarchy()
+    {
         $service = $this->getService();
         $this->assertEquals($this->roleHierarchy, $service->getRoleHierarchy());
         $newHierarchy = [$this->getAlphaNumeric(), $this->getAlphaNumeric()];
@@ -54,7 +52,8 @@ class RoleServiceTest extends TestCase
         $this->assertEquals($newHierarchy, $service->getRoleHierarchy());
     }
 
-    public function testGetRole() {
+    public function testGetRole()
+    {
         $service = $this->getService();
 
         $name = $this->getAlphaNumeric();
@@ -77,7 +76,8 @@ class RoleServiceTest extends TestCase
         $this->assertEquals($role, $service->getOrCreateRole($name));
     }
 
-    public function testCreateRole() {
+    public function testCreateRole()
+    {
         $service = $this->getService();
 
         $name = $this->getAlphaNumeric();
@@ -101,14 +101,13 @@ class RoleServiceTest extends TestCase
     }
 
     /**
-     *
      * @return RoleService
      */
     protected function getService()
     {
         $service = new RoleService($this->roleHierarchy);
         $service->setDoctrine($this->doctrine);
+
         return $service;
     }
-
 }

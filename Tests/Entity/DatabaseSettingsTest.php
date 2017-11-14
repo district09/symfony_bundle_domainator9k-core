@@ -5,30 +5,25 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Entity;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Application;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\DatabaseSettings;
-use DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\EntityTest;
 
 /**
- * Description of DatabaseSettingsTest
+ * Description of DatabaseSettingsTest.
  *
  * @author Jelle Sebreghts
  */
 class DatabaseSettingsTest extends EntityTest
 {
-
     /**
-     *
      * @var Application
      */
     protected $app;
 
     /**
-     *
      * @var Environment
      */
     protected $env;
 
     /**
-     *
      * @var string
      */
     protected $name;
@@ -93,12 +88,10 @@ class DatabaseSettingsTest extends EntityTest
     }
 
     /**
-     *
      * @return DatabaseSettings
      */
     protected function getEntity()
     {
         return new DatabaseSettings($this->env, $this->name);
     }
-
 }

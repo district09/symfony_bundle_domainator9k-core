@@ -8,7 +8,6 @@ use Webmozart\PathUtil\Path;
 
 abstract class AbstractTask implements TaskInterface
 {
-
     /**
      * @var bool
      */
@@ -109,6 +108,8 @@ abstract class AbstractTask implements TaskInterface
     }
 
     /**
+     * @param mixed $dir
+     *
      * @return $this
      */
     public function setHomeDirectory($dir)
@@ -126,6 +127,7 @@ abstract class AbstractTask implements TaskInterface
         if (null !== $this->homeDirectory) {
             return $this->homeDirectory;
         }
+
         return Path::getHomeDirectory();
     }
 }

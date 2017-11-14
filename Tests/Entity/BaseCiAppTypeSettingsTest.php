@@ -3,26 +3,20 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Entity;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\BaseCiAppTypeSettings;
-use DigipolisGent\Domainator9k\CoreBundle\Service\AppTypeSettingsService;
-use DigipolisGent\Domainator9k\CoreBundle\Service\EnvironmentService;
-use DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\EntityTest;
 
 /**
- * Description of AppEnvironmentSettingsTest
+ * Description of AppEnvironmentSettingsTest.
  *
  * @author Jelle Sebreghts
  */
 class BaseCiAppTypeSettingsTest extends EntityTest
 {
-
     /**
-     *
      * @var string
      */
     protected $ciTypeSlug;
 
     /**
-     *
      * @var string
      */
     protected $appTypeSlug;
@@ -64,12 +58,10 @@ class BaseCiAppTypeSettingsTest extends EntityTest
     }
 
     /**
-     *
      * @return BaseCiAppTypeSettings
      */
     protected function getEntity()
     {
         return $this->getMockBuilder(BaseCiAppTypeSettings::class)->setConstructorArgs([$this->ciTypeSlug, $this->appTypeSlug])->getMockForAbstractClass();
     }
-
 }

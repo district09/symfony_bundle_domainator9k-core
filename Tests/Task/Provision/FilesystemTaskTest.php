@@ -16,18 +16,16 @@ use DigipolisGent\Domainator9k\CoreBundle\Task\TaskInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Task\TaskResult;
 use DigipolisGent\Domainator9k\CoreBundle\Task\TaskRunner;
 use DigipolisGent\Domainator9k\CoreBundle\Tests\TestTools\DataGenerator;
-use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 use Webmozart\PathUtil\Path;
 
 /**
- * Description of FilesystemTaskTest
+ * Description of FilesystemTaskTest.
  *
  * @author Jelle Sebreghts
  */
 class FilesystemTaskTest extends TestCase
 {
-
     use DataGenerator;
 
     protected $options = [];
@@ -67,7 +65,8 @@ class FilesystemTaskTest extends TestCase
         $serverSettings = $this->getMockBuilder(ServerSettings::class)->disableOriginalConstructor()->getMock();
         $serverSettings->expects($this->once())->method('getUser')->willReturn($user);
 
-        $typeSlug = $this->getAlphaNumeric();$folder = $this->getAlphaNumeric();
+        $typeSlug = $this->getAlphaNumeric();
+        $folder = $this->getAlphaNumeric();
         $application = $this->getMockBuilder(Application::class)->disableOriginalConstructor()->getMock();
         $application->expects($this->once())->method('getAppTypeSlug')->willReturn($typeSlug);
         $application->expects($this->once())->method('getNameForFolder')->willReturn($folder);
@@ -143,9 +142,10 @@ class FilesystemTaskTest extends TestCase
     }
 
     /**
-     * @expectedException RuntimeException
+     * @expectedException \RuntimeException
      */
-    public function testNoKeyFile() {
+    public function testNoKeyFile()
+    {
         $task = $this->getTask();
         $home = $this->getAlphaNumeric();
         $task->setHomeDirectory($home);
@@ -164,10 +164,10 @@ class FilesystemTaskTest extends TestCase
         $this->options['appEnvironment']->expects($this->once())->method('getApplication')->willReturn($application);
 
         $task->execute();
-
     }
 
-    public function testGetHomeDirectory() {
+    public function testGetHomeDirectory()
+    {
         $task = $this->getTask();
         $this->assertEquals(Path::getHomeDirectory(), $task->getHomeDirectory());
     }
@@ -176,6 +176,7 @@ class FilesystemTaskTest extends TestCase
     {
         $task = new FilesystemTask($this->options);
         $task->setTaskFactory($this->taskFactory);
+
         return $task;
     }
 }

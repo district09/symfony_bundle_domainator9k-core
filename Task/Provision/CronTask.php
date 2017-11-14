@@ -12,7 +12,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CronTask extends AbstractTask implements TaskFactoryAwareInterface
 {
-
     use TaskFactoryAware;
 
     /**
@@ -43,7 +42,7 @@ class CronTask extends AbstractTask implements TaskFactoryAwareInterface
         $appFolder = $application->getNameForFolder();
         $appPath = "/home/$user/apps/$appFolder/current";
         $taskRunner = $this->taskFactory->createRunner();
-        $keyFilePath = $this->getHomeDirectory().'/.ssh/id_rsa';
+        $keyFilePath = $this->getHomeDirectory() . '/.ssh/id_rsa';
         $keyFile = realpath($keyFilePath);
 
         if (!file_exists($keyFile)) {

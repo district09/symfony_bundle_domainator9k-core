@@ -4,7 +4,6 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Task;
 
 interface FactoryInterface
 {
-
     /**
      * Set the default options for this task.
      *

@@ -20,7 +20,6 @@ if (!defined('NET_SFTP_TYPE_REGULAR')) {
 
 class SshShell implements SshShellInterface
 {
-
     /**
      * @var string
      */
@@ -220,7 +219,7 @@ class SshShell implements SshShellInterface
         $stderr = $this->connection->getStdError();
         $exitStatus = $this->connection->getExitStatus();
 
-        return $exitStatus === 0;
+        return 0 === $exitStatus;
     }
 
     /**
@@ -234,7 +233,7 @@ class SshShell implements SshShellInterface
 
         $stat = $sftp->stat($file);
         if ($stat) {
-            $stat['type'] = ($stat['type'] === NET_SFTP_TYPE_DIRECTORY) ? 'dir' : 'file';
+            $stat['type'] = (NET_SFTP_TYPE_DIRECTORY === $stat['type']) ? 'dir' : 'file';
         }
 
         return $stat;

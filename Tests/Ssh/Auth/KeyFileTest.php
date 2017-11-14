@@ -9,13 +9,12 @@ use phpseclib\Net\SSH2;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of KeyFileTest
+ * Description of KeyFileTest.
  *
  * @author Jelle Sebreghts
  */
 class KeyFileTest extends TestCase
 {
-
     use DataGenerator;
 
     protected $user;
@@ -30,7 +29,8 @@ class KeyFileTest extends TestCase
         $this->passphrase = $this->getAlphaNumeric();
     }
 
-    public function testSuccess() {
+    public function testSuccess()
+    {
         $keyFile = $this->getKeyFile();
 
         $connection = $this->getMockBuilder(SSH2::class)->disableOriginalConstructor()->getMock();
@@ -42,8 +42,8 @@ class KeyFileTest extends TestCase
         $this->assertNull($keyFile->authenticate($connection));
     }
 
-
-    public function testFail() {
+    public function testFail()
+    {
         $keyFile = $this->getKeyFile();
 
         $connection = $this->getMockBuilder(SSH2::class)->disableOriginalConstructor()->getMock();
@@ -54,12 +54,12 @@ class KeyFileTest extends TestCase
 
         try {
             $keyFile->authenticate($connection);
-        }
-        catch (\RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             $this->assertEquals(sprintf(
                 "fail: unable to authenticate user '%s' using key file",
                 $this->user
             ), $e->getMessage());
+
             return;
         }
         $this->fail('No RuntimeException thrown when ssh login fails.');
@@ -69,5 +69,4 @@ class KeyFileTest extends TestCase
     {
         return new KeyFile($this->user, $this->privateKeyFile, $this->passphrase);
     }
-
 }

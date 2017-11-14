@@ -11,7 +11,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of AppTypeInjectorListenerTest
+ * Description of AppTypeInjectorListenerTest.
  *
  * @author Jelle Sebreghts
  */
@@ -37,5 +37,4 @@ class AppTypeInjectorListenerTest extends TestCase
         $args->expects($this->once())->method('getEntity')->willReturn($app);
         $listener->postLoad($args);
     }
-
 }

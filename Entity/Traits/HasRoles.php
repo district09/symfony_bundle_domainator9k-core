@@ -66,6 +66,7 @@ trait HasRoles
             foreach ($this->roles as $r) {
                 if ($r->getRole() === $role) {
                     $this->roles->removeElement($r);
+
                     break;
                 }
             }

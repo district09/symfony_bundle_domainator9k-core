@@ -9,13 +9,12 @@ use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of NoneTest
+ * Description of NoneTest.
  *
  * @author Jelle Sebreghts
  */
 class NoneTest extends TestCase
 {
-
     use DataGenerator;
 
     protected $user;
@@ -26,7 +25,8 @@ class NoneTest extends TestCase
         $this->user = $this->getAlphaNumeric();
     }
 
-    public function testSuccess() {
+    public function testSuccess()
+    {
         $none = $this->getNone();
 
         $connection = $this->getMockBuilder(SSH2::class)->disableOriginalConstructor()->getMock();
@@ -35,8 +35,8 @@ class NoneTest extends TestCase
         $this->assertNull($none->authenticate($connection));
     }
 
-
-    public function testFail() {
+    public function testFail()
+    {
         $none = $this->getNone();
 
         $connection = $this->getMockBuilder(SSH2::class)->disableOriginalConstructor()->getMock();
@@ -44,12 +44,12 @@ class NoneTest extends TestCase
 
         try {
             $none->authenticate($connection);
-        }
-        catch (RuntimeException $e) {
+        } catch (RuntimeException $e) {
             $this->assertEquals(sprintf(
                 "fail: unable to authenticate user '%s', using password: NO",
                 $this->user
             ), $e->getMessage());
+
             return;
         }
         $this->fail('No RuntimeException thrown when ssh login fails.');
@@ -59,5 +59,4 @@ class NoneTest extends TestCase
     {
         return new None($this->user);
     }
-
 }

@@ -13,13 +13,12 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * Description of ApplicationVoterTest
+ * Description of ApplicationVoterTest.
  *
  * @author Jelle Sebreghts
  */
 class ApplicationVoterTest extends TestCase
 {
-
     use DataGenerator;
 
     protected $container;
@@ -32,6 +31,10 @@ class ApplicationVoterTest extends TestCase
 
     /**
      * @dataProvider supportsDataProvider
+     *
+     * @param mixed $attribute
+     * @param mixed $app
+     * @param mixed $expected
      */
     public function testSupports($attribute, $app, $expected)
     {
@@ -98,12 +101,10 @@ class ApplicationVoterTest extends TestCase
     }
 
     /**
-     *
      * @return ApplicationVoter
      */
     protected function getVoter()
     {
         return new ApplicationVoter($this->container);
     }
-
 }

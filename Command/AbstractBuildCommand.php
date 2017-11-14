@@ -24,13 +24,11 @@ abstract class AbstractBuildCommand extends ContainerAwareCommand
     protected $applications;
 
     /**
-     *
      * @var \DigipolisGent\Domainator9k\CoreBundle\EntityService\BuildService
      */
     protected $buildService;
 
     /**
-     *
      * @var \DigipolisGent\Domainator9k\CoreBundle\EntityService\ApplicationService
      */
     protected $applicationService;
@@ -97,6 +95,7 @@ abstract class AbstractBuildCommand extends ContainerAwareCommand
                 break;
             }
         }
+
         return $app;
     }
 }

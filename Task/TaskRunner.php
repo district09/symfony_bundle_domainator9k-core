@@ -66,7 +66,7 @@ class TaskRunner implements TaskRunnerInterface
         $failed = false;
 
         foreach ($this->tasks as $task) {
-            Messenger::send('executing task: '.$task->getName());
+            Messenger::send('executing task: ' . $task->getName());
             $result = $task->execute();
             $log[] = array(
                 'task' => $task,
@@ -74,8 +74,9 @@ class TaskRunner implements TaskRunnerInterface
             );
             if (!$result->isSuccess()) {
                 $failed = true;
-                Messenger::send('task failed: '.$task->getName());
+                Messenger::send('task failed: ' . $task->getName());
                 Messenger::send($result->getMessages());
+
                 break;
             }
             $executedTasks[] = $task;

@@ -9,7 +9,7 @@ use DigipolisGent\Domainator9k\CoreBundle\Tests\TestTools\DataGenerator;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of TaskRunnerTest
+ * Description of TaskRunnerTest.
  *
  * @author Jelle Sebreghts
  */
@@ -17,7 +17,8 @@ class TaskRunnerTest extends TestCase
 {
     use DataGenerator;
 
-    public function testGetSetTasks() {
+    public function testGetSetTasks()
+    {
         $runner = new TaskRunner();
         $tasks = [$this->getMockBuilder(TaskInterface::class)->getMock()];
         $this->assertEquals($runner, $runner->setTasks($tasks));
@@ -30,7 +31,8 @@ class TaskRunnerTest extends TestCase
         $this->assertEmpty($runner->getTasks());
     }
 
-    public function testRun() {
+    public function testRun()
+    {
         $runner = new TaskRunner();
         $result = $this->getMockBuilder(TaskResult::class)->getMock();
         $result->expects($this->once())->method('isSuccess')->willReturn(true);
@@ -41,14 +43,15 @@ class TaskRunnerTest extends TestCase
         $this->assertTrue($taskResult->isSuccess());
     }
 
-    public function testRunFails() {
+    public function testRunFails()
+    {
         $runner = new TaskRunner();
         $result = $this->getMockBuilder(TaskResult::class)->getMock();
         $result->expects($this->exactly(2))->method('isSuccess')->willReturnOnConsecutiveCalls(true, false);
         $result->expects($this->any())->method('getMessages')->willReturn([$this->getAlphaNumeric()]);
         $tasks = [
             (new Stub\StubTask())->setExecuteResult($result)->setIsExecuted(true)->setRevertResult(true),
-            (new Stub\StubTask())->setExecuteResult($result)->setIsExecuted(true)->setRevertResult(true)
+            (new Stub\StubTask())->setExecuteResult($result)->setIsExecuted(true)->setRevertResult(true),
         ];
         $runner->setTasks($tasks);
         $taskResult = $runner->run();

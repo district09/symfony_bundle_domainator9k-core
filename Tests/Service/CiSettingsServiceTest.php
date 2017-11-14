@@ -2,8 +2,6 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Service;
 
-use DigipolisGent\Domainator9k\CoreBundle\Entity\BaseCiAppTypeSettings;
-use DigipolisGent\Domainator9k\CoreBundle\Interfaces\ApplicationTypeInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Interfaces\CiTypeInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Service\CiSettingsService;
 use DigipolisGent\Domainator9k\CoreBundle\Tests\TestTools\DataGenerator;
@@ -14,13 +12,12 @@ use stdClass;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of CiAppTypeSettingsServiceTest
+ * Description of CiAppTypeSettingsServiceTest.
  *
  * @author Jelle Sebreghts
  */
 class CiSettingsServiceTest extends TestCase
 {
-
     use DataGenerator;
 
     protected $registry;
@@ -88,10 +85,8 @@ class CiSettingsServiceTest extends TestCase
         $service->saveSettings($settings);
     }
 
-
     protected function getService()
     {
         return new CiSettingsService($this->registry);
     }
-
 }

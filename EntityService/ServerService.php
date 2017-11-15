@@ -8,7 +8,7 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\Server;
 class ServerService extends AbstractDoctrineService
 {
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getEntityClass()
     {

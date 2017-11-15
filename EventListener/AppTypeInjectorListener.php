@@ -18,11 +18,21 @@ class AppTypeInjectorListener
      */
     protected $appTypeBuilder;
 
+    /**
+     * Creates a neww app type injector listener.
+     *
+     * @param ApplicationTypeBuilder $builder
+     */
     public function __construct(ApplicationTypeBuilder $builder)
     {
         $this->appTypeBuilder = $builder;
     }
 
+    /**
+     * Binds to the post load event.
+     * 
+     * @param LifecycleEventArgs $args
+     */
     public function postLoad(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();

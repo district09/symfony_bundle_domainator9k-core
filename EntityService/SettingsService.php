@@ -9,7 +9,7 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
 class SettingsService extends AbstractDoctrineService
 {
     /**
-     * @return string
+     * {@inhertidoc}
      */
     public function getEntityClass()
     {
@@ -17,6 +17,8 @@ class SettingsService extends AbstractDoctrineService
     }
 
     /**
+     * Gets the settings.
+     *
      * @return Settings
      */
     public function getSettings()
@@ -25,7 +27,7 @@ class SettingsService extends AbstractDoctrineService
     }
 
     /**
-     * Apply all defaults to a new Application.
+     * Applies all defaults to a new Application.
      *
      * @param Application $app
      */

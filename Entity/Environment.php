@@ -42,6 +42,9 @@ class Environment
      */
     protected $urlStructure;
 
+    /**
+     * Creates a new environment.
+     */
     public function __construct()
     {
         $this->prod = false;
@@ -49,6 +52,8 @@ class Environment
     }
 
     /**
+     * Checks whether or not devs have permissions on this environment.
+     *
      * @return bool
      */
     public function isDevPermissions()
@@ -57,6 +62,7 @@ class Environment
     }
 
     /**
+     * Sets whether or not devs have permissions on this environment.
      * @param bool $devPermissions
      */
     public function setDevPermissions($devPermissions)
@@ -67,6 +73,8 @@ class Environment
     }
 
     /**
+     * Gets the id.
+     *
      * @return int
      */
     public function getId()
@@ -75,6 +83,8 @@ class Environment
     }
 
     /**
+     * Gets the name.
+     *
      * @return string
      */
     public function getName()
@@ -83,6 +93,8 @@ class Environment
     }
 
     /**
+     * Sets the name.
+     *
      * @param string $name
      */
     public function setName($name)
@@ -92,12 +104,17 @@ class Environment
         return $this;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function __toString()
     {
         return $this->getName();
     }
 
     /**
+     * Checks whether or not this is a production environment.
+     *
      * @return bool
      */
     public function isProd()
@@ -106,6 +123,8 @@ class Environment
     }
 
     /**
+     * Sets whether or not this is a production environment.
+     *
      * @param bool $prod
      */
     public function setProd($prod)
@@ -116,6 +135,8 @@ class Environment
     }
 
     /**
+     * Gets the url structure.
+     *
      * @return string
      */
     public function getUrlStructure()
@@ -124,6 +145,8 @@ class Environment
     }
 
     /**
+     * Sets the url structure.
+     *
      * @param string $urlStructure
      */
     public function setUrlStructure($urlStructure)

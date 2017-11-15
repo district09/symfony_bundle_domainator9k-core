@@ -14,6 +14,8 @@ class RoleService extends AbstractDoctrineService
     protected $roleHierarchy = [];
 
     /**
+     * Creates a new role service.
+     *
      * @param $roleHierarchy
      */
     public function __construct($roleHierarchy)
@@ -22,7 +24,7 @@ class RoleService extends AbstractDoctrineService
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getEntityClass()
     {
@@ -30,6 +32,8 @@ class RoleService extends AbstractDoctrineService
     }
 
     /**
+     * Gets an existing or creates a new role.
+     *
      * @param string $name
      *
      * @return Role
@@ -47,6 +51,8 @@ class RoleService extends AbstractDoctrineService
     }
 
     /**
+     * Gets the role hierarchy.
+     *
      * @return RoleHierarchy
      */
     public function getRoleHierarchy()
@@ -55,6 +61,8 @@ class RoleService extends AbstractDoctrineService
     }
 
     /**
+     * Sets the role hierarchy.
+     * 
      * @param RoleHierarchy $roleHierarchy
      *
      * @return $this

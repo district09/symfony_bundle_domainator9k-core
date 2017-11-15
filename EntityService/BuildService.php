@@ -51,8 +51,10 @@ class BuildService extends AbstractDoctrineService implements ContainerAwareInte
     protected $processBuilder;
 
     /**
+     * Creates a new build service
      * @param string $workspaceDirectory
      * @param string $kernelDir
+     * @param null|ProcessBuilder $processBuilder
      */
     public function __construct($workspaceDirectory, $kernelDir, ProcessBuilder $processBuilder = null)
     {
@@ -65,7 +67,7 @@ class BuildService extends AbstractDoctrineService implements ContainerAwareInte
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getEntityClass()
     {
@@ -73,6 +75,8 @@ class BuildService extends AbstractDoctrineService implements ContainerAwareInte
     }
 
     /**
+     * Gets the container.
+     *
      * @return ContainerInterface
      */
     public function getContainer()
@@ -81,6 +85,8 @@ class BuildService extends AbstractDoctrineService implements ContainerAwareInte
     }
 
     /**
+     * Sets the container.
+     *
      * @param ContainerInterface $container
      *
      * @return $this
@@ -93,6 +99,8 @@ class BuildService extends AbstractDoctrineService implements ContainerAwareInte
     }
 
     /**
+     * Gets the workspace directory.
+     *
      * @return string
      */
     public function getWorkspaceDirectory()
@@ -101,6 +109,8 @@ class BuildService extends AbstractDoctrineService implements ContainerAwareInte
     }
 
     /**
+     * Sets the workspace directory.
+     *
      * @param string $workspaceDirectory
      *
      * @return $this
@@ -112,15 +122,22 @@ class BuildService extends AbstractDoctrineService implements ContainerAwareInte
         return $this;
     }
 
+    /**
+     * Gets the kernel directory.
+     *
+     * @return string
+     */
     public function getKernelDir()
     {
         return $this->kernelDir;
     }
 
     /**
-     * @param Build  $build
+     * Updates the build log.
+     *
+     * @param Build $build
      * @param string $newMessage
-     * @param bool   $persist
+     * @param bool $persist
      */
     public function updateBuildLog(Build $build, $newMessage, $persist = true)
     {
@@ -136,10 +153,10 @@ class BuildService extends AbstractDoctrineService implements ContainerAwareInte
     }
 
     /**
-     * @param Build    $build
-     * @param array    $servers
+     * @param Build $build
+     * @param array|Server[] $servers
      * @param Settings $settings
-     * @param int      $provision
+     * @param int $provision
      *
      * @throws RuntimeException
      *
@@ -182,10 +199,12 @@ class BuildService extends AbstractDoctrineService implements ContainerAwareInte
     }
 
     /**
-     * @param Build          $build
+     * Executes the provision.
+     *
+     * @param Build $build
      * @param array|Server[] $servers
-     * @param Settings       $settings
-     * @param int            $options
+     * @param Settings $settings
+     * @param int $options
      *
      * @throws Exception
      *
@@ -327,6 +346,8 @@ cron:               %s', $build->getApplication()->getName(), ($ciActive) ? 'On'
     }
 
     /**
+     * Helper function to get a cli header.
+     *
      * @param string $text
      * @param string $padChar
      *
@@ -343,8 +364,10 @@ cron:               %s', $build->getApplication()->getName(), ($ciActive) ? 'On'
     }
 
     /**
+     * Executes the sock provision.
+     *
      * @param AppEnvironment $env
-     * @param Server         $server
+     * @param Server $server
      *
      * @throws Exception
      *
@@ -460,8 +483,10 @@ cron:               %s', $build->getApplication()->getName(), ($ciActive) ? 'On'
     }
 
     /**
+     * Creates a background provision.
+     * 
      * @param Application $app
-     * @param int         $provision
+     * @param int $provision
      *
      * @return Build
      */

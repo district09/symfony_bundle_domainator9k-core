@@ -61,6 +61,8 @@ class Settings
     protected $appEnvironmentSettings;
 
     /**
+     * Gets the id.
+     *
      * @return int
      */
     public function getId()
@@ -69,6 +71,8 @@ class Settings
     }
 
     /**
+     * Sets the id.
+     *
      * @param int $id
      *
      * @return $this
@@ -81,6 +85,8 @@ class Settings
     }
 
     /**
+     * Gets the default sock ssh keys.
+     *
      * @return string
      */
     public function getDefaultSockSshKeys()
@@ -89,6 +95,8 @@ class Settings
     }
 
     /**
+     * Sets the default sock ssh keys.
+     *
      * @param string $defaultSockSshKeys
      *
      * @return $this
@@ -101,6 +109,8 @@ class Settings
     }
 
     /**
+     * Gets the DNS mail recipients.
+     *
      * @return string
      */
     public function getDnsMailRecipients()
@@ -109,6 +119,8 @@ class Settings
     }
 
     /**
+     * Sets the DNS mail recipients.
+     *
      * @param string $dnsMailRecipients
      *
      * @return $this
@@ -121,6 +133,8 @@ class Settings
     }
 
     /**
+     * Gets the DNS mail template.
+     *
      * @return string
      */
     public function getDnsMailTemplate()
@@ -129,6 +143,8 @@ class Settings
     }
 
     /**
+     * Sets the DNS mail template.
+     *
      * @param string $dnsMailTemplate
      *
      * @return $this
@@ -141,6 +157,8 @@ class Settings
     }
 
     /**
+     * Gets the sock domain.
+     *
      * @return string
      */
     public function getSockDomain()
@@ -149,6 +167,8 @@ class Settings
     }
 
     /**
+     * Sets the sock domain.
+     *
      * @param string $sockDomain
      *
      * @return $this
@@ -161,6 +181,8 @@ class Settings
     }
 
     /**
+     * Gets the sock user token.
+     *
      * @return string
      */
     public function getSockUserToken()
@@ -169,6 +191,8 @@ class Settings
     }
 
     /**
+     * Sets the sock user token.
+     *
      * @param string $sockUserToken
      *
      * @return $this
@@ -181,6 +205,8 @@ class Settings
     }
 
     /**
+     * Gets the sock client token.
+     *
      * @return string
      */
     public function getSockClientToken()
@@ -189,6 +215,8 @@ class Settings
     }
 
     /**
+     * Sets the sock client token.
+     *
      * @param string $sockClientToken
      *
      * @return $this
@@ -201,6 +229,8 @@ class Settings
     }
 
     /**
+     * Gets the app environment settings for an app environment.
+     *
      * @param null|string|AppEnvironment $appEnvironment
      *
      * @return AppEnvironmentSettings|AppEnvironmentSettings[]
@@ -225,6 +255,8 @@ class Settings
     }
 
     /**
+     * Sets the app environment settings.
+     *
      * @param AppEnvironmentSettings[] $appEnvironmentSettings
      *
      * @return $this

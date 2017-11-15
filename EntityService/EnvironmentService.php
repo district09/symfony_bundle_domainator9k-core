@@ -8,7 +8,7 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\Environment;
 class EnvironmentService extends AbstractDoctrineService
 {
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getEntityClass()
     {

@@ -60,6 +60,8 @@ class Server
     protected $environment;
 
     /**
+     * Creates a new server.
+     *
      * @param string $sockId
      * @param string $name
      * @param string $ip
@@ -74,6 +76,8 @@ class Server
     }
 
     /**
+     * Gets the id.
+     *
      * @return int
      */
     public function getId()
@@ -82,6 +86,8 @@ class Server
     }
 
     /**
+     * Gets the name.
+     *
      * @return string
      */
     public function getName()
@@ -90,6 +96,8 @@ class Server
     }
 
     /**
+     * Sets the name.
+     *
      * @param string $name
      *
      * @return $this
@@ -102,6 +110,8 @@ class Server
     }
 
     /**
+     * Gets the sock id.
+     *
      * @return string
      *
      * @todo Shouldn't this be in a separate sock bundle??
@@ -112,6 +122,8 @@ class Server
     }
 
     /**
+     * Sets the sock id.
+     *
      * @param string $sockId
      *
      * @return $this
@@ -126,6 +138,8 @@ class Server
     }
 
     /**
+     * Checks whether or not this server is managed by sock.
+     *
      * @return bool
      */
     public function manageSock()
@@ -134,6 +148,8 @@ class Server
     }
 
     /**
+     * Sets whether or not this server is managed by sock.
+     *
      * @param bool $manageSock
      *
      * @return $this
@@ -146,6 +162,7 @@ class Server
     }
 
     /**
+     * Checks whether or not this server is a task server.
      * @return bool
      */
     public function isTaskServer()
@@ -154,6 +171,8 @@ class Server
     }
 
     /**
+     * Sets whether or not this server is a task server.
+     *
      * @param bool $taskServer
      *
      * @return $this
@@ -166,6 +185,8 @@ class Server
     }
 
     /**
+     * Gets the server IP.
+     *
      * @return string
      */
     public function getIp()
@@ -174,6 +195,8 @@ class Server
     }
 
     /**
+     * Sets the server IP.
+     *
      * @param string $ip
      *
      * @return $this
@@ -186,6 +209,8 @@ class Server
     }
 
     /**
+     * Gets the environment.
+     *
      * @return string
      */
     public function getEnvironment()
@@ -194,6 +219,8 @@ class Server
     }
 
     /**
+     * Sets the environment.
+     *
      * @param string $environment
      *
      * @return $this

@@ -15,7 +15,7 @@ use ZipStream\ZipStream;
 class ApplicationService extends AbstractDoctrineService
 {
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getEntityClass()
     {
@@ -23,10 +23,13 @@ class ApplicationService extends AbstractDoctrineService
     }
 
     /**
-     * @param Application   $application
+     * Generates the drush alias files.
+     *
+     * @param Application $application
      * @param ServerService $serverService
      *
-     * @return string the file content
+     * @return string
+     *     The file content
      */
     public function generateDrushAliasFile(Application $application, ServerService $serverService)
     {
@@ -100,8 +103,6 @@ DRUSH;
         }
 
         return $drush;
-
-        exit(var_dump($drush));
     }
 
     /**
@@ -142,9 +143,12 @@ DRUSH;
     }
 
     /**
+     * Generates a csv for all apps with application, environment and domain.
+     *
      * @param Application[] $apps
      *
-     * @return string the file content
+     * @return string
+     *     The file content
      */
     public function generateDomainCsv(array $apps)
     {
@@ -165,7 +169,7 @@ DRUSH;
             }
         }
 
-        // get content and close handle
+        // Get content and close handle.
         rewind($h);
         $csv = stream_get_contents($h);
         fclose($h);

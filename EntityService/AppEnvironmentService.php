@@ -3,7 +3,6 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\EntityService;
 
 use Ctrl\Common\EntityService\AbstractDoctrineService;
-use DigipolisGent\Domainator9k\CiTypes\JenkinsBundle\Service\Jenkins;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Server;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
@@ -22,7 +21,6 @@ use InvalidArgumentException;
 
 // @codeCoverageIgnoreStart
 define('SOCK_MAX_SECONDS', '900');
-
 // @codeCoverageIgnoreEnd
 
 class AppEnvironmentService extends AbstractDoctrineService
@@ -31,11 +29,6 @@ class AppEnvironmentService extends AbstractDoctrineService
      * @var Settings
      */
     protected $settings;
-
-    /**
-     * @var Jenkins
-     */
-    protected $jenkins;
 
     /**
      * @var ApplicationTypeBuilder
@@ -48,6 +41,8 @@ class AppEnvironmentService extends AbstractDoctrineService
     protected $taskFactory;
 
     /**
+     * Creates a new app environment service.
+     *
      * @param Settings $settings
      * @param ApplicationTypeBuilder $appTypeBuilder
      * @param FactoryInterface $taskFactory
@@ -63,7 +58,7 @@ class AppEnvironmentService extends AbstractDoctrineService
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getEntityClass()
     {
@@ -225,7 +220,7 @@ class AppEnvironmentService extends AbstractDoctrineService
 
         $dbSettings = $appEnvironment->getDatabaseSettings();
 
-        // check if a database is already present for this environment
+        // Check if a database is already present for this environment.
         $db = $sockDatabaseService->findByName(
             $accountId,
             $dbSettings->getName()
@@ -264,10 +259,15 @@ class AppEnvironmentService extends AbstractDoctrineService
     // FILES AND DIRECTORIES
 
     /**
+     * Triggers the 'provision.filesystem' task for each server for the given
+     * app environment.
+     *
      * @param AppEnvironment $appEnvironment
      * @param array|Server[] $servers
      *
      * @throws Exception
+     *
+     * @return bool
      */
     public function createServerFilesystem(AppEnvironment $appEnvironment, array $servers)
     {
@@ -290,13 +290,20 @@ class AppEnvironmentService extends AbstractDoctrineService
         if (!$result->isSuccess()) {
             throw new Exception('failed to create server filesystem');
         }
+
+        return true;
     }
 
     /**
+     * Triggers the 'provision.config_files' task for each server for the given
+     * app environment.
+     *
      * @param AppEnvironment $appEnvironment
      * @param array|Server[] $servers
      *
      * @throws Exception
+     *
+     * @return bool
      */
     public function createServerConfigFiles(AppEnvironment $appEnvironment, array $servers)
     {
@@ -319,9 +326,14 @@ class AppEnvironmentService extends AbstractDoctrineService
         if (!$result->isSuccess()) {
             throw new Exception('failed to create server config files');
         }
+
+        return true;
     }
 
     /**
+     * Triggers the 'provision.cron' task for each server for the given
+     * app environment.
+     *
      * @param AppEnvironment $appEnvironment
      * @param array          $servers
      *

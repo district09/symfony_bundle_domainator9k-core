@@ -134,6 +134,8 @@ class DatabaseSettings
     }
 
     /**
+     * Gets the name.
+     *
      * @return string
      */
     public function getName()
@@ -142,6 +144,8 @@ class DatabaseSettings
     }
 
     /**
+     * Sets the name.
+     *
      * @param string $name
      *
      * @return $this
@@ -154,6 +158,8 @@ class DatabaseSettings
     }
 
     /**
+     * Gets the host.
+     *
      * @return string
      */
     public function getHost()
@@ -162,6 +168,8 @@ class DatabaseSettings
     }
 
     /**
+     * Sets the host.
+     *
      * @param string $host
      *
      * @return $this
@@ -174,6 +182,8 @@ class DatabaseSettings
     }
 
     /**
+     * Gets the port.
+     *
      * @return string
      */
     public function getPort()
@@ -182,6 +192,8 @@ class DatabaseSettings
     }
 
     /**
+     * Sets the port.
+     *
      * @param string $port
      *
      * @return $this
@@ -194,6 +206,8 @@ class DatabaseSettings
     }
 
     /**
+     * Gets the user.
+     *
      * @return string
      */
     public function getUser()
@@ -202,6 +216,8 @@ class DatabaseSettings
     }
 
     /**
+     * Sets the user.
+     *
      * @param string $user
      *
      * @return $this
@@ -214,6 +230,8 @@ class DatabaseSettings
     }
 
     /**
+     * Gets the password.
+     *
      * @return string
      */
     public function getPassword()
@@ -222,6 +240,8 @@ class DatabaseSettings
     }
 
     /**
+     * Sets the password.
+     *
      * @param string $password
      *
      * @return $this
@@ -234,6 +254,8 @@ class DatabaseSettings
     }
 
     /**
+     * Gets the sock database id.
+     *
      * @return int
      */
     public function getSockDatabaseId()
@@ -242,6 +264,8 @@ class DatabaseSettings
     }
 
     /**
+     * Sets the sock database id.
+     *
      * @param int $sockDatabaseId
      *
      * @return $this
@@ -254,7 +278,9 @@ class DatabaseSettings
     }
 
     /**
-     * @return mixed
+     * Checks whether or not the database is created.
+     *
+     * @return bool
      */
     public function isCreated()
     {
@@ -262,7 +288,9 @@ class DatabaseSettings
     }
 
     /**
-     * @param mixed $isCreated
+     * Sets whether or not the database is created.
+     *
+     * @param bool $isCreated
      *
      * @return $this
      */
@@ -274,6 +302,8 @@ class DatabaseSettings
     }
 
     /**
+     * Gets the engine.
+     *
      * @return string
      */
     public function getEngine()
@@ -286,6 +316,8 @@ class DatabaseSettings
     }
 
     /**
+     * Sets the engine.
+     *
      * @param string $engine
      *
      * @return $this

@@ -27,12 +27,19 @@ class Role implements RoleInterface
      */
     protected $name;
 
+    /**
+     * Creates a new role.
+     *
+     * @param string $name
+     */
     public function __construct($name)
     {
         $this->name = $name;
     }
 
     /**
+     * Gets the id.
+     *
      * @return int
      */
     public function getId()
@@ -41,6 +48,8 @@ class Role implements RoleInterface
     }
 
     /**
+     * Gets the name.
+     *
      * @return string
      */
     public function getName()
@@ -49,6 +58,8 @@ class Role implements RoleInterface
     }
 
     /**
+     * Sets the name.
+     * 
      * @param string $name
      *
      * @return $this

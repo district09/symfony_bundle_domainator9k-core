@@ -67,7 +67,7 @@ services:
 
     digip_deploy.filesystem_createlink:
       arguments: []
-      class: DigipolisGent\Domainator9k\CoreBundle\Task\Filesystem\CreateLinkTask
+      class: DigipolisGent\Domainator9k\CoreBundle\Task\Filesystem\LinkTask
       tags: [digip_deploy.task]
 
     digip_deploy.console_cron:

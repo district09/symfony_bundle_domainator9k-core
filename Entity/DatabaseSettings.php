@@ -84,8 +84,10 @@ class DatabaseSettings
     protected $isCreated = false;
 
     /**
+     * Creates new database settings.
+     *
      * @param AppEnvironment $appEnvironment
-     * @param string         $name
+     * @param string $name
      */
     public function __construct(AppEnvironment $appEnvironment, $name)
     {
@@ -93,11 +95,13 @@ class DatabaseSettings
         $this->name = $name;
         $this->user = substr($appEnvironment->getApplication()->getNameCanonical(), 0, 14).'_'.substr($appEnvironment->getNameCanonical(), 0, 1);
 
-        // generate a random string, hopefully, somebody will set a real password later on...
+        // Generate a random string, hopefully, somebody will set a real password later on...
         $this->password = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 10);
     }
 
     /**
+     * Gets the id.
+     *
      * @return int
      */
     public function getId()
@@ -106,6 +110,8 @@ class DatabaseSettings
     }
 
     /**
+     * Gets the app environment.
+     *
      * @return AppEnvironment
      */
     public function getAppEnvironment()
@@ -114,6 +120,8 @@ class DatabaseSettings
     }
 
     /**
+     * Sets the app environment.
+     *
      * @param AppEnvironment $appEnvironment
      *
      * @return $this

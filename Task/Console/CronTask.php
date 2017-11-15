@@ -35,16 +35,16 @@ class CronTask extends AbstractSshTask
         $cron = $this->options['cron'];
         $check = $this->options['check'];
 
-        if ($check === true) {
+        if (true === $check) {
             $lines = explode(PHP_EOL, $cron);
             $regex = [];
             foreach ($lines as $l) {
                 $regex[] = preg_quote(trim($l));
             }
-            $regex = '('.implode(')|(', $regex).')';
+            $regex = '(' . implode(')|(', $regex) . ')';
 
             $check = "| grep -vE \"$regex\"";
-        } elseif ($check !== false) {
+        } elseif (false !== $check) {
             $check = "| grep -vE \"$check\"";
         }
 

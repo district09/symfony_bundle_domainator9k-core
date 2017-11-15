@@ -4,36 +4,30 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Entity;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Role;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Server;
-use DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\EntityTest;
 
 /**
- * Description of ServerTest
+ * Description of ServerTest.
  *
  * @author Jelle Sebreghts
  */
 class ServerTest extends EntityTest
 {
-
     /**
-     *
      * @var string
      */
     protected $sockId;
 
     /**
-     *
      * @var string
      */
     protected $name;
 
     /**
-     *
      * @var string
      */
     protected $ip;
 
     /**
-     *
      * @var string
      */
     protected $environment;
@@ -82,12 +76,10 @@ class ServerTest extends EntityTest
     }
 
     /**
-     *
      * @return Role
      */
     protected function getEntity()
     {
         return new Server($this->sockId, $this->name, $this->ip, $this->environment);
     }
-
 }

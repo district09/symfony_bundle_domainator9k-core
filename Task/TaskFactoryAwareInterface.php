@@ -9,9 +9,9 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Task;
  */
 interface TaskFactoryAwareInterface
 {
-
     /**
      * @param FactoryInterface $factory
+     *
      * @return $this
      */
     public function setTaskFactory(FactoryInterface $factory);

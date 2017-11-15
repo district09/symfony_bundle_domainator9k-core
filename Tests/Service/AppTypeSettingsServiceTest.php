@@ -13,13 +13,12 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of AppTypeSettingsServiceTest
+ * Description of AppTypeSettingsServiceTest.
  *
  * @author Jelle Sebreghts
  */
 class AppTypeSettingsServiceTest extends TestCase
 {
-
     use DataGenerator;
 
     protected $registry;
@@ -138,5 +137,4 @@ class AppTypeSettingsServiceTest extends TestCase
     {
         return new AppTypeSettingsService($this->registry, $this->applicationTypeBuilder);
     }
-
 }

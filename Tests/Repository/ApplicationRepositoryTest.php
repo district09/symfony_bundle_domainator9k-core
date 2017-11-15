@@ -13,23 +13,20 @@ use PHPUnit_Framework_MockObject_MockObject;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of ApplicationRepositoryTest
+ * Description of ApplicationRepositoryTest.
  *
  * @author Jelle Sebreghts
  */
 class ApplicationRepositoryTest extends TestCase
 {
-
     use DataGenerator;
 
     /**
-     *
      * @var PHPUnit_Framework_MockObject_MockObject
      */
     protected $entityManager;
 
     /**
-     *
      * @var ClassMetadata
      */
     protected $metadata;
@@ -87,5 +84,4 @@ class ApplicationRepositoryTest extends TestCase
     {
         return new ApplicationRepository($this->entityManager, $this->metadata);
     }
-
 }

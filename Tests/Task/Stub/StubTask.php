@@ -6,13 +6,12 @@ use DigipolisGent\Domainator9k\CoreBundle\Task\TaskInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Task\TaskResult;
 
 /**
- * Description of StubTask
+ * Description of StubTask.
  *
  * @author Jelle Sebreghts
  */
 class StubTask implements TaskInterface
 {
-
     protected $revertResult;
     protected $isExecuted;
     protected $executeResult;

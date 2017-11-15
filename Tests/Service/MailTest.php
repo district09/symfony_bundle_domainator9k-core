@@ -10,18 +10,16 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
 use DigipolisGent\Domainator9k\CoreBundle\Service\EnvironmentService;
 use DigipolisGent\Domainator9k\CoreBundle\Service\Mail;
 use DigipolisGent\Domainator9k\CoreBundle\Tests\TestTools\DataGenerator;
-use RuntimeException;
 use Swift_Mailer;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of MailTest
+ * Description of MailTest.
  *
  * @author Jelle Sebreghts
  */
 class MailTest extends TestCase
 {
-
     use DataGenerator;
 
     protected $mailer;
@@ -35,7 +33,7 @@ class MailTest extends TestCase
     }
 
     /**
-     * @expectedException RuntimeException
+     * @expectedException \RuntimeException
      * @expectedExceptionMessage DNS mail template is empty
      */
     public function testSendDnsMailNoTemplate()
@@ -62,7 +60,7 @@ class MailTest extends TestCase
         $app = $this->getMockBuilder(Application::class)->disableOriginalConstructor()->getMock();
         $app->expects($this->once())->method('getDnsMailTemplate')->willReturn($template);
 
-       $this->assertFalse($service->sendDnsMail($settings, $app, []));
+        $this->assertFalse($service->sendDnsMail($settings, $app, []));
     }
 
     public function testSendDnsMail()
@@ -135,5 +133,4 @@ class MailTest extends TestCase
     {
         return new Mail($this->mailer, $this->environmentService);
     }
-
 }

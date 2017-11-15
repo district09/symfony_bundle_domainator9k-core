@@ -16,13 +16,12 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of CiAppTypeSettingsServiceTest
+ * Description of CiAppTypeSettingsServiceTest.
  *
  * @author Jelle Sebreghts
  */
 class CiAppTypeSettingsServiceTest extends TestCase
 {
-
     use DataGenerator;
 
     protected $registry;
@@ -202,10 +201,8 @@ class CiAppTypeSettingsServiceTest extends TestCase
         $service->saveSettings($settings);
     }
 
-
     protected function getService()
     {
         return new CiAppTypeSettingsService($this->registry, $this->applicationTypeBuilder, $this->ciTypeBuilder);
     }
-
 }

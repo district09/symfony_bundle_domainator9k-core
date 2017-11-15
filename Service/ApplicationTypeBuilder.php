@@ -8,7 +8,6 @@ use Exception;
 
 class ApplicationTypeBuilder
 {
-
     protected $applicationTypes;
 
     public function __construct()
@@ -22,8 +21,7 @@ class ApplicationTypeBuilder
     public function getTypes()
     {
         $arr = [];
-        foreach ($this->applicationTypes as $type)
-        {
+        foreach ($this->applicationTypes as $type) {
             $arr[$type->getSlug()] = $type;
         }
 
@@ -33,9 +31,9 @@ class ApplicationTypeBuilder
     /**
      * @param $slug
      *
-     * @return BaseAppType
-     *
      * @throws Exception
+     *
+     * @return BaseAppType
      */
     public function getType($slug)
     {
@@ -48,5 +46,4 @@ class ApplicationTypeBuilder
 
         return $this;
     }
-
 }

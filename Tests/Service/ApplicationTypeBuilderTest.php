@@ -8,13 +8,12 @@ use DigipolisGent\Domainator9k\CoreBundle\Tests\TestTools\DataGenerator;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of ApplicationTypeBuilderTest
+ * Description of ApplicationTypeBuilderTest.
  *
  * @author Jelle Sebreghts
  */
 class ApplicationTypeBuilderTest extends TestCase
 {
-
     use DataGenerator;
 
     public function testAddGetType()
@@ -31,5 +30,4 @@ class ApplicationTypeBuilderTest extends TestCase
     {
         return new ApplicationTypeBuilder();
     }
-
 }

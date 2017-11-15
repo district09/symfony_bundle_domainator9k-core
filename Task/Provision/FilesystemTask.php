@@ -14,7 +14,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class FilesystemTask extends AbstractTask implements TaskFactoryAwareInterface
 {
-
     use TaskFactoryAware;
 
     /**
@@ -48,7 +47,7 @@ class FilesystemTask extends AbstractTask implements TaskFactoryAwareInterface
         $application = $appEnvironment->getApplication();
         $appFolder = $application->getNameForFolder();
         $taskRunner = $this->taskFactory->createRunner();
-        $keyFilePath = $this->getHomeDirectory().'/.ssh/id_rsa';
+        $keyFilePath = $this->getHomeDirectory() . '/.ssh/id_rsa';
         $keyFile = realpath($keyFilePath);
 
         if (!file_exists($keyFile)) {

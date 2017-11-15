@@ -10,13 +10,14 @@ use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
- * Description of DigipolisGentDomainator9kCoreBundleTest
+ * Description of DigipolisGentDomainator9kCoreBundleTest.
  *
  * @author Jelle Sebreghts
  */
 class DigipolisGentDomainator9kCoreBundleTest extends TestCase
 {
-    public function testBuild() {
+    public function testBuild()
+    {
         $bundle = new DigipolisGentDomainator9kCoreBundle();
         $container = $this->getMockBuilder(ContainerBuilder::class)->disableOriginalConstructor()->getMock();
         $container->expects($this->at(0))->method('addCompilerPass')->with($this->isInstanceOf(ApplicationTypePass::class));

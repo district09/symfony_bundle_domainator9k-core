@@ -8,13 +8,12 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
 /**
- * Description of ProvisionCommandTest
+ * Description of ProvisionCommandTest.
  *
  * @author Jelle Sebreghts
  */
 class CiTypePassTest extends TestCase
 {
-
     public function testNoCiTypeBuilder()
     {
         $container = $this->getMockBuilder(ContainerBuilder::class)->getMock();
@@ -56,13 +55,10 @@ class CiTypePassTest extends TestCase
             ->willReturn($ciTypeBuilderDefinition);
 
         $types = array();
-        for ($i = 0; $i <= mt_rand(5, 10); $i++)
-        {
-            do
-            {
+        for ($i = 0; $i <= mt_rand(5, 10); ++$i) {
+            do {
                 $id = (string) mt_rand(0, 100000);
-            }
-            while (isset($types[$id]));
+            } while (isset($types[$id]));
 
             $typeDefinition = $this->getMockBuilder(Definition::class)->getMock();
 
@@ -70,8 +66,7 @@ class CiTypePassTest extends TestCase
                 ->expects($this->at(0))
                 ->method('addMethodCall')
                 ->with(
-                    'parseYamlConfig', $this->callback(function(array $args) use ($id)
-                    {
+                    'parseYamlConfig', $this->callback(function (array $args) use ($id) {
                         return ((string) $args[0]) === $id;
                     })
             );
@@ -86,8 +81,7 @@ class CiTypePassTest extends TestCase
                 ->expects($this->at($i))
                 ->method('addMethodCall')
                 ->with(
-                    'addType', $this->callback(function(array $args) use ($id)
-                    {
+                    'addType', $this->callback(function (array $args) use ($id) {
                         return ((string) $args[0]) === $id;
                     })
             );
@@ -109,5 +103,4 @@ class CiTypePassTest extends TestCase
         $pass = new CiTypePass();
         $pass->process($container);
     }
-
 }

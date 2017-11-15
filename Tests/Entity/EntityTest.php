@@ -7,15 +7,21 @@ use ReflectionObject;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of EnittyTest
+ * Description of EnittyTest.
  *
  * @author Jelle Sebreghts
  */
 abstract class EntityTest extends TestCase
 {
     use DataGenerator;
+
     /**
      * @dataProvider getterTestDataProvider
+     *
+     * @param mixed $prop
+     * @param mixed $val
+     * @param mixed $isBool
+     * @param mixed $boolVerb
      */
     public function testGetter($prop, $val, $isBool = false, $boolVerb = 'is')
     {
@@ -29,6 +35,11 @@ abstract class EntityTest extends TestCase
 
     /**
      * @dataProvider setterTestDataProvider
+     *
+     * @param mixed $prop
+     * @param mixed $val
+     * @param mixed $isBool
+     * @param mixed $boolVerb
      */
     public function testSetter($prop, $val, $isBool = false, $boolVerb = 'is')
     {
@@ -42,5 +53,4 @@ abstract class EntityTest extends TestCase
     abstract public function setterTestDataProvider();
 
     abstract protected function getEntity();
-
 }

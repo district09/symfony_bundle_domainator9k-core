@@ -12,19 +12,19 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ProvisionCommand extends AbstractBuildCommand
 {
-
     /**
-     *
      * @var \DigipolisGent\Domainator9k\CoreBundle\EntityService\SettingsService
      */
     protected $settingsService;
 
     /**
-     *
      * @var \DigipolisGent\Domainator9k\CoreBundle\EntityService\ServerService
      */
     protected $serverService;
 
+    /**
+     * {@inheritdoc}
+     */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         parent::initialize($input, $output);
@@ -32,6 +32,9 @@ class ProvisionCommand extends AbstractBuildCommand
         $this->serverService = $this->getContainer()->get('digip_deploy.entity.server');
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         $this
@@ -49,7 +52,7 @@ class ProvisionCommand extends AbstractBuildCommand
                 'A queued build you want to start instead of creating a new one'
             )
 
-            // options for partials builds
+            // Options for partials builds.
             ->addOption('all', 'a', InputOption::VALUE_NONE, 'Run all parts of the provisioning')
             ->addOption('ci', 'j', InputOption::VALUE_NONE, 'Run ci related parts of the provisioning')
             ->addOption('ci-override', 'J', InputOption::VALUE_NONE, 'Run ci related parts of the provisioning (override if ci jobs exist)')
@@ -60,6 +63,9 @@ class ProvisionCommand extends AbstractBuildCommand
         ;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         Messenger::addListener(function ($message) use ($output) {
@@ -85,9 +91,18 @@ class ProvisionCommand extends AbstractBuildCommand
         $build->setPid(getmypid());
         $this->buildService->persist($build);
 
-        $this->doBuild($build, $input);
+        return $this->doBuild($build, $input);
     }
 
+    /**
+     * Execute the build.
+     *
+     * @param DigipolisGent\Domainator9k\CoreBundle\Entity\Build $build
+     * @param InputInterface $input
+     *
+     * @return int
+     *     0 on success, 1 on failure.
+     */
     protected function doBuild(Build $build, InputInterface $input)
     {
         $settings = $this->settingsService->getSettings();

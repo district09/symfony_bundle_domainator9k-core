@@ -8,13 +8,12 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
 /**
- * Description of ProvisionCommandTest
+ * Description of ProvisionCommandTest.
  *
  * @author Jelle Sebreghts
  */
 class ApplicationTypePassTest extends TestCase
 {
-
     public function testNoAppTypeBuilder()
     {
         $container = $this->getMockBuilder(ContainerBuilder::class)->getMock();
@@ -56,13 +55,10 @@ class ApplicationTypePassTest extends TestCase
             ->willReturn($appTypeBuilderDefinition);
 
         $types = array();
-        for ($i = 0; $i <= mt_rand(5, 10); $i++)
-        {
-            do
-            {
+        for ($i = 0; $i <= mt_rand(5, 10); ++$i) {
+            do {
                 $id = (string) mt_rand(0, 100000);
-            }
-            while (isset($types[$id]));
+            } while (isset($types[$id]));
 
             $typeDefinition = $this->getMockBuilder(Definition::class)->getMock();
 
@@ -70,8 +66,7 @@ class ApplicationTypePassTest extends TestCase
                 ->expects($this->at(0))
                 ->method('addMethodCall')
                 ->with(
-                    'parseYamlConfig', $this->callback(function(array $args) use ($id)
-                    {
+                    'parseYamlConfig', $this->callback(function (array $args) use ($id) {
                         return ((string) $args[0]) === $id;
                     })
             );
@@ -80,9 +75,8 @@ class ApplicationTypePassTest extends TestCase
                 ->expects($this->at(1))
                 ->method('addMethodCall')
                 ->with(
-                    'setAppTypeSettingsService', $this->callback(function(array $args)
-                    {
-                        return ((string) $args[0]) === 'digip_deploy.application_type_settings_service';
+                    'setAppTypeSettingsService', $this->callback(function (array $args) {
+                        return 'digip_deploy.application_type_settings_service' === ((string) $args[0]);
                     })
             );
 
@@ -90,9 +84,8 @@ class ApplicationTypePassTest extends TestCase
                 ->expects($this->at(2))
                 ->method('addMethodCall')
                 ->with(
-                    'setEnvironmentService', $this->callback(function(array $args)
-                    {
-                        return ((string) $args[0]) === 'digip_deploy.environment_service';
+                    'setEnvironmentService', $this->callback(function (array $args) {
+                        return 'digip_deploy.environment_service' === ((string) $args[0]);
                     })
             );
 
@@ -106,8 +99,7 @@ class ApplicationTypePassTest extends TestCase
                 ->expects($this->at($i))
                 ->method('addMethodCall')
                 ->with(
-                    'addType', $this->callback(function(array $args) use ($id)
-                    {
+                    'addType', $this->callback(function (array $args) use ($id) {
                         return ((string) $args[0]) === $id;
                     })
             );
@@ -129,5 +121,4 @@ class ApplicationTypePassTest extends TestCase
         $pass = new ApplicationTypePass();
         $pass->process($container);
     }
-
 }

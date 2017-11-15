@@ -33,6 +33,8 @@ abstract class BaseAppType implements ApplicationTypeInterface
     protected $environmentService;
 
     /**
+     * Sets the environment service.
+     *
      * @param EnvironmentService $environmentService
      */
     public function setEnvironmentService(EnvironmentService $environmentService)
@@ -43,6 +45,8 @@ abstract class BaseAppType implements ApplicationTypeInterface
     }
 
     /**
+     * Gets the environment service.
+     *
      * @return EnvironmentService
      */
     public function getEnvironmentService()
@@ -51,6 +55,8 @@ abstract class BaseAppType implements ApplicationTypeInterface
     }
 
     /**
+     * Sets the app type settings service.
+     *
      * @param mixed $appTypeSettingsService
      */
     public function setAppTypeSettingsService(AppTypeSettingsService $appTypeSettingsService)
@@ -61,6 +67,8 @@ abstract class BaseAppType implements ApplicationTypeInterface
     }
 
     /**
+     * Gets the app type settings service.
+     *
      * @return AppTypeSettingsService
      */
     public function getAppTypeSettingsService()
@@ -69,6 +77,8 @@ abstract class BaseAppType implements ApplicationTypeInterface
     }
 
     /**
+     * Gets the name.
+     *
      * @return mixed
      */
     public function getName()
@@ -77,6 +87,8 @@ abstract class BaseAppType implements ApplicationTypeInterface
     }
 
     /**
+     * Gets the slug.
+     *
      * @return string
      */
     public function getSlug()
@@ -85,6 +97,8 @@ abstract class BaseAppType implements ApplicationTypeInterface
     }
 
     /**
+     * Gets the cronjob.
+     *
      * @return string
      */
     public function getCron()
@@ -93,6 +107,8 @@ abstract class BaseAppType implements ApplicationTypeInterface
     }
 
     /**
+     * Gets the public folder.
+     *
      * @return mixed
      */
     public function getPublicFolder()
@@ -101,6 +117,8 @@ abstract class BaseAppType implements ApplicationTypeInterface
     }
 
     /**
+     * Checks whether or not this app type requires a database.
+     *
      * @return mixed
      */
     public function isDatabaseRequired()
@@ -109,6 +127,8 @@ abstract class BaseAppType implements ApplicationTypeInterface
     }
 
     /**
+     * Gets the site config.
+     *
      * @return mixed
      */
     public function getSiteConfig()
@@ -116,12 +136,15 @@ abstract class BaseAppType implements ApplicationTypeInterface
         return $this->siteConfig;
     }
 
+    /**
+     * Parses the YAML config.
+     */
     public function parseYamlConfig()
     {
         $class_info = new ReflectionClass($this);
         if ($this->ymlConfigName) {
             //todo: parse @ notation or something
-            $path = dirname($class_info->getFileName()) . '/' .$this->ymlConfigName;
+            $path = dirname($class_info->getFileName()) . '/' . $this->ymlConfigName;
         } else {
             $path = dirname($class_info->getFileName()) . '/type_config.yml';
         }
@@ -129,6 +152,11 @@ abstract class BaseAppType implements ApplicationTypeInterface
         $this->mapYmlToProperties($content);
     }
 
+    /**
+     * Maps the YAML contents to properties.
+     *
+     * @param array $content
+     */
     protected function mapYmlToProperties($content)
     {
         $this->siteConfig = $content['additional_config'];
@@ -140,6 +168,13 @@ abstract class BaseAppType implements ApplicationTypeInterface
         $this->databaseRequired = $content['database_required'];
     }
 
+    /**
+     * Gets the directories for this apptype.
+     *
+     * @param string $user
+     *
+     * @return array
+     */
     public function getDirectories($user)
     {
         $directories = [];
@@ -151,6 +186,8 @@ abstract class BaseAppType implements ApplicationTypeInterface
     }
 
     /**
+     * Gets the settings form class.
+     *
      * @return string
      */
     public function getSettingsFormClass()
@@ -159,6 +196,8 @@ abstract class BaseAppType implements ApplicationTypeInterface
     }
 
     /**
+     * Gets the settings entity class.
+     *
      * @return string
      */
     public function getSettingsEntityClass()

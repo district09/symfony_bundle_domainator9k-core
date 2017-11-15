@@ -4,7 +4,6 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Task;
 
 interface TaskRunnerInterface
 {
-
     /**
      * @return array
      */

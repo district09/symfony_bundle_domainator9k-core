@@ -47,6 +47,8 @@ class AppEnvironmentSettings
     protected $environment;
 
     /**
+     * Gets the id.
+     *
      * @return int
      */
     public function getId()
@@ -55,6 +57,8 @@ class AppEnvironmentSettings
     }
 
     /**
+     * Gets the database host.
+     *
      * @return string
      */
     public function getDatabaseHost()
@@ -63,6 +67,8 @@ class AppEnvironmentSettings
     }
 
     /**
+     * Sets the database host.
+     *
      * @param string $databaseHost
      *
      * @return $this
@@ -75,6 +81,8 @@ class AppEnvironmentSettings
     }
 
     /**
+     * Gets the redis password.
+     *
      * @return string
      */
     public function getRedisPassword()
@@ -83,6 +91,8 @@ class AppEnvironmentSettings
     }
 
     /**
+     * Sets the redis password.
+     *
      * @param string $redisPassword
      *
      * @return $this
@@ -95,6 +105,8 @@ class AppEnvironmentSettings
     }
 
     /**
+     * Gets the settings.
+     *
      * @return Settings
      */
     public function getSettings()
@@ -103,6 +115,8 @@ class AppEnvironmentSettings
     }
 
     /**
+     * Sets the settings.
+     *
      * @param Settings $settings
      *
      * @return $this
@@ -115,6 +129,8 @@ class AppEnvironmentSettings
     }
 
     /**
+     * Gets the environment.
+     *
      * @return string
      */
     public function getEnvironment()
@@ -123,6 +139,8 @@ class AppEnvironmentSettings
     }
 
     /**
+     * Sets the environment.
+     * 
      * @param string $environment
      *
      * @return $this

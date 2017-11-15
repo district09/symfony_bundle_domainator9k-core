@@ -4,19 +4,17 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Tests\DependencyInjection\Compil
 
 use DigipolisGent\Domainator9k\CoreBundle\DependencyInjection\Compiler\TaskPass;
 use DigipolisGent\Domainator9k\CoreBundle\Task\Provision\FilesystemTask;
-use InvalidArgumentException;
 use Symfony\Bundle\WebProfilerBundle\Tests\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 
 /**
- * Description of TaskPassTest
+ * Description of TaskPassTest.
  *
  * @author Jelle Sebreghts
  */
 class TaskPassTest extends TestCase
 {
-
     public function testNoCiTaskFactory()
     {
         $container = $this->getMockBuilder(ContainerBuilder::class)->getMock();
@@ -78,7 +76,7 @@ class TaskPassTest extends TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testTaggedServicesInvalid()
     {
@@ -122,5 +120,4 @@ class TaskPassTest extends TestCase
         $pass = new TaskPass();
         $pass->process($container);
     }
-
 }

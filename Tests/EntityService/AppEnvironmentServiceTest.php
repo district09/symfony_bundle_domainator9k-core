@@ -11,7 +11,6 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
 use DigipolisGent\Domainator9k\CoreBundle\EntityService\AppEnvironmentService;
 use DigipolisGent\Domainator9k\CoreBundle\Interfaces\ApplicationTypeInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Service\ApplicationTypeBuilder;
-use DigipolisGent\Domainator9k\CoreBundle\Task\FactoryInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Task\TaskInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Task\TaskResult;
 use DigipolisGent\Domainator9k\CoreBundle\Task\TaskRunnerInterface;
@@ -24,28 +23,24 @@ use DigipolisGent\SockAPIBundle\Service\AccountService;
 use DigipolisGent\SockAPIBundle\Service\ApplicationService;
 use DigipolisGent\SockAPIBundle\Service\DatabaseService;
 use DigipolisGent\SockAPIBundle\Service\Promise\EntityCreatePromise;
-use InvalidArgumentException;
 use PHPUnit_Framework_MockObject_MockObject;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of AppEnvironmentServiceTest
+ * Description of AppEnvironmentServiceTest.
  *
  * @author Jelle Sebreghts
  */
 class AppEnvironmentServiceTest extends TestCase
 {
-
     use DataGenerator;
 
     /**
-     *
      * @var PHPUnit_Framework_MockObject_MockObject
      */
     protected $settings;
 
     /**
-     *
      * @var PHPUnit_Framework_MockObject_MockObject
      */
     protected $applicationTypeBuilder;
@@ -70,14 +65,14 @@ class AppEnvironmentServiceTest extends TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testCreateSockAccountNoSockId()
     {
         $service = $this->getService();
         $appEnvironment = $this->getMockBuilder(AppEnvironment::class)->disableOriginalConstructor()->getMock();
         $server = $this->getMockBuilder(Server::class)->disableOriginalConstructor()->getMock();
-        $server->expects($this->once())->method('getSockId')->willReturn(NULL);
+        $server->expects($this->once())->method('getSockId')->willReturn(null);
         $sockAccountService = $this->getMockBuilder(AccountService::class)->disableOriginalConstructor()->getMock();
         $service->createSockAccount($appEnvironment, $server, $sockAccountService);
     }
@@ -142,13 +137,12 @@ class AppEnvironmentServiceTest extends TestCase
 
         $accountId = uniqid();
 
-        $sockAccountService->expects($this->once())->method('create')->with($this->callback(function (Account $account) use ($sockId, $user, $sshKeys)
-            {
-                return $sockId === $account->getServerId() && $user === $account->getName() && $sshKeys === $account->getSshKeys();
-            }
-        ))->willReturnCallback(function (Account $account) use ($accountId)
-        {
+        $sockAccountService->expects($this->once())->method('create')->with($this->callback(function (Account $account) use ($sockId, $user, $sshKeys) {
+            return $sockId === $account->getServerId() && $user === $account->getName() && $sshKeys === $account->getSshKeys();
+        }
+        ))->willReturnCallback(function (Account $account) use ($accountId) {
             $account->setId($accountId);
+
             return $account;
         }
         );
@@ -167,7 +161,7 @@ class AppEnvironmentServiceTest extends TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testCreateSockApplicationNoSockId()
     {
@@ -253,17 +247,15 @@ class AppEnvironmentServiceTest extends TestCase
 
         $sockApplicationService = $this->getMockBuilder(ApplicationService::class)->disableOriginalConstructor()->getMock();
         $sockApplicationService->expects($this->once())->method('findByName')->with($sockId, $name)->willReturn(false);
-        $sockApplicationService->expects($this->once())->method('create')->with($this->callback(function (SockApplication $sockApp) use ($sockId, $name, $domains)
-                {
-                    return $sockApp->getAccountId() === $sockId && $sockApp->getName() === $name && $sockApp->getAliases() === $domains && $sockApp->getDocumentRoot() === 'current/web';
-                }))
-            ->willReturnCallback(function (SockApplication $sockApp) use ($appId)
-            {
+        $sockApplicationService->expects($this->once())->method('create')->with($this->callback(function (SockApplication $sockApp) use ($sockId, $name, $domains) {
+            return $sockApp->getAccountId() === $sockId && $sockApp->getName() === $name && $sockApp->getAliases() === $domains && 'current/web' === $sockApp->getDocumentRoot();
+        }))
+            ->willReturnCallback(function (SockApplication $sockApp) use ($appId) {
                 $sockApp->setId($appId);
+
                 return $sockApp;
             }
         );
-        ;
 
         $promise = $service->createSockApplication($appEnvironment, $sockApplicationService);
 
@@ -279,7 +271,7 @@ class AppEnvironmentServiceTest extends TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testCreateSockDatabaseNoSockId()
     {
@@ -359,12 +351,11 @@ class AppEnvironmentServiceTest extends TestCase
 
         $sockDbService = $this->getMockBuilder(DatabaseService::class)->disableOriginalConstructor()->getMock();
         $sockDbService->expects($this->once())->method('findByName')->with($sockId, $dbName)->willReturn(false);
-        $sockDbService->expects($this->once())->method('create')->with($this->callback(function (Database $db) use ($sockId, $dbName, $dbUser, $dbPassword, $dbEngine)
-            {
-                return $db->getAccountId() === $sockId && $db->getEngine() === $dbEngine && $db->getLogin() === $dbUser && $db->getName() === $dbName && $db->getPassword() === $dbPassword;
-            }))->willReturnCallback(function (Database $db) use ($sockDbId)
-        {
+        $sockDbService->expects($this->once())->method('create')->with($this->callback(function (Database $db) use ($sockId, $dbName, $dbUser, $dbPassword, $dbEngine) {
+            return $db->getAccountId() === $sockId && $db->getEngine() === $dbEngine && $db->getLogin() === $dbUser && $db->getName() === $dbName && $db->getPassword() === $dbPassword;
+        }))->willReturnCallback(function (Database $db) use ($sockDbId) {
             $db->setId($sockDbId);
+
             return $db;
         });
 
@@ -410,7 +401,7 @@ class AppEnvironmentServiceTest extends TestCase
                     'settings' => $this->settings,
                     'servers' => $servers,
                     'applicationTypeBuilder' => $this->applicationTypeBuilder,
-                ]
+                ],
             ]
         );
 
@@ -449,7 +440,7 @@ class AppEnvironmentServiceTest extends TestCase
                     'settings' => $this->settings,
                     'servers' => $servers,
                     'applicationTypeBuilder' => $this->applicationTypeBuilder,
-                ]
+                ],
             ]
         );
 
@@ -484,7 +475,7 @@ class AppEnvironmentServiceTest extends TestCase
                     'settings' => $this->settings,
                     'servers' => $servers,
                     'applicationTypeBuilder' => $this->applicationTypeBuilder,
-                ]
+                ],
             ]
         );
 
@@ -523,7 +514,7 @@ class AppEnvironmentServiceTest extends TestCase
                     'settings' => $this->settings,
                     'servers' => $servers,
                     'applicationTypeBuilder' => $this->applicationTypeBuilder,
-                ]
+                ],
             ]
         );
 
@@ -560,7 +551,7 @@ class AppEnvironmentServiceTest extends TestCase
                 [
                     'appEnvironment' => $appEnvironment,
                     'servers' => $servers,
-                ]
+                ],
             ]
         );
 
@@ -601,7 +592,7 @@ class AppEnvironmentServiceTest extends TestCase
                 [
                     'appEnvironment' => $appEnvironment,
                     'servers' => $servers,
-                ]
+                ],
             ]
         );
 
@@ -625,12 +616,10 @@ class AppEnvironmentServiceTest extends TestCase
     }
 
     /**
-     *
      * @return AppEnvironmentService
      */
     protected function getService()
     {
         return new AppEnvironmentService($this->settings, $this->applicationTypeBuilder, $this->taskFactory);
     }
-
 }

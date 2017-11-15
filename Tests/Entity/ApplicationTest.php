@@ -11,46 +11,39 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\Build;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\DatabaseSettings;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Environment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\ServerSettings;
-use DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\EntityTest;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
 use PHPUnit_Framework_MockObject_MockObject;
 use ReflectionObject;
 
 /**
- * Description of AppEnvironmentSettingsTest
+ * Description of AppEnvironmentSettingsTest.
  *
  * @author Jelle Sebreghts
  */
 class ApplicationTest extends EntityTest
 {
-
     /**
-     *
      * @var BaseAppType|PHPUnit_Framework_MockObject_MockObject
      */
     protected $type;
 
     /**
-     *
      * @var Environment[]|PHPUnit_Framework_MockObject_MockObject[]
      */
     protected $environments;
 
     /**
-     *
      * @var string
      */
     protected $name;
 
     /**
-     *
      * @var string
      */
     protected $scheme;
 
     /**
-     *
      * @var string
      */
     protected $siteConfig;
@@ -197,7 +190,7 @@ class ApplicationTest extends EntityTest
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException \Exception
      * @expectedExceptionMessage Application has no environment 'test1234'
      */
     public function testGetAppEnvironment()
@@ -215,20 +208,17 @@ class ApplicationTest extends EntityTest
         $refProperty->setAccessible(true);
         $refProperty->setValue($app, $appEnvCollection);
 
-        try
-        {
+        try {
             $this->assertEquals($appEnv, $app->getAppEnvironment($env->getName()));
             $this->assertEquals($appEnv, $app->getAppEnvironment($env));
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $this->fail($e->getMessage());
         }
         $app->getAppEnvironment('test1234');
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException \Exception
      * @expectedExceptionMessage Application has no environment marked as isProd == true
      */
     public function testGetProdAppEnvironment()
@@ -245,12 +235,9 @@ class ApplicationTest extends EntityTest
         $refProperty->setAccessible(true);
         $refProperty->setValue($app, $appEnvCollection);
 
-        try
-        {
+        try {
             $this->assertEquals($appEnv, $app->getProdAppEnvironment());
-        }
-        catch (Exception $e)
-        {
+        } catch (Exception $e) {
             $this->fail($e->getMessage());
         }
         $app->getProdAppEnvironment();
@@ -334,12 +321,10 @@ class ApplicationTest extends EntityTest
     }
 
     /**
-     *
      * @return Application
      */
     protected function getEntity()
     {
         return new Application($this->type, $this->name, $this->environments, $this->scheme, $this->siteConfig);
     }
-
 }

@@ -2,8 +2,6 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
-use Ctrl\RadBundle\Entity\User;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Environment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\HasRoles;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\HasUsers;
 use DigipolisGent\Domainator9k\CoreBundle\Tools\StringHelper;
@@ -130,12 +128,14 @@ class AppEnvironment
     protected $prod;
 
     /**
+     * Creates a new AppEnvironment.
+     *
      * @param Application $application
-     * @param string      $name
-     * @param string      $urlScheme
+     * @param string $name
      * @param bool $devPermissions
+     * @param bool $prod
      */
-    public function __construct(Application $application, $name, $devPermissions, $prod, $urlScheme = Application::URL_SCHEME_GENT_GRP_ENV)
+    public function __construct(Application $application, $name, $devPermissions, $prod)
     {
         $this->name = $name;
         $this->application = $application;
@@ -157,7 +157,9 @@ class AppEnvironment
     }
 
     /**
-     * @return mixed
+     * Gets the id.
+     *
+     * @return int
      */
     public function getId()
     {
@@ -165,6 +167,8 @@ class AppEnvironment
     }
 
     /**
+     * Gets the salt.
+     *
      * @return string
      */
     public function getSalt()
@@ -173,6 +177,8 @@ class AppEnvironment
     }
 
     /**
+     * Gets the application.
+     *
      * @return Application
      */
     public function getApplication()
@@ -181,6 +187,8 @@ class AppEnvironment
     }
 
     /**
+     * Sets the application.
+     *
      * @param Application $application
      *
      * @return $this
@@ -193,6 +201,8 @@ class AppEnvironment
     }
 
     /**
+     * Gets the sock application id.
+     *
      * @return int|null
      */
     public function getSockApplicationId()
@@ -201,6 +211,8 @@ class AppEnvironment
     }
 
     /**
+     * Sets the sock application id.
+     *
      * @param int|null $sockApplicationId
      *
      * @return $this
@@ -213,6 +225,8 @@ class AppEnvironment
     }
 
     /**
+     * Gets the name.
+     *
      * @return string
      */
     public function getName()
@@ -221,6 +235,8 @@ class AppEnvironment
     }
 
     /**
+     * Gets the canonical name.
+     *
      * @return string
      */
     public function getNameCanonical()
@@ -229,14 +245,18 @@ class AppEnvironment
     }
 
     /**
+     * Gets the full canonical name.
+     *
      * @return string
      */
     public function getFullNameCanonical()
     {
-        return $this->getApplication()->getNameCanonical().'_'.StringHelper::canonicalize($this->getName());
+        return $this->getApplication()->getNameCanonical() . '_' . StringHelper::canonicalize($this->getName());
     }
 
     /**
+     * Gets the domains.
+     *
      * @return array
      */
     public function getDomains()
@@ -245,6 +265,8 @@ class AppEnvironment
     }
 
     /**
+     * Sets the domains.
+     *
      * @param array $domains
      *
      * @return $this
@@ -261,6 +283,8 @@ class AppEnvironment
     }
 
     /**
+     * Adds a domain.
+     *
      * @param string $domain
      * @param bool   $isPreferred
      *
@@ -278,6 +302,8 @@ class AppEnvironment
     }
 
     /**
+     * Removes a domain.
+     *
      * @param string $domain
      *
      * @return $this
@@ -288,6 +314,7 @@ class AppEnvironment
             foreach ($this->domains as $k => $d) {
                 if ($d === $domain) {
                     unset($this->domains[$k]);
+
                     break;
                 }
             }
@@ -303,13 +330,13 @@ class AppEnvironment
     /**
      * If no preferred domain is explicitly set, the first domain will be returned.
      *
-     * @return string
-     *
      * @throws \Exception
+     *
+     * @return string
      */
     public function getPreferredDomain()
     {
-        if ($this->preferredDomain === null) {
+        if (null === $this->preferredDomain) {
             if (!count($this->domains)) {
                 throw new \Exception('no domains configured');
             }
@@ -321,7 +348,11 @@ class AppEnvironment
     }
 
     /**
+     * Set the preferred domain.
+     *
      * @param string $preferredDomain
+     *
+     * @throws \InvalidArgumentException
      *
      * @return $this
      */
@@ -337,8 +368,9 @@ class AppEnvironment
     }
 
     /**
-     * @param Environment $env
+     * Add a default domain based on the environment.
      *
+     * @param Environment $env
      * @param string $scheme
      *
      * @return $this
@@ -358,6 +390,8 @@ class AppEnvironment
     }
 
     /**
+     * Gets the git ref.
+     *
      * @return mixed
      */
     public function getGitRef()
@@ -366,6 +400,8 @@ class AppEnvironment
     }
 
     /**
+     * Sets the git ref.
+     *
      * @param mixed $gitRef
      *
      * @return $this
@@ -378,6 +414,8 @@ class AppEnvironment
     }
 
     /**
+     * Gets the site config.
+     *
      * @return string
      */
     public function getSiteConfig()
@@ -387,6 +425,8 @@ class AppEnvironment
     }
 
     /**
+     * Sets the site config.
+     *
      * @param string $siteConfig
      *
      * @return $this
@@ -399,6 +439,8 @@ class AppEnvironment
     }
 
     /**
+     * Gets the cron job.
+     *
      * @return string
      */
     public function getCron()
@@ -407,6 +449,8 @@ class AppEnvironment
     }
 
     /**
+     * Sets the cron job.
+     *
      * @param string $cron
      *
      * @return $this
@@ -419,6 +463,8 @@ class AppEnvironment
     }
 
     /**
+     * Gets the created at time.
+     *
      * @return \Datetime
      */
     public function getCreatedAt()
@@ -427,6 +473,8 @@ class AppEnvironment
     }
 
     /**
+     * Gets the updated at time.
+     *
      * @return \DateTime
      */
     public function getUpdatedAt()
@@ -435,6 +483,8 @@ class AppEnvironment
     }
 
     /**
+     * Gets the server settings;
+     *
      * @return ServerSettings
      */
     public function getServerSettings()
@@ -444,6 +494,11 @@ class AppEnvironment
         return $this->serverSettings;
     }
 
+    /**
+     * Asserts the server settings are set.
+     *
+     * @return $this
+     */
     public function assertServerSettings()
     {
         // if we don't have any settings, create settings with defaults
@@ -454,6 +509,11 @@ class AppEnvironment
         return $this;
     }
 
+    /**
+     * Creates default server settings based on the application.
+     *
+     * @return \DigipolisGent\Domainator9k\CoreBundle\Entity\ServerSettings
+     */
     protected function createDefaultServerSettings()
     {
         if (null === $this->getApplication()->getParent()) {
@@ -479,6 +539,8 @@ class AppEnvironment
     }
 
     /**
+     * Gets the database settings.
+     *
      * @return DatabaseSettings|null
      */
     public function getDatabaseSettings()
@@ -488,6 +550,11 @@ class AppEnvironment
         return $this->databaseSettings;
     }
 
+    /**
+     * Asserts the database settings.
+     *
+     * @return $this
+     */
     public function assertDatabaseSettings()
     {
         // if we don't have any settings, but the project is configured to use one
@@ -499,15 +566,22 @@ class AppEnvironment
         return $this;
     }
 
+    /**
+     * Creates the default database settings based on the application.
+     *
+     * @return \DigipolisGent\Domainator9k\CoreBundle\Entity\DatabaseSettings
+     */
     protected function createDefaultDatabaseSettings()
     {
         return new DatabaseSettings(
             $this,
-            substr($this->getApplication()->getNameCanonical(), 0, 14).'_'.substr($this->getNameCanonical(), 0, 1)
+            substr($this->getApplication()->getNameCanonical(), 0, 14) . '_' . substr($this->getNameCanonical(), 0, 1)
         );
     }
 
     /**
+     * Sets the database settings.
+     *
      * @param DatabaseSettings|null $databaseSettings
      *
      * @return $this
@@ -519,15 +593,15 @@ class AppEnvironment
         return $this;
     }
 
-
-
     /**
+     * Replaces config placeholders with their values.
+     *
      * @param $content
      * @param array|Server[] $servers
      *
-     * @return string
-     *
      * @throws \Exception
+     *
+     * @return string
      */     //TODO: move out of environment ..
 
     public function replaceConfigPlaceholders($content, array $servers = array())
@@ -536,6 +610,7 @@ class AppEnvironment
         foreach ($servers as $server) {
             if ($server->isTaskServer() && $server->getEnvironment() === $this->getNameCanonical()) {
                 $ip = $server->getIp();
+
                 break;
             }
         }
@@ -549,6 +624,13 @@ class AppEnvironment
         ], $content);
     }
 
+    /**
+     * Gets project specific directories based on the user.
+     *
+     * @param string $user
+     *
+     * @return string[]
+     */
     public function getProjectSpecificDirs($user)
     {
         return $this->getApplication()->getType()->getDirectories(
@@ -557,12 +639,17 @@ class AppEnvironment
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function __toString()
     {
         return $this->name;
     }
 
     /**
+     * Gets the ci job uri.
+     *
      * @return string
      */
     public function getCiJobUri()
@@ -571,6 +658,8 @@ class AppEnvironment
     }
 
     /**
+     * Sets the ci job uri.
+     *
      * @param string $ciJobUri
      *
      * @return $this
@@ -583,6 +672,8 @@ class AppEnvironment
     }
 
     /**
+     * Checks whether or not devs have permissions on this appenvironment.
+     *
      * @return bool
      */
     public function isDevPermissions()
@@ -591,6 +682,8 @@ class AppEnvironment
     }
 
     /**
+     * Sets whether or not devs have permissions on this appenvironment.
+     *
      * @param bool $devPermissions
      *
      * @return $this
@@ -603,6 +696,8 @@ class AppEnvironment
     }
 
     /**
+     * Checks if this is the prod environment.
+     *
      * @return bool
      */
     public function isProd()
@@ -611,6 +706,8 @@ class AppEnvironment
     }
 
     /**
+     * Sets whether or not this is the prod environment.
+     * 
      * @param bool $prod
      *
      * @return $this

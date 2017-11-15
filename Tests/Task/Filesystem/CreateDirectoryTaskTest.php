@@ -11,13 +11,12 @@ use DigipolisGent\Domainator9k\CoreBundle\Tests\TestTools\DataGenerator;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of CreateDirectoryTaskTest
+ * Description of CreateDirectoryTaskTest.
  *
  * @author Jelle Sebreghts
  */
 class CreateDirectoryTaskTest extends TestCase
 {
-
     use DataGenerator;
 
     protected $options = [];
@@ -127,6 +126,7 @@ class CreateDirectoryTaskTest extends TestCase
     {
         $task = new CreateDirectoryTask($this->options);
         $task->setSshShellFactory($this->sshShellFactory);
+
         return $task;
     }
 }

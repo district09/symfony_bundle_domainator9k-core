@@ -2,7 +2,6 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Service;
 
-use DigipolisGent\Domainator9k\CoreBundle\Service\EnvironmentService;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Application;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Server;

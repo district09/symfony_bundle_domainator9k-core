@@ -31,7 +31,7 @@ class ApplicationService extends AbstractDoctrineService
     public function generateDrushAliasFile(Application $application, ServerService $serverService)
     {
         //todo: make requiresdrush variable in appType config ?
-        if (strpos($application->getType()->getSlug(), 'drupal') !== FALSE) {
+        if (false !== strpos($application->getType()->getSlug(), 'drupal')) {
             throw new \InvalidArgumentException(sprintf(
                 'Only Drupal applications can be used to generate drush alias files, %s given',
                 $application->getType()->getSlug()
@@ -130,7 +130,7 @@ DRUSH;
 
         $zip = new ZipStream();
         foreach ($apps as $app) {
-            $zip->addFile($app->getNameCanonical().'.aliases.drushrc.php', $this->generateDrushAliasFile($app, $serverService));
+            $zip->addFile($app->getNameCanonical() . '.aliases.drushrc.php', $this->generateDrushAliasFile($app, $serverService));
         }
 
         $zip->finish();

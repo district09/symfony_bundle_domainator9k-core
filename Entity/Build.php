@@ -86,13 +86,23 @@ class Build
      */
     protected $deletedUser;
 
+    /**
+     * Creates a new build.
+     *
+     * @param \DigipolisGent\Domainator9k\CoreBundle\Entity\Application $app
+     * @param string $type
+     * @param \DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment $env
+     *
+     * @throws \InvalidArgumentException
+     *     When the build type is deploy and no environment is given.
+     */
     public function __construct(Application $app, $type, AppEnvironment $env = null)
     {
         $this->application = $app;
         $this->appEnvironment = $env;
         $this->type = $type;
 
-        if ($type === self::TYPE_DEPLOY && !$env) {
+        if (self::TYPE_DEPLOY === $type && !$env) {
             throw new InvalidArgumentException(sprintf(
                 'environment is required when creating a DEPLOY build'
             ));
@@ -102,6 +112,8 @@ class Build
     }
 
     /**
+     * Gets the id.
+     *
      * @return int
      */
     public function getId()
@@ -110,6 +122,8 @@ class Build
     }
 
     /**
+     * Gets the type.
+     *
      * @return string
      */
     public function getType()
@@ -118,6 +132,8 @@ class Build
     }
 
     /**
+     * Sets the type.
+     *
      * @param string $type
      *
      * @return $this
@@ -130,6 +146,8 @@ class Build
     }
 
     /**
+     * Gets the user.
+     *
      * @return User
      */
     public function getUser()
@@ -138,6 +156,8 @@ class Build
     }
 
     /**
+     * Sets the user.
+     *
      * @param User $user
      *
      * @return $this
@@ -152,6 +172,8 @@ class Build
     }
 
     /**
+     * Gets the deleted user.
+     *
      * @return string
      */
     public function getDeletedUser()
@@ -160,6 +182,8 @@ class Build
     }
 
     /**
+     * Gets the application.
+     *
      * @return Application
      */
     public function getApplication()
@@ -168,6 +192,8 @@ class Build
     }
 
     /**
+     * Sets the application.
+     *
      * @param Application $application
      *
      * @return $this
@@ -180,6 +206,8 @@ class Build
     }
 
     /**
+     * Gets the app environment.
+     *
      * @return AppEnvironment
      */
     public function getAppEnvironment()
@@ -188,6 +216,8 @@ class Build
     }
 
     /**
+     * Sets the app environment.
+     *
      * @param mixed $appEnvironment
      *
      * @return $this
@@ -200,6 +230,8 @@ class Build
     }
 
     /**
+     * Gets the timestamp.
+     *
      * @return DateTime
      */
     public function getTimestamp()
@@ -208,6 +240,8 @@ class Build
     }
 
     /**
+     * Sets the timestamp.
+     *
      * @param mixed $timestamp
      *
      * @return $this
@@ -220,6 +254,8 @@ class Build
     }
 
     /**
+     * Gets the log.
+     *
      * @return string
      */
     public function getLog()
@@ -228,6 +264,8 @@ class Build
     }
 
     /**
+     * Sets the log.
+     *
      * @param string $log
      *
      * @return $this
@@ -240,6 +278,8 @@ class Build
     }
 
     /**
+     * Checks whether or not this build has started.
+     *
      * @return bool
      */
     public function isStarted()
@@ -248,6 +288,8 @@ class Build
     }
 
     /**
+     * Sets whether or not this build has started.
+     *
      * @param bool $started
      *
      * @return $this
@@ -260,6 +302,8 @@ class Build
     }
 
     /**
+     * Checks whether or not this build is completed.
+     *
      * @return bool
      */
     public function isCompleted()
@@ -268,6 +312,8 @@ class Build
     }
 
     /**
+     * Sets whether or not this build is completed.
+     *
      * @param bool $completed
      *
      * @return $this
@@ -281,6 +327,8 @@ class Build
     }
 
     /**
+     * Checks whether or not this build was successful.
+     *
      * @return mixed
      */
     public function getSuccess()
@@ -289,6 +337,8 @@ class Build
     }
 
     /**
+     * Sets whether or not this build was successful.
+     *
      * @param mixed $success
      *
      * @return $this
@@ -301,6 +351,8 @@ class Build
     }
 
     /**
+     * Gets the process id.
+     *
      * @return int
      */
     public function getPid()
@@ -309,6 +361,8 @@ class Build
     }
 
     /**
+     * Sets the process id.
+     *
      * @param int $pid
      *
      * @return $this

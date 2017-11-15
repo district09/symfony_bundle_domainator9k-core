@@ -18,13 +18,12 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Description of ProvisionCommandTest
+ * Description of ProvisionCommandTest.
  *
  * @author Jelle Sebreghts
  */
 class ProvisionCommandTest extends TestCase
 {
-
     protected function setUp()
     {
         parent::setUp();
@@ -94,13 +93,14 @@ class ProvisionCommandTest extends TestCase
 
     /**
      * @dataProvider appOptionsProvider
+     *
+     * @param mixed $options
      */
     public function testProvisionAppOptions($options)
     {
         $expectedMask = 0;
         $commandOptions = array();
-        foreach ($options as $option => $mask)
-        {
+        foreach ($options as $option => $mask) {
             $expectedMask |= $mask;
             $commandOptions[$option] = true;
         }
@@ -134,18 +134,17 @@ class ProvisionCommandTest extends TestCase
         );
         $data = array();
         // Test each option individually
-        foreach ($options as $name => $mask)
-        {
+        foreach ($options as $name => $mask) {
             $data[] = array(array($name => $mask));
         }
 
         // Test random combinations.
-        for ($i = 0; $i < 10; $i++)
-        {
+        for ($i = 0; $i < 10; ++$i) {
             $randomOptions = array_rand($options, mt_rand(2, count($options)));
             $keys = array_combine($randomOptions, $randomOptions);
             $data[] = array(array_intersect_key($options, $keys));
         }
+
         return $data;
     }
 
@@ -195,8 +194,7 @@ class ProvisionCommandTest extends TestCase
         $this->assertContains('Which application would you like to deploy?', $output);
         $this->assertContains('[' . str_pad($this->app1Id, 2, ' ', STR_PAD_RIGHT) . '] App1', $output);
         $this->assertContains('[' . str_pad($this->app2Id, 2, ' ', STR_PAD_RIGHT) . '] App2', $output);
-        if (!$validChoice)
-        {
+        if (!$validChoice) {
             $this->assertContains('Value "qsdf" is invalid', $output);
         }
     }
@@ -206,12 +204,9 @@ class ProvisionCommandTest extends TestCase
         $this->buildMocks(!$started);
         $build = $this->getMockBuilder(Build::class)->disableOriginalConstructor()->getMock();
         $build->expects($this->once())->method('isStarted')->willReturn($started);
-        if ($started)
-        {
+        if ($started) {
             $build->expects($this->once())->method('getId')->willReturn($this->buildId);
-        }
-        else
-        {
+        } else {
             $build->expects($this->once())->method('getApplication')->willReturn($this->app1);
             $build->expects($this->once())->method('getType')->willReturn(Build::TYPE_PROVISION);
         }
@@ -224,27 +219,23 @@ class ProvisionCommandTest extends TestCase
             ->method('get')
             ->with($this->buildId)
             ->willReturn($build);
-        try
-        {
+
+        try {
             $this->tester->execute(
                 array('command' => $this->command->getName(), '--build' => $this->buildId)
             );
             if ($started) {
                 $this->fail('Should not be able to load a build that has already started.');
             }
-        }
-        catch (\Exception $e)
-        {
-            if ($started)
-            {
+        } catch (\Exception $e) {
+            if ($started) {
                 $this->assertInstanceOf(\InvalidArgumentException::class, $e);
                 $this->assertEquals($e->getMessage(), sprintf(
                         'build %s was already started', $this->buildId
                 ));
-            }
-            else
-            {
+            } else {
                 $this->fail($e->getMessage());
+
                 throw $e;
             }
         }
@@ -276,8 +267,7 @@ class ProvisionCommandTest extends TestCase
             ->with('digip_deploy.entity.server')
             ->willReturn($this->serverService);
 
-        if ($willRun)
-        {
+        if ($willRun) {
             $settings = $this->getMockBuilder(Settings::class)->getMock();
             $this->settingsService
                 ->expects($this->once())
@@ -303,13 +293,11 @@ class ProvisionCommandTest extends TestCase
                 ->expects($this->once())
                 ->method('execute')
                 ->with(
-                    $this->callback(function(Build $build)
-                    {
-                        return $build->getApplication() === $this->app1 && $build->getType() === Build::TYPE_PROVISION;
+                    $this->callback(function (Build $build) {
+                        return $build->getApplication() === $this->app1 && Build::TYPE_PROVISION === $build->getType();
                     }), array(), $settings, $expectedMask
                 )
                 ->willReturn(true);
         }
     }
-
 }

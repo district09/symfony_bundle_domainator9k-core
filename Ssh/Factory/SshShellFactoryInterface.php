@@ -11,9 +11,7 @@ use DigipolisGent\Domainator9k\CoreBundle\Ssh\SshShellInterface;
  */
 interface SshShellFactoryInterface
 {
-
     /**
-     *
      * @param string $host
      *     The host to connect to.
      * @param string $authType

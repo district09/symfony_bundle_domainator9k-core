@@ -17,13 +17,12 @@ use stdClass;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 
 /**
- * Description of FactoryTest
+ * Description of FactoryTest.
  *
  * @author Jelle Sebreghts
  */
 class FactoryTest extends TestCase
 {
-
     use DataGenerator;
 
     protected $shellFactory;
@@ -34,14 +33,16 @@ class FactoryTest extends TestCase
         $this->shellFactory = $this->getMockBuilder(SshShellFactoryInterface::class)->getMock();
     }
 
-    public function testSetDefaultOptions() {
+    public function testSetDefaultOptions()
+    {
         $factory = $this->getFactory();
         $options = [$this->getAlphaNumeric()];
         $factory->setDefaultOptions($options);
         $this->assertEquals($options, $factory->getDefaultOptions());
     }
 
-    public function testAddTaskDefinition() {
+    public function testAddTaskDefinition()
+    {
         $factory = $this->getFactory();
         $factory->addTaskDefinition(CreateFileTask::class);
         $factory->addTaskDefinition(FilesystemTask::class);
@@ -69,7 +70,8 @@ class FactoryTest extends TestCase
     /**
      * @expectedException \InvalidArgumentexception
      */
-    public function testAddInvalidTaskDefinition() {
+    public function testAddInvalidTaskDefinition()
+    {
         $factory = $this->getFactory();
         $factory->addTaskDefinition(stdClass::class);
     }
@@ -77,17 +79,20 @@ class FactoryTest extends TestCase
     /**
      * @expectedException \InvalidArgumentexception
      */
-    public function testInvalidCreate() {
+    public function testInvalidCreate()
+    {
         $factory = $this->getFactory();
         $factory->create($this->getAlphaNumeric());
     }
 
-    public function testCreateRunner() {
+    public function testCreateRunner()
+    {
         $factory = $this->getFactory();
         $this->assertInstanceOf(TaskRunner::class, $factory->createRunner());
     }
 
-    protected function getFactory() {
+    protected function getFactory()
+    {
         return new Factory($this->shellFactory);
     }
 }

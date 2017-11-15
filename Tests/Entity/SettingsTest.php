@@ -5,18 +5,14 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Entity;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironmentSettings;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
-use DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\EntityTest;
-use Doctrine\Common\Collections\ArrayCollection;
-use InvalidArgumentException;
 
 /**
- * Description of SettingsTest
+ * Description of SettingsTest.
  *
  * @author Jelle Sebreghts
  */
 class SettingsTest extends EntityTest
 {
-
     public function testGetAppEnvironmentSettingsValidString()
     {
         $settings = $this->getEntity();
@@ -31,7 +27,7 @@ class SettingsTest extends EntityTest
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testGetAppEnvironmentSettingsInValidString()
     {
@@ -62,7 +58,7 @@ class SettingsTest extends EntityTest
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testGetAppEnvironmentSettingsInValidAppEnv()
     {
@@ -108,12 +104,10 @@ class SettingsTest extends EntityTest
     }
 
     /**
-     *
      * @return Settings
      */
     protected function getEntity()
     {
         return new Settings();
     }
-
 }

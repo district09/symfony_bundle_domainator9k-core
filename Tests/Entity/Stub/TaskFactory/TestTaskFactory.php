@@ -6,13 +6,12 @@ use DigipolisGent\Domainator9k\CoreBundle\Task\FactoryInterface;
 use Exception;
 
 /**
- * Description of TestTaskFactory
+ * Description of TestTaskFactory.
  *
  * @author Jelle Sebreghts
  */
 class TestTaskFactory implements FactoryInterface
 {
-
     protected $runner;
     protected $task;
     protected $defaultOptions;
@@ -38,6 +37,7 @@ class TestTaskFactory implements FactoryInterface
         if ($this->expectedArguments != [$name, $options]) {
             throw new Exception('Expected arguments ' . print_r($this->expectedArguments, true) . ' got ' . print_r(func_get_args(), true));
         }
+
         return $this->task;
     }
 

@@ -3,23 +3,25 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\EntityService;
 
 use Ctrl\Common\EntityService\AbstractDoctrineService;
-use DigipolisGent\Domainator9k\CiTypes\JenkinsBundle\Service\Jenkins;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Application;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Server;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
 use DigipolisGent\Domainator9k\CoreBundle\Service\ApplicationTypeBuilder;
-use DigipolisGent\SockAPIBundle\Service\Event\Poller;
+use DigipolisGent\Domainator9k\CoreBundle\Task\FactoryInterface;
 use DigipolisGent\SockAPIBundle\JsonModel\Account;
 use DigipolisGent\SockAPIBundle\JsonModel\Application as SockApp;
 use DigipolisGent\SockAPIBundle\JsonModel\Database;
 use DigipolisGent\SockAPIBundle\Service\AccountService;
 use DigipolisGent\SockAPIBundle\Service\ApplicationService as SockAppService;
 use DigipolisGent\SockAPIBundle\Service\DatabaseService;
-use DigipolisGent\Domainator9k\CoreBundle\Task\Factory as TaskFactory;
+use DigipolisGent\SockAPIBundle\Service\Event\Poller;
 use DigipolisGent\SockAPIBundle\Service\Promise\EntityCreatePromise;
+use Exception;
+use InvalidArgumentException;
 
+// @codeCoverageIgnoreStart
 define('SOCK_MAX_SECONDS', '900');
+// @codeCoverageIgnoreEnd
 
 class AppEnvironmentService extends AbstractDoctrineService
 {
@@ -29,27 +31,38 @@ class AppEnvironmentService extends AbstractDoctrineService
     protected $settings;
 
     /**
-     * @var Jenkins
-     */
-    protected $jenkins;
-
-    /**
      * @var ApplicationTypeBuilder
      */
-    private $applicationTypeBuilder;
+    protected $applicationTypeBuilder;
 
-    public function __construct(Settings $settings, ApplicationTypeBuilder $applicationTypeBuilder)
-    {
+    /**
+     * @var FactoryInterface
+     */
+    protected $taskFactory;
+
+    /**
+     * Creates a new app environment service.
+     *
+     * @param Settings $settings
+     * @param ApplicationTypeBuilder $appTypeBuilder
+     * @param FactoryInterface $taskFactory
+     */
+    public function __construct(
+        Settings $settings,
+        ApplicationTypeBuilder $appTypeBuilder,
+        FactoryInterface $taskFactory
+    ) {
         $this->settings = $settings;
-        $this->applicationTypeBuilder = $applicationTypeBuilder;
+        $this->applicationTypeBuilder = $appTypeBuilder;
+        $this->taskFactory = $taskFactory;
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getEntityClass()
     {
-        return 'DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment';
+        return AppEnvironment::class;
     }
 
     // SOCK
@@ -62,15 +75,17 @@ class AppEnvironmentService extends AbstractDoctrineService
      * @param Server         $server
      * @param AccountService $sockAccountService
      *
+     * @throws InvalidArgumentException
+     * @throws Exception
+     *
      * @return EntityCreatePromise
      *
-     * @throws \InvalidArgumentException
-     * @throws \Exception
+     * @todo Shouldn't this be in a separate sock bundle??
      */
     public function createSockAccount(AppEnvironment $appEnvironment, Server $server, AccountService $sockAccountService)
     {
         if (!$server->getSockId()) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 "Can not create account on sock: Environment '%s' has no server assigned",
                 $appEnvironment->getName()
             ));
@@ -82,34 +97,34 @@ class AppEnvironmentService extends AbstractDoctrineService
             $server->getSockId()
         );
 
-        if (!$account) {
-            $account = new Account();
-            $account
-                ->setServerId($server->getSockId())
-                ->setName($appEnvironment->getServerSettings()->getUser())
-            ;
-
-            if ($this->settings->getDefaultSockSshKeys()) {
-                $keys = explode(',', $this->settings->getDefaultSockSshKeys());
-                $account->setSshKeys($keys);
-            }
-
-            /** @var Account $account */
-            $account = $sockAccountService->create($account);
-
-            $promise = new EntityCreatePromise($account);
-            $promise
-                ->setEntity($account)
-                ->setPoller(new Poller($sockAccountService, $account->getId(), 'account create'))
-            ;
-        } else {
+        if ($account) {
             $promise = new EntityCreatePromise($account);
             $promise
                 ->setResolved(true)
                 ->setIsCreated(true)
-                ->setDidExist(true)
-            ;
+                ->setDidExist(true);
+
+            $appEnvironment->getServerSettings()->setSockAccountId($account->getId());
+
+            return $promise;
         }
+        $account = new Account();
+        $account
+            ->setServerId($server->getSockId())
+            ->setName($appEnvironment->getServerSettings()->getUser());
+
+        if ($this->settings->getDefaultSockSshKeys()) {
+            $keys = explode(',', $this->settings->getDefaultSockSshKeys());
+            $account->setSshKeys($keys);
+        }
+
+        /** @var Account $account */
+        $account = $sockAccountService->create($account);
+
+        $promise = new EntityCreatePromise($account);
+        $promise
+            ->setEntity($account)
+            ->setPoller(new Poller($sockAccountService, $account->getId(), 'account create'));
 
         $appEnvironment->getServerSettings()->setSockAccountId($account->getId());
 
@@ -122,15 +137,15 @@ class AppEnvironmentService extends AbstractDoctrineService
      * @param AppEnvironment $appEnvironment
      * @param SockAppService $sockAppService
      *
-     * @return EntityCreatePromise
+     * @throws InvalidArgumentException
+     * @throws Exception
      *
-     * @throws \InvalidArgumentException
-     * @throws \Exception
+     * @return EntityCreatePromise
      */
     public function createSockApplication(AppEnvironment $appEnvironment, SockAppService $sockAppService)
     {
         if (!$appEnvironment->getServerSettings()->getSockAccountId()) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 "Can not create application on sock: Environment '%s' has no account assigned",
                 $appEnvironment->getName()
             ));
@@ -147,36 +162,35 @@ class AppEnvironmentService extends AbstractDoctrineService
             $appName
         );
 
-        if (!$app) {
-            $appType = $this->applicationTypeBuilder->getType($appEnvironment->getApplication()->getAppTypeSlug());
-
-            $app = new SockApp();
-            $app
-                ->setAccountId($appEnvironment->getServerSettings()->getSockAccountId())
-                ->setName($appName)
-                ->setAliases($appEnvironment->getDomains())
-                ->setDocumentRoot(
-                    'current/'.$appType->getPublicFolder()
-                )
-            ;
-
-            /** @var SockApp $app */
-            $app = $sockAppService->create($app);
-
-            $promise = new EntityCreatePromise($app);
-            $promise
-                ->setEntity($app)
-                ->setPoller(new Poller($sockAppService, $app->getId(), 'application create'))
-            ;
-        } else {
+        if ($app) {
             $promise = new EntityCreatePromise($app);
             $promise
                 ->setResolved(true)
                 ->setIsCreated(true)
-                ->setDidExist(true)
-            ;
-        }
+                ->setDidExist(true);
 
+            $appEnvironment->setSockApplicationId($app->getId());
+
+            return $promise;
+        }
+        $appType = $this->applicationTypeBuilder->getType($appEnvironment->getApplication()->getAppTypeSlug());
+
+        $app = new SockApp();
+        $app
+            ->setAccountId($appEnvironment->getServerSettings()->getSockAccountId())
+            ->setName($appName)
+            ->setAliases($appEnvironment->getDomains())
+            ->setDocumentRoot(
+                'current/' . $appType->getPublicFolder()
+            );
+
+        /** @var SockApp $app */
+        $app = $sockAppService->create($app);
+
+        $promise = new EntityCreatePromise($app);
+        $promise
+            ->setEntity($app)
+            ->setPoller(new Poller($sockAppService, $app->getId(), 'application create'));
         $appEnvironment->setSockApplicationId($app->getId());
 
         return $promise;
@@ -188,17 +202,17 @@ class AppEnvironmentService extends AbstractDoctrineService
      * @param AppEnvironment  $appEnvironment
      * @param DatabaseService $sockDatabaseService
      *
-     * @return EntityCreatePromise
+     * @throws InvalidArgumentException
+     * @throws Exception
      *
-     * @throws \InvalidArgumentException
-     * @throws \Exception
+     * @return EntityCreatePromise
      */
     public function createSockDatabase(AppEnvironment $appEnvironment, DatabaseService $sockDatabaseService)
     {
         $accountId = $appEnvironment->getServerSettings()->getSockAccountId();
 
         if (!$appEnvironment->getServerSettings()->getSockAccountId()) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 "Can not create database on sock: Environment '%s' has no account assigned",
                 $appEnvironment->getName()
             ));
@@ -206,39 +220,37 @@ class AppEnvironmentService extends AbstractDoctrineService
 
         $dbSettings = $appEnvironment->getDatabaseSettings();
 
-        // check if a database is already present for this environment
+        // Check if a database is already present for this environment.
         $db = $sockDatabaseService->findByName(
             $accountId,
             $dbSettings->getName()
         );
 
-        if (!$db) {
-            $db = new Database();
-            $db
-                ->setAccountId($accountId)
-                ->setName($dbSettings->getName())
-                ->setLogin($dbSettings->getUser())
-                ->setPassword($dbSettings->getPassword())
-                ->setEngine($dbSettings->getEngine())
-            ;
-
-            /** @var Database $db */
-            $db = $sockDatabaseService->create($db);
-
-            $promise = new EntityCreatePromise($db);
-            $promise
-                ->setEntity($db)
-                ->setPoller(new Poller($sockDatabaseService, $db->getId(), 'database create'))
-            ;
-        } else {
+        if ($db) {
             $promise = new EntityCreatePromise($db);
             $promise
                 ->setResolved(true)
                 ->setIsCreated(true)
-                ->setDidExist(true)
-            ;
-        }
+                ->setDidExist(true);
+            $dbSettings->setSockDatabaseId($db->getId());
 
+            return $promise;
+        }
+        $db = new Database();
+        $db
+            ->setAccountId($accountId)
+            ->setName($dbSettings->getName())
+            ->setLogin($dbSettings->getUser())
+            ->setPassword($dbSettings->getPassword())
+            ->setEngine($dbSettings->getEngine());
+
+        /** @var Database $db */
+        $db = $sockDatabaseService->create($db);
+
+        $promise = new EntityCreatePromise($db);
+        $promise
+            ->setEntity($db)
+            ->setPoller(new Poller($sockDatabaseService, $db->getId(), 'database create'));
         $dbSettings->setSockDatabaseId($db->getId());
 
         return $promise;
@@ -247,58 +259,85 @@ class AppEnvironmentService extends AbstractDoctrineService
     // FILES AND DIRECTORIES
 
     /**
+     * Triggers the 'provision.filesystem' task for each server for the given
+     * app environment.
+     *
      * @param AppEnvironment $appEnvironment
      * @param array|Server[] $servers
      *
-     * @throws \Exception
+     * @throws Exception
+     *
+     * @return bool
      */
     public function createServerFilesystem(AppEnvironment $appEnvironment, array $servers)
     {
-        $taskRunner = TaskFactory::createRunner();
+        $taskRunner = $this->taskFactory->createRunner();
 
-        $taskRunner->addTask(TaskFactory::create('provision.filesystem', array(
-            'appEnvironment' => $appEnvironment,
-            'settings' => $this->settings,
-            'servers' => $servers,
-            'applicationTypeBuilder' => $this->applicationTypeBuilder,
-        )));
+        $taskRunner->addTask(
+            $this->taskFactory->create(
+                'provision.filesystem',
+                [
+                    'appEnvironment' => $appEnvironment,
+                    'settings' => $this->settings,
+                    'servers' => $servers,
+                    'applicationTypeBuilder' => $this->applicationTypeBuilder,
+                ]
+            )
+        );
 
         $result = $taskRunner->run();
 
         if (!$result->isSuccess()) {
-            throw new \Exception('failed to create server filesystem');
+            throw new Exception('failed to create server filesystem');
         }
+
+        return true;
     }
 
     /**
+     * Triggers the 'provision.config_files' task for each server for the given
+     * app environment.
+     *
      * @param AppEnvironment $appEnvironment
      * @param array|Server[] $servers
      *
-     * @throws \Exception
+     * @throws Exception
+     *
+     * @return bool
      */
     public function createServerConfigFiles(AppEnvironment $appEnvironment, array $servers)
     {
-        $taskRunner = TaskFactory::createRunner();
+        $taskRunner = $this->taskFactory->createRunner();
 
-        $taskRunner->addTask(TaskFactory::create('provision.config_files', array(
-            'appEnvironment' => $appEnvironment,
-            'servers' => $servers,
-            'settings' => $this->settings,
-            'applicationTypeBuilder' => $this->applicationTypeBuilder,
-        )));
+        $taskRunner->addTask(
+            $this->taskFactory->create(
+                'provision.config_files',
+                [
+                    'appEnvironment' => $appEnvironment,
+                    'servers' => $servers,
+                    'settings' => $this->settings,
+                    'applicationTypeBuilder' => $this->applicationTypeBuilder,
+                ]
+            )
+        );
 
         $result = $taskRunner->run();
 
         if (!$result->isSuccess()) {
-            throw new \Exception('failed to create server filesystem');
+            throw new Exception('failed to create server config files');
         }
+
+        return true;
     }
 
     /**
+     * Triggers the 'provision.cron' task for each server for the given
+     * app environment.
+     *
      * @param AppEnvironment $appEnvironment
      * @param array          $servers
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @return bool
      */
@@ -309,18 +348,22 @@ class AppEnvironmentService extends AbstractDoctrineService
             return false;
         }
 
-        $taskRunner = TaskFactory::createRunner();
+        $taskRunner = $this->taskFactory->createRunner();
 
-        $taskRunner->addTask(TaskFactory::create('provision.cron', array(
-            'appEnvironment' => $appEnvironment,
-            //'settings'          => $this->settings,
-            'servers' => $servers,
-        )));
+        $taskRunner->addTask(
+            $this->taskFactory->create(
+                'provision.cron',
+                [
+                    'appEnvironment' => $appEnvironment,
+                    'servers' => $servers,
+                ]
+            )
+        );
 
         $result = $taskRunner->run();
 
         if (!$result->isSuccess()) {
-            throw new \Exception('failed to install cron job');
+            throw new Exception('failed to install cron job');
         }
 
         return true;

@@ -53,6 +53,8 @@ abstract class BaseCiAppTypeSettings
     }
 
     /**
+     * Gets the app type slug.
+     *
      * @return mixed
      */
     public function getAppTypeSlug()
@@ -61,14 +63,20 @@ abstract class BaseCiAppTypeSettings
     }
 
     /**
+     * Sets the app type slug.
+     *
      * @param mixed $appTypeSlug
      */
     public function setAppTypeSlug($appTypeSlug)
     {
         $this->appTypeSlug = $appTypeSlug;
+
+        return $this;
     }
 
     /**
+     * Gets the ci type slug.
+     *
      * @return string
      */
     public function getCiTypeSlug()
@@ -77,14 +85,20 @@ abstract class BaseCiAppTypeSettings
     }
 
     /**
+     * Sets the ci type slug.
+     *
      * @param string $ciTypeSlug
      */
     public function setCiTypeSlug($ciTypeSlug)
     {
         $this->ciTypeSlug = $ciTypeSlug;
+
+        return $this;
     }
 
     /**
+     * Checks if this is enabled.
+     *
      * @return bool
      */
     public function isEnabled()
@@ -93,14 +107,20 @@ abstract class BaseCiAppTypeSettings
     }
 
     /**
+     * Sets whether or not this is enabled.
+     *
      * @param bool $enabled
      */
     public function setEnabled($enabled)
     {
         $this->enabled = $enabled;
+
+        return $this;
     }
 
     /**
+     * Gets additional config.
+     *
      * @return mixed
      */
     public function getAdditionalConfig()
@@ -109,14 +129,20 @@ abstract class BaseCiAppTypeSettings
     }
 
     /**
+     * Sets additional config.
+     *
      * @param mixed $additionalConfig
      */
     public function setAdditionalConfig($additionalConfig)
     {
         $this->additionalConfig = $additionalConfig;
+
+        return $this;
     }
 
     /**
+     * Gets the app id.
+     *
      * @return string
      */
     public function getAppId()
@@ -125,10 +151,14 @@ abstract class BaseCiAppTypeSettings
     }
 
     /**
+     * Sets the app id.
+     * 
      * @param string $appId
      */
     public function setAppId($appId)
     {
         $this->appId = $appId;
+
+        return $this;
     }
 }

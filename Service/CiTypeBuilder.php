@@ -51,5 +51,7 @@ class CiTypeBuilder
     public function addType(CiTypeInterface $ciType)
     {
         $this->ciTypes[$ciType->getSlug()] = $ciType;
+
+        return $this;
     }
 }

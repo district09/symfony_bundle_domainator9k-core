@@ -26,21 +26,54 @@ services:
     digip_deploy.ci_apptype_settings_service:
         arguments: ["@doctrine", "@digip_deploy.application_type_builder", "@digip_deploy.ci_type_builder"]
         class: DigipolisGent\Domainator9k\CoreBundle\Service\CiAppTypeSettingsService
+    digip_deploy.apptype_injector_listener:
+        arguments: ["@digip_deploy.application_type_builder"]
+        class: DigipolisGent\Domainator9k\CoreBundle\EventListener\AppTypeInjectorListener
+        tags:
+            - { name: doctrine.event_listener, event: postLoad }
 
+    digip_deploy.shell_factory:
+      arguments: []
+      class: DigipolisGent\Domainator9k\CoreBundle\Ssh\Factory\SshShellFactory
 
+    digip_deploy.task_factory:
+      arguments: ["@digip_deploy.shell_factory"]
+      class: DigipolisGent\Domainator9k\CoreBundle\Task\Factory
 
+    digip_deploy.provision_filesystem_task:
+      arguments: []
+      class: DigipolisGent\Domainator9k\CoreBundle\Task\Provision\FilesystemTask
+      tags: [digip_deploy.task]
 
+    digip_deploy.provision_configfiles_task:
+      arguments: []
+      class: DigipolisGent\Domainator9k\CoreBundle\Task\Provision\ConfigFilesTask
+      tags: [digip_deploy.task]
 
+    digip_deploy.provision_cron_task:
+      arguments: []
+      class: DigipolisGent\Domainator9k\CoreBundle\Task\Provision\CronTask
+      tags: [digip_deploy.task]
 
+    digip_deploy.filesystem_createdirectory:
+      arguments: []
+      class: DigipolisGent\Domainator9k\CoreBundle\Task\Filesystem\CreateDirectoryTask
+      tags: [digip_deploy.task]
 
+    digip_deploy.filesystem_createfile:
+      arguments: []
+      class: DigipolisGent\Domainator9k\CoreBundle\Task\Filesystem\CreateFileTask
+      tags: [digip_deploy.task]
 
+    digip_deploy.filesystem_createlink:
+      arguments: []
+      class: DigipolisGent\Domainator9k\CoreBundle\Task\Filesystem\CreateLinkTask
+      tags: [digip_deploy.task]
 
-
-        #///////////////// from older Digip\DeployBundle
-
-
-
-
+    digip_deploy.console_cron:
+      arguments: []
+      class: DigipolisGent\Domainator9k\CoreBundle\Task\Console\CronTask
+      tags: [digip_deploy.task]
     #
     # entity services
     #
@@ -57,22 +90,12 @@ services:
 
     digip_deploy.entity.appenvironment:
         class: DigipolisGent\Domainator9k\CoreBundle\EntityService\AppEnvironmentService
-        arguments: ["@digip_deploy.settings", "@digip_deploy.application_type_builder"]
+        arguments: ["@digip_deploy.settings", "@digip_deploy.application_type_builder", "@digip_deploy.task_factory"]
         tags:
             - { name: ctrl_rad.entity_service }
 
     digip_deploy.entity.server:
         class: DigipolisGent\Domainator9k\CoreBundle\EntityService\ServerService
-        tags:
-            - { name: ctrl_rad.entity_service }
-
-    digip_deploy.entity.ssh_key_group:
-        class: DigipolisGent\Domainator9k\CoreBundle\EntityService\SshKeyGroupService
-        tags:
-            - { name: ctrl_rad.entity_service }
-
-    digip_deploy.entity.ssh_key:
-        class: DigipolisGent\Domainator9k\CoreBundle\EntityService\SshKeyService
         tags:
             - { name: ctrl_rad.entity_service }
 

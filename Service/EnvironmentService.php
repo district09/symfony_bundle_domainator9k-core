@@ -28,6 +28,9 @@ class EnvironmentService
         return $envs;
     }
 
+    /**
+     * @return ArrayCollection
+     */
     public function getEnvironmentChoices()
     {
         $envs = $this->getEnvironments();

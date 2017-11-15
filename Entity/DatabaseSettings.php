@@ -84,20 +84,24 @@ class DatabaseSettings
     protected $isCreated = false;
 
     /**
+     * Creates new database settings.
+     *
      * @param AppEnvironment $appEnvironment
-     * @param string         $name
+     * @param string $name
      */
     public function __construct(AppEnvironment $appEnvironment, $name)
     {
         $this->appEnvironment = $appEnvironment;
         $this->name = $name;
-        $this->user = substr($appEnvironment->getApplication()->getNameCanonical(), 0, 14).'_'.substr($appEnvironment->getNameCanonical(), 0, 1);
+        $this->user = substr($appEnvironment->getApplication()->getNameCanonical(), 0, 14) . '_' . substr($appEnvironment->getNameCanonical(), 0, 1);
 
-        // generate a random string, hopefully, somebody will set a real password later on...
+        // Generate a random string, hopefully, somebody will set a real password later on...
         $this->password = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 10);
     }
 
     /**
+     * Gets the id.
+     *
      * @return int
      */
     public function getId()
@@ -106,6 +110,8 @@ class DatabaseSettings
     }
 
     /**
+     * Gets the app environment.
+     *
      * @return AppEnvironment
      */
     public function getAppEnvironment()
@@ -114,6 +120,8 @@ class DatabaseSettings
     }
 
     /**
+     * Sets the app environment.
+     *
      * @param AppEnvironment $appEnvironment
      *
      * @return $this
@@ -126,6 +134,8 @@ class DatabaseSettings
     }
 
     /**
+     * Gets the name.
+     *
      * @return string
      */
     public function getName()
@@ -134,6 +144,8 @@ class DatabaseSettings
     }
 
     /**
+     * Sets the name.
+     *
      * @param string $name
      *
      * @return $this
@@ -146,6 +158,8 @@ class DatabaseSettings
     }
 
     /**
+     * Gets the host.
+     *
      * @return string
      */
     public function getHost()
@@ -154,6 +168,8 @@ class DatabaseSettings
     }
 
     /**
+     * Sets the host.
+     *
      * @param string $host
      *
      * @return $this
@@ -166,6 +182,8 @@ class DatabaseSettings
     }
 
     /**
+     * Gets the port.
+     *
      * @return string
      */
     public function getPort()
@@ -174,6 +192,8 @@ class DatabaseSettings
     }
 
     /**
+     * Sets the port.
+     *
      * @param string $port
      *
      * @return $this
@@ -186,6 +206,8 @@ class DatabaseSettings
     }
 
     /**
+     * Gets the user.
+     *
      * @return string
      */
     public function getUser()
@@ -194,6 +216,8 @@ class DatabaseSettings
     }
 
     /**
+     * Sets the user.
+     *
      * @param string $user
      *
      * @return $this
@@ -206,6 +230,8 @@ class DatabaseSettings
     }
 
     /**
+     * Gets the password.
+     *
      * @return string
      */
     public function getPassword()
@@ -214,6 +240,8 @@ class DatabaseSettings
     }
 
     /**
+     * Sets the password.
+     *
      * @param string $password
      *
      * @return $this
@@ -226,6 +254,8 @@ class DatabaseSettings
     }
 
     /**
+     * Gets the sock database id.
+     *
      * @return int
      */
     public function getSockDatabaseId()
@@ -234,6 +264,8 @@ class DatabaseSettings
     }
 
     /**
+     * Sets the sock database id.
+     *
      * @param int $sockDatabaseId
      *
      * @return $this
@@ -246,7 +278,9 @@ class DatabaseSettings
     }
 
     /**
-     * @return mixed
+     * Checks whether or not the database is created.
+     *
+     * @return bool
      */
     public function isCreated()
     {
@@ -254,7 +288,9 @@ class DatabaseSettings
     }
 
     /**
-     * @param mixed $isCreated
+     * Sets whether or not the database is created.
+     *
+     * @param bool $isCreated
      *
      * @return $this
      */
@@ -266,6 +302,8 @@ class DatabaseSettings
     }
 
     /**
+     * Gets the engine.
+     *
      * @return string
      */
     public function getEngine()
@@ -278,10 +316,16 @@ class DatabaseSettings
     }
 
     /**
+     * Sets the engine.
+     *
      * @param string $engine
+     *
+     * @return $this
      */
     public function setEngine($engine)
     {
         $this->engine = $engine;
+
+        return $this;
     }
 }

@@ -1,0 +1,10 @@
+name: 'Custom Stub'
+slug: 'custom_stub'
+cron: 'custom cron123'
+public_folder: 'custompublictestfolder'
+database_required: false
+
+additional_config: 'custom config123'
+
+directories:
+  - "/home/[[user]]/customstubfolder"

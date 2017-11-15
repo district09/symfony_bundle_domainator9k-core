@@ -12,6 +12,29 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class ProvisionCommand extends AbstractBuildCommand
 {
+    /**
+     * @var \DigipolisGent\Domainator9k\CoreBundle\EntityService\SettingsService
+     */
+    protected $settingsService;
+
+    /**
+     * @var \DigipolisGent\Domainator9k\CoreBundle\EntityService\ServerService
+     */
+    protected $serverService;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        parent::initialize($input, $output);
+        $this->settingsService = $this->getContainer()->get('digip_deploy.entity.settings');
+        $this->serverService = $this->getContainer()->get('digip_deploy.entity.server');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function configure()
     {
         $this
@@ -29,7 +52,7 @@ class ProvisionCommand extends AbstractBuildCommand
                 'A queued build you want to start instead of creating a new one'
             )
 
-            // options for partials builds
+            // Options for partials builds.
             ->addOption('all', 'a', InputOption::VALUE_NONE, 'Run all parts of the provisioning')
             ->addOption('ci', 'j', InputOption::VALUE_NONE, 'Run ci related parts of the provisioning')
             ->addOption('ci-override', 'J', InputOption::VALUE_NONE, 'Run ci related parts of the provisioning (override if ci jobs exist)')
@@ -40,24 +63,20 @@ class ProvisionCommand extends AbstractBuildCommand
         ;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         Messenger::addListener(function ($message) use ($output) {
+            // @codeCoverageIgnoreStart
             $output->writeln($message);
+            // @codeCoverageIgnoreEnd
         });
-
-        $buildService = $this->container->get('digip_deploy.entity.build');
 
         if ($input->getOption('build')) {
             /** @var Build $build */
-            $build = $buildService->getFinder()->get($input->getOption('build'));
-
-            if ($build->isStarted()) {
-                throw new \InvalidArgumentException(sprintf(
-                    'build %s was already started',
-                    $build->getId()
-                ));
-            }
+            $build = $this->loadBuild($input->getOption('build'));
         } else {
             if ($input->getArgument('application')) {
                 $application = $this->loadApplication($input->getArgument('application'));
@@ -66,21 +85,27 @@ class ProvisionCommand extends AbstractBuildCommand
             }
             $build = new Build($application, Build::TYPE_PROVISION);
             $application->setProvisionBuild($build);
-            $buildService->persist($build);
+            $this->buildService->persist($build);
         }
 
         $build->setPid(getmypid());
-        $buildService->persist($build);
+        $this->buildService->persist($build);
 
-        $this->doBuild($build, $input);
+        return $this->doBuild($build, $input);
     }
 
+    /**
+     * Execute the build.
+     *
+     * @param DigipolisGent\Domainator9k\CoreBundle\Entity\Build $build
+     * @param InputInterface $input
+     *
+     * @return int
+     *     0 on success, 1 on failure.
+     */
     protected function doBuild(Build $build, InputInterface $input)
     {
-        $settings = $this->container->get('digip_deploy.entity.settings')->getSettings();
-
-        $buildService = $this->container->get('digip_deploy.entity.build');
-        $serverService = $this->container->get('digip_deploy.entity.server');
+        $settings = $this->settingsService->getSettings();
 
         $mask = 0;
         $parts = false;
@@ -116,9 +141,9 @@ class ProvisionCommand extends AbstractBuildCommand
             $mask = BuildService::PROVISION_ALL;
         }
 
-        $result = $buildService->execute(
+        $result = $this->buildService->execute(
             $build,
-            $serverService->getFinder()->find()->getAll(),
+            $this->serverService->getFinder()->find()->getAll(),
             $settings,
             $mask
         );

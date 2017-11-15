@@ -2,10 +2,10 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Task;
 
-class TaskRunner
+class TaskRunner implements TaskRunnerInterface
 {
     /**
-     * @var array|AbstractTask[]
+     * @var array|TaskInterface[]
      */
     protected $tasks = array();
 
@@ -23,7 +23,7 @@ class TaskRunner
     }
 
     /**
-     * @param array $tasks
+     * @param TaskInterface[] $tasks
      *
      * @return $this
      */
@@ -35,11 +35,11 @@ class TaskRunner
     }
 
     /**
-     * @param AbstractTask $task
+     * @param TaskInterface $task
      *
      * @return $this
      */
-    public function addTask(AbstractTask $task)
+    public function addTask(TaskInterface $task)
     {
         $this->tasks[] = $task;
 
@@ -66,7 +66,7 @@ class TaskRunner
         $failed = false;
 
         foreach ($this->tasks as $task) {
-            Messenger::send('executing task: '.$task->getName());
+            Messenger::send('executing task: ' . $task->getName());
             $result = $task->execute();
             $log[] = array(
                 'task' => $task,
@@ -74,8 +74,9 @@ class TaskRunner
             );
             if (!$result->isSuccess()) {
                 $failed = true;
-                Messenger::send('task failed: '.$task->getName());
+                Messenger::send('task failed: ' . $task->getName());
                 Messenger::send($result->getMessages());
+
                 break;
             }
             $executedTasks[] = $task;
@@ -93,16 +94,13 @@ class TaskRunner
     }
 
     /**
-     * @param array|AbstractTask[] $tasks
+     * @param array|TaskInterface[] $tasks
      */
     public function revert(array $tasks)
     {
-        // revert in reverse order of execution
-        $tasks = array_reverse($tasks);
-
-        /** @var AbstractTask[] $tasks */
-        foreach ($tasks as $task) {
-            // only revert executed tasks
+        // Revert in reverse order of execution.
+        foreach (array_reverse($tasks) as $task) {
+            // Only revert executed tasks.
             if ($task->isExecuted()) {
                 $task->revert();
             }

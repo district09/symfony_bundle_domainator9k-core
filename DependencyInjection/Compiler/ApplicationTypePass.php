@@ -8,6 +8,10 @@ use Symfony\Component\DependencyInjection\Reference;
 
 class ApplicationTypePass implements CompilerPassInterface
 {
+
+    /**
+     * {@inheritdoc}
+     */
     public function process(ContainerBuilder $container)
     {
         // always first check if the primary service is defined

@@ -4,32 +4,39 @@ namespace DigipolisGent\Domainator9k\CoreBundle\EntityService;
 
 use Ctrl\Common\EntityService\AbstractDoctrineService;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Application;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationType;
 use ZipStream\ZipStream;
 
+/**
+ * @codeCoverageIgnore
+ *
+ * @todo No tests are written for these methods because they might be removed or
+ * will at least be heavily refactored.
+ */
 class ApplicationService extends AbstractDoctrineService
 {
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getEntityClass()
     {
-        return 'DigipolisGent\Domainator9k\CoreBundle\Entity\Application';
+        return Application::class;
     }
 
     /**
-     * @param Application   $application
+     * Generates the drush alias files.
+     *
+     * @param Application $application
      * @param ServerService $serverService
      *
-     * @return string the file content
+     * @return string
+     *     The file content
      */
     public function generateDrushAliasFile(Application $application, ServerService $serverService)
     {
         //todo: make requiresdrush variable in appType config ?
-        if (!in_array($application->getType()->getSlug(), [ApplicationType::TYPE_DRUPAL_7, ApplicationType::TYPE_DRUPAL_8])) {
+        if (false !== strpos($application->getType()->getSlug(), 'drupal')) {
             throw new \InvalidArgumentException(sprintf(
-                'Only applications of type %s can be used to generate drush alias files, %s given',
-                ApplicationType::TYPE_DRUPAL_7.' or '.ApplicationType::TYPE_DRUPAL_8,
+                'Only Drupal applications can be used to generate drush alias files, %s given',
                 $application->getType()->getSlug()
             ));
         }
@@ -84,7 +91,7 @@ DRUSH;
 
         foreach ($servers as $server) {
             $drush .= <<<DRUSH
-            
+
 /**
  * {$server->getEnvironment()} alias
  */
@@ -96,8 +103,6 @@ DRUSH;
         }
 
         return $drush;
-
-        exit(var_dump($drush));
     }
 
     /**
@@ -113,14 +118,12 @@ DRUSH;
         /** @var Application[] $apps */
         $apps = $this->getEntityRepository()->createQueryBuilder('a')
             ->join('a.type', 'type')
-            ->where('type.slug = :'.ApplicationType::TYPE_DRUPAL_7)
-            ->orWhere('type.slug = :'.ApplicationType::TYPE_DRUPAL_8)
-            ->setParameters([ApplicationType::TYPE_DRUPAL_7 => ApplicationType::TYPE_DRUPAL_7, ApplicationType::TYPE_DRUPAL_8 => ApplicationType::TYPE_DRUPAL_8])
+            ->where('type.slug LIKE \'%drupal%\'')
             ->getQuery()
             ->getResult();
 
         if (!count($apps)) {
-            throw new \RuntimeException(sprintf('No applications found of type %s', ApplicationType::TYPE_DRUPAL_7.' or '.ApplicationType::TYPE_DRUPAL_8));
+            throw new \RuntimeException('No Drupal applications found.');
         }
 
         // zip streamer outputs directly, catch in buffer
@@ -128,7 +131,7 @@ DRUSH;
 
         $zip = new ZipStream();
         foreach ($apps as $app) {
-            $zip->addFile($app->getNameCanonical().'.aliases.drushrc.php', $this->generateDrushAliasFile($app, $serverService));
+            $zip->addFile($app->getNameCanonical() . '.aliases.drushrc.php', $this->generateDrushAliasFile($app, $serverService));
         }
 
         $zip->finish();
@@ -140,9 +143,12 @@ DRUSH;
     }
 
     /**
+     * Generates a csv for all apps with application, environment and domain.
+     *
      * @param Application[] $apps
      *
-     * @return string the file content
+     * @return string
+     *     The file content
      */
     public function generateDomainCsv(array $apps)
     {
@@ -163,7 +169,7 @@ DRUSH;
             }
         }
 
-        // get content and close handle
+        // Get content and close handle.
         rewind($h);
         $csv = stream_get_contents($h);
         fclose($h);

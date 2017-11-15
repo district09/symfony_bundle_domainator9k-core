@@ -30,7 +30,7 @@ class CiSettingsService
     public function getSettings(CiTypeInterface $deployType) //todo:settingsinterface for return
     {
         $settings = $this->doctrine->getManager()->getRepository($deployType->getSettingsEntityClass())->findAll();
-        if (!$settings || count($settings) === 0) {
+        if (!$settings || 0 === count($settings)) {
             $className = $deployType->getSettingsEntityClass();
 
             return new $className();

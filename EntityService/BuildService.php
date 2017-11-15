@@ -3,18 +3,22 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\EntityService;
 
 use Ctrl\Common\EntityService\AbstractDoctrineService;
-use DigipolisGent\Domainator9k\CoreBundle\Interfaces\CiProcessorInterface;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Application;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Build;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Server;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
+use DigipolisGent\Domainator9k\CoreBundle\Interfaces\CiProcessorInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Task\Messenger;
 use DigipolisGent\SockAPIBundle\Service\Event\Poller;
 use DigipolisGent\SockAPIBundle\Service\Promise\EntityCreatePromise;
 use DigipolisGent\SockAPIBundle\Service\Promise\PromiseQueue;
+use Exception;
+use RuntimeException;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Process\Process;
+use Symfony\Component\Process\ProcessBuilder;
 
 class BuildService extends AbstractDoctrineService implements ContainerAwareInterface
 {
@@ -42,24 +46,37 @@ class BuildService extends AbstractDoctrineService implements ContainerAwareInte
     protected $kernelDir;
 
     /**
+     * @var processBuilder
+     */
+    protected $processBuilder;
+
+    /**
+     * Creates a new build service
      * @param string $workspaceDirectory
      * @param string $kernelDir
+     * @param null|ProcessBuilder $processBuilder
      */
-    public function __construct($workspaceDirectory, $kernelDir)
+    public function __construct($workspaceDirectory, $kernelDir, ProcessBuilder $processBuilder = null)
     {
         $this->workspaceDirectory = $workspaceDirectory;
         $this->kernelDir = $kernelDir;
+        if (is_null($processBuilder)) {
+            $processBuilder = new ProcessBuilder();
+        }
+        $this->processBuilder = $processBuilder;
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getEntityClass()
     {
-        return 'DigipolisGent\Domainator9k\CoreBundle\Entity\Build';
+        return Build::class;
     }
 
     /**
+     * Gets the container.
+     *
      * @return ContainerInterface
      */
     public function getContainer()
@@ -68,6 +85,8 @@ class BuildService extends AbstractDoctrineService implements ContainerAwareInte
     }
 
     /**
+     * Sets the container.
+     *
      * @param ContainerInterface $container
      *
      * @return $this
@@ -80,6 +99,8 @@ class BuildService extends AbstractDoctrineService implements ContainerAwareInte
     }
 
     /**
+     * Gets the workspace directory.
+     *
      * @return string
      */
     public function getWorkspaceDirectory()
@@ -88,6 +109,8 @@ class BuildService extends AbstractDoctrineService implements ContainerAwareInte
     }
 
     /**
+     * Sets the workspace directory.
+     *
      * @param string $workspaceDirectory
      *
      * @return $this
@@ -100,16 +123,28 @@ class BuildService extends AbstractDoctrineService implements ContainerAwareInte
     }
 
     /**
-     * @param Build  $build
+     * Gets the kernel directory.
+     *
+     * @return string
+     */
+    public function getKernelDir()
+    {
+        return $this->kernelDir;
+    }
+
+    /**
+     * Updates the build log.
+     *
+     * @param Build $build
      * @param string $newMessage
-     * @param bool   $persist
+     * @param bool $persist
      */
     public function updateBuildLog(Build $build, $newMessage, $persist = true)
     {
         $timestamp = str_pad(date('Y-m-d H:i:s'), 25);
-        $newMessage = str_replace(PHP_EOL, PHP_EOL.str_repeat(' ', 25), $newMessage);
+        $newMessage = str_replace(PHP_EOL, PHP_EOL . str_repeat(' ', 25), $newMessage);
         $build->setLog(
-            $build->getLog().PHP_EOL.$timestamp.$newMessage
+            $build->getLog() . PHP_EOL . $timestamp . $newMessage
         );
 
         if ($persist) {
@@ -118,14 +153,19 @@ class BuildService extends AbstractDoctrineService implements ContainerAwareInte
     }
 
     /**
-     * @param Build    $build
-     * @param array    $servers
+     * @param Build $build
+     * @param array|Server[] $servers
      * @param Settings $settings
-     * @param int      $provision
+     * @param int $provision
+     *
+     * @throws RuntimeException
      *
      * @return bool
      *
-     * @throws \RuntimeException
+     * @todo Very hard to test right now. This will switch to an event system
+     * which will make it easier to test.
+     *
+     * @codeCoverageIgnore
      */
     public function execute(Build $build, array $servers, Settings $settings, $provision = self::PROVISION_ALL)
     {
@@ -138,11 +178,12 @@ class BuildService extends AbstractDoctrineService implements ContainerAwareInte
             switch ($build->getType()) {
                 case Build::TYPE_PROVISION:
                     $this->executeProvision($build, $servers, $settings, $provision);
+
                     break;
             }
 
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Messenger::send([
                 'ERROR build failed',
                 sprintf('%s says: "%s"', get_class($e), $e->getMessage()),
@@ -158,14 +199,21 @@ class BuildService extends AbstractDoctrineService implements ContainerAwareInte
     }
 
     /**
-     * @param Build          $build
+     * Executes the provision.
+     *
+     * @param Build $build
      * @param array|Server[] $servers
-     * @param Settings       $settings
-     * @param int            $options
+     * @param Settings $settings
+     * @param int $options
+     *
+     * @throws Exception
      *
      * @return bool
      *
-     * @throws \Exception
+     * @todo Very hard to test right now. This will switch to an event system
+     * which will make it easier to test.
+     *
+     * @codeCoverageIgnore
      */
     protected function executeProvision(Build $build, array $servers, Settings $settings, $options = self::PROVISION_ALL)
     {
@@ -186,25 +234,19 @@ class BuildService extends AbstractDoctrineService implements ContainerAwareInte
         $ciAppTypeSettings = $this->container->get('digip_deploy.ci_apptype_settings_service')->getSettings($ciType, $appType);
 
         Messenger::send(sprintf(
-            'starting new provision build for %s
+                'starting new provision build for %s
 ci:            %s
 ciOverride:    %s
 filesystem:         %s
 config files:       %s
 sock:               %s
-cron:               %s',
-            $build->getApplication()->getName(),
-            ($ciActive) ? 'On' : 'Off',
-            ($this->isEnabled($options, self::PROVISION_CI_OVERRIDE)) ? 'On' : 'Off',
-            ($allActive || $this->isEnabled($options, self::PROVISION_FILESYSTEM)) ? 'On' : 'Off',
-            ($allActive || $this->isEnabled($options, self::PROVISION_CONFIG_FILES)) ? 'On' : 'Off',
-            ($allActive || $this->isEnabled($options, self::PROVISION_SOCK)) ? 'On' : 'Off',
-            (($allActive || $this->isEnabled($options, self::PROVISION_CRON)) && $allowPartialBuilds) ? 'On' : 'Off'
+cron:               %s', $build->getApplication()->getName(), ($ciActive) ? 'On' : 'Off', ($this->isEnabled($options, self::PROVISION_CI_OVERRIDE)) ? 'On' : 'Off', ($allActive || $this->isEnabled($options, self::PROVISION_FILESYSTEM)) ? 'On' : 'Off', ($allActive || $this->isEnabled($options, self::PROVISION_CONFIG_FILES)) ? 'On' : 'Off', ($allActive || $this->isEnabled($options, self::PROVISION_SOCK)) ? 'On' : 'Off', (($allActive || $this->isEnabled($options, self::PROVISION_CRON)) && $allowPartialBuilds) ? 'On' : 'Off'
         ));
 
-        if (!$allActive && !$allowPartialBuilds && $this->container->getParameter('kernel.environment') !== 'dev') {
+        if (!$allActive && !$allowPartialBuilds && 'dev' !== $this->container->getParameter('kernel.environment')) {
             Messenger::send('a partial build was requested, but is seems we are missing required parts');
-            throw new \RuntimeException('Partial build not possible');
+
+            throw new RuntimeException('Partial build not possible');
         }
 
         Messenger::send($this->getCliHeader('APPLICATION WIDE TASKS'));
@@ -239,6 +281,7 @@ cron:               %s',
 
             if (!$envServersCount) {
                 Messenger::send('no servers configured for this environment.');
+
                 continue;
             }
 
@@ -257,11 +300,8 @@ cron:               %s',
             }
 
             if (!$allowPartialBuilds && $this->isEnabled($options, self::PROVISION_CRON)) {
-                if ($envService->createCronJob($env, $envServers)) {
-                    Messenger::send('cron jobs installed');
-                } else {
-                    Messenger::send('no cron jobs installed');
-                }
+                $cronJobResult = $envService->createCronJob($env, $envServers);
+                Messenger::send($cronJobResult ? 'cron jobs installed' : 'no cron jobs installed');
             }
 
             if ($ciActive) {
@@ -277,9 +317,7 @@ cron:               %s',
                     } else {
                         if ($ciAppTypeSettings->isDumpJobEnabled()) {
                             $ciProcessor->createDumpJob(
-                                $app->getProdAppEnvironment(),
-                                $envServers,
-                                $ciOverrideActive
+                                $app->getProdAppEnvironment(), $envServers, $ciOverrideActive
                             );
                         }
                     }
@@ -296,9 +334,7 @@ cron:               %s',
         } else {
             Messenger::send(sprintf('sending DNS mail to %s', $settings->getDnsMailRecipients()));
             $this->container->get('digip_deploy.mailer')->sendDnsMail(
-                $settings,
-                $app,
-                $servers
+                $settings, $app, $servers
             );
         }
 
@@ -310,21 +346,35 @@ cron:               %s',
     }
 
     /**
+     * Helper function to get a cli header.
+     *
      * @param string $text
      * @param string $padChar
      *
      * @return string
+     *
+     * @todo Very hard to test right now. This will switch to an event system
+     * which will make it easier to test.
+     *
+     * @codeCoverageIgnore
      */
     protected function getCliHeader($text, $padChar = '=')
     {
-        return PHP_EOL.str_pad(str_repeat($padChar, 20).' '.trim($text).' ', 80, $padChar);
+        return PHP_EOL . str_pad(str_repeat($padChar, 20) . ' ' . trim($text) . ' ', 80, $padChar);
     }
 
     /**
-     * @param AppEnvironment $env
-     * @param Server         $server
+     * Executes the sock provision.
      *
-     * @throws \Exception
+     * @param AppEnvironment $env
+     * @param Server $server
+     *
+     * @throws Exception
+     *
+     * @todo Very hard to test right now. This will switch to an event system
+     * which will make it easier to test.
+     *
+     * @codeCoverageIgnore
      */
     protected function executeSockProvision(AppEnvironment $env, Server $server)
     {
@@ -339,18 +389,14 @@ cron:               %s',
         if ($app->getParent()) {
             Messenger::send(
                 sprintf(
-                    'using existing account "%s" as parent on Sock Virtual Server %s',
-                    $app->getParent()->getName(),
-                    $server->getSockId()
+                    'using existing account "%s" as parent on Sock Virtual Server %s', $app->getParent()->getName(), $server->getSockId()
                 )
             );
             $applicationName = $app->getName();
         } else {
             Messenger::send(
                 sprintf(
-                    'requesting account "%s" on Sock Virtual Server %s',
-                    $env->getServerSettings()->getUser(),
-                    $server->getSockId()
+                    'requesting account "%s" on Sock Virtual Server %s', $env->getServerSettings()->getUser(), $server->getSockId()
                 )
             );
             $queue->addPromise(
@@ -361,19 +407,18 @@ cron:               %s',
                             sprintf(
                                 $promise->getDidExist() ?
                                     'account "%s" already exists on Sock Virtual Server %s' :
-                                    'account "%s" created on Sock Virtual Server %s',
-                                $env->getServerSettings()->getUser(),
-                                $server->getSockId()
+                                    'account "%s" created on Sock Virtual Server %s', $env->getServerSettings()->getUser(), $server->getSockId()
                             )
                         );
                     })
                     ->error(function (EntityCreatePromise $promise) {
                         $msg = 'error creating account';
-                        if ($promise->getPoller() && $promise->getPoller()->getState() === Poller::STATE_EXPIRED) {
+                        if ($promise->getPoller() && Poller::STATE_EXPIRED === $promise->getPoller()->getState()) {
                             $msg .= ': polling event queue timed out';
                         }
                         Messenger::send($msg);
-                        throw new \RuntimeException($msg);
+
+                        throw new RuntimeException($msg);
                     })
             );
 
@@ -381,9 +426,7 @@ cron:               %s',
         }
 
         Messenger::send(sprintf(
-            'requesting application "%s" on Sock Account %s',
-            $applicationName,
-            $env->getServerSettings()->getSockAccountId()
+                'requesting application "%s" on Sock Account %s', $applicationName, $env->getServerSettings()->getSockAccountId()
         ));
         $queue->addPromise(
             $envService
@@ -393,27 +436,24 @@ cron:               %s',
                         sprintf(
                             $promise->getDidExist() ?
                                 'application "%s" already exists on Sock Virtual Server %s' :
-                                'application "%s" created on Sock Virtual Server %s',
-                            $env->getServerSettings()->getUser(),
-                            $server->getSockId()
+                                'application "%s" created on Sock Virtual Server %s', $env->getServerSettings()->getUser(), $server->getSockId()
                         )
                     );
                 })
                 ->error(function (EntityCreatePromise $promise) {
                     $msg = 'error creating application';
-                    if ($promise->getPoller() && $promise->getPoller()->getState() === Poller::STATE_EXPIRED) {
+                    if ($promise->getPoller() && Poller::STATE_EXPIRED === $promise->getPoller()->getState()) {
                         $msg .= ': polling event queue timed out';
                     }
                     Messenger::send($msg);
-                    throw new \RuntimeException($msg);
+
+                    throw new RuntimeException($msg);
                 })
         );
 
         if ($env->getApplication()->hasDatabase()) {
             Messenger::send(sprintf(
-                'requesting database "%s" on Sock Account %s',
-                $env->getDatabaseSettings()->getName(),
-                $env->getServerSettings()->getSockAccountId()
+                    'requesting database "%s" on Sock Account %s', $env->getDatabaseSettings()->getName(), $env->getServerSettings()->getSockAccountId()
             ));
             $queue->addPromise(
                 $envService
@@ -423,19 +463,18 @@ cron:               %s',
                             sprintf(
                                 $promise->getDidExist() ?
                                     'database "%s" already exists on Sock Virtual Server %s' :
-                                    'database "%s" created on Sock Virtual Server %s',
-                                $env->getDatabaseSettings()->getName(),
-                                $server->getSockId()
+                                    'database "%s" created on Sock Virtual Server %s', $env->getDatabaseSettings()->getName(), $server->getSockId()
                             )
                         );
                     })
                     ->error(function (EntityCreatePromise $promise) {
                         $msg = 'error creating database';
-                        if ($promise->getPoller() && $promise->getPoller()->getState() === Poller::STATE_EXPIRED) {
+                        if ($promise->getPoller() && Poller::STATE_EXPIRED === $promise->getPoller()->getState()) {
                             $msg .= ': polling event queue timed out';
                         }
                         Messenger::send($msg);
-                        throw new \RuntimeException($msg);
+
+                        throw new RuntimeException($msg);
                     })
             );
         }
@@ -444,8 +483,10 @@ cron:               %s',
     }
 
     /**
+     * Creates a background provision.
+     * 
      * @param Application $app
-     * @param int         $provision
+     * @param int $provision
      *
      * @return Build
      */
@@ -459,39 +500,33 @@ cron:               %s',
         $appId = $app->getId();
         $buildId = $build->getId();
 
-        $options = [];
+        $options = '';
         if ($this->isEnabled($provision, self::PROVISION_ALL)) {
-            $options[] = 'a';
+            $options .= 'a';
         } else {
-            if ($this->isEnabled($provision, self::PROVISION_CI)) {
-                $options[] = 'j';
-            }
-            if ($this->isEnabled($provision, self::PROVISION_CI_OVERRIDE)) {
-                $options[] = 'J';
-            }
-            if ($this->isEnabled($provision, self::PROVISION_FILESYSTEM)) {
-                $options[] = 'f';
-            }
-            if ($this->isEnabled($provision, self::PROVISION_CONFIG_FILES)) {
-                $options[] = 'c';
-            }
-            if ($this->isEnabled($provision, self::PROVISION_SOCK)) {
-                $options[] = 'S';
-            }
-            if ($this->isEnabled($provision, self::PROVISION_CRON)) {
-                $options[] = 'C';
+            $types = [
+                'C' => self::PROVISION_CRON,
+                'J' => self::PROVISION_CI_OVERRIDE,
+                'S' => self::PROVISION_SOCK,
+                'c' => self::PROVISION_CONFIG_FILES,
+                'f' => self::PROVISION_FILESYSTEM,
+                'j' => self::PROVISION_CI,
+            ];
+            foreach ($types as $option => $type) {
+                if ($this->isEnabled($provision, $type)) {
+                    $options .= $option;
+                }
             }
         }
 
-        $options = implode('', $options);
         if ($options) {
-            $options = '-'.$options;
+            $options = '-' . $options;
         }
 
-        //leave this comment pls ?
-        exit("exec php {$this->kernelDir}/../bin/console digip:provision -b$buildId $options -- $appId > /dev/null 2>&1 &");
-
-        shell_exec("exec php {$this->kernelDir}/../bin/console digip:provision -b$buildId $options -- $appId > /dev/null 2>&1 &");
+        // We mostly use this so we can mock the process builder and so we can
+        // unit test this without actually executing the shell command.
+        $this->processBuilder->setPrefix("exec php {$this->kernelDir}/../bin/console digip:provision -b$buildId $options -- $appId > /dev/null 2>&1 &");
+        $this->processBuilder->getProcess()->run();
 
         return $build;
     }

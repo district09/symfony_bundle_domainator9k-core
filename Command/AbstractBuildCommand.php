@@ -4,15 +4,14 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Command;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Application;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Build;
-use Symfony\Component\Console\Command\Command;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-abstract class AbstractBuildCommand extends Command implements ContainerAwareInterface
+abstract class AbstractBuildCommand extends ContainerAwareCommand
 {
     /**
      * @var ContainerInterface
@@ -25,23 +24,40 @@ abstract class AbstractBuildCommand extends Command implements ContainerAwareInt
     protected $applications;
 
     /**
-     * Sets the Container.
-     *
-     * @param ContainerInterface|null $container A ContainerInterface instance or null
-     *
-     * @api
+     * @var \DigipolisGent\Domainator9k\CoreBundle\EntityService\BuildService
      */
-    public function setContainer(ContainerInterface $container = null)
+    protected $buildService;
+
+    /**
+     * @var \DigipolisGent\Domainator9k\CoreBundle\EntityService\ApplicationService
+     */
+    protected $applicationService;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function initialize(InputInterface $input, OutputInterface $output)
     {
-        $this->container = $container;
+        parent::initialize($input, $output);
+        $this->buildService = $this->getContainer()->get('digip_deploy.entity.build');
+        $this->applicationService = $this->getContainer()->get('digip_deploy.entity.application');
     }
 
+    /**
+     * Loads a build.
+     *
+     * @param int $id
+     *     The build id.
+     *
+     * @return \DigipolisGent\Domainator9k\CoreBundle\Entity\Build
+     *
+     * @throws \InvalidArgumentException
+     *     If the build has already started.
+     */
     public function loadBuild($id)
     {
-        $buildService = $this->container->get('digip_deploy.entity.build');
-
         /** @var Build $build */
-        $build = $buildService->getFinder()->get($id);
+        $build = $this->buildService->getFinder()->get($id);
 
         if ($build->isStarted()) {
             throw new \InvalidArgumentException(sprintf(
@@ -53,25 +69,39 @@ abstract class AbstractBuildCommand extends Command implements ContainerAwareInt
         return $build;
     }
 
+    /**
+     * Loads all applications.
+     *
+     * @return \DigipolisGent\Domainator9k\CoreBundle\Entity\Application[]
+     */
     public function getApplications()
     {
         if (!$this->applications) {
-            $this->applications = $this->container->get('digip_deploy.entity.application')->getFinder()->find()->getAll();
+            $this->applications = $this->applicationService->getFinder()->find()->getAll();
         }
 
         return $this->applications;
     }
 
+    /**
+     * Loads an application.
+     *
+     * @param int $id
+     *
+     * @return \DigipolisGent\Domainator9k\CoreBundle\Entity\Application
+     */
     public function loadApplication($id)
     {
-        return $this->container->get('digip_deploy.entity.application')->getFinder()->get($id);
+        return $this->applicationService->getFinder()->get($id);
     }
 
     /**
+     * Prompts the user to choose an application.
+     *
      * @param InputInterface  $input
      * @param OutputInterface $output
      *
-     * @return Application
+     * @return \DigipolisGent\Domainator9k\CoreBundle\Entity\Application
      */
     protected function askApplication(InputInterface $input, OutputInterface $output)
     {
@@ -86,14 +116,14 @@ abstract class AbstractBuildCommand extends Command implements ContainerAwareInt
         $question = new ChoiceQuestion('Which application would you like to deploy?', $choices);
         $result = $dialog->ask($input, $output, $question);
 
+        // The ChoiceQuestion class handles invalid answers, so the chosen
+        // application will always exist.
         foreach ($this->getApplications() as $app) {
             if ($app->getName() === $result) {
-                return $app;
+                break;
             }
         }
 
-        $output->writeln('something went wrong with the selection, please try again');
-
-        return $this->askApplication($input, $output);
+        return $app;
     }
 }

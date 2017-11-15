@@ -2,7 +2,6 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Service;
 
-use DigipolisGent\Domainator9k\CoreBundle\Service\EnvironmentService;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Application;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Server;
@@ -39,12 +38,13 @@ class Mail
      */
     public function sendDnsMail(Settings $settings, Application $application, array $servers)
     {
-        if (!$application->getDnsMailTemplate()) {
+        $template = $application->getDnsMailTemplate();
+        if (!$template) {
             throw new \RuntimeException('DNS mail template is empty');
         }
 
         $recipients = trim($settings->getDnsMailRecipients());
-        $emails = explode(',', $settings->getDnsMailRecipients());
+        $emails = explode(',', $recipients);
         if (empty($recipients) || !count($emails)) {
             return false;
         }
@@ -84,7 +84,7 @@ class Mail
                 $ip['qa'],
                 $ip['prod'],
             ),
-            $application->getDnsMailTemplate()
+            $template
         );
 
         $message = \Swift_Message::newInstance('DNS record request', $content)

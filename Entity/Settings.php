@@ -2,9 +2,7 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -25,12 +23,6 @@ class Settings
      * @ORM\Column(name="default_sock_ssh_keys", type="string", nullable=true)
      */
     protected $defaultSockSshKeys;
-
-    /**
-     * @var SshKeyGroup[]|array|ArrayCollection
-     * @ORM\ManyToMany(targetEntity="DigipolisGent\Domainator9k\CoreBundle\Entity\SshKeyGroup", inversedBy="defaultSettings")
-     */
-    protected $defaultSshKeyGroups;
 
     /**
      * @var string
@@ -68,12 +60,9 @@ class Settings
      */
     protected $appEnvironmentSettings;
 
-    public function __construct()
-    {
-        $this->defaultSshKeyGroups = new ArrayCollection();
-    }
-
     /**
+     * Gets the id.
+     *
      * @return int
      */
     public function getId()
@@ -82,6 +71,8 @@ class Settings
     }
 
     /**
+     * Sets the id.
+     *
      * @param int $id
      *
      * @return $this
@@ -94,6 +85,8 @@ class Settings
     }
 
     /**
+     * Gets the default sock ssh keys.
+     *
      * @return string
      */
     public function getDefaultSockSshKeys()
@@ -102,6 +95,8 @@ class Settings
     }
 
     /**
+     * Sets the default sock ssh keys.
+     *
      * @param string $defaultSockSshKeys
      *
      * @return $this
@@ -114,26 +109,8 @@ class Settings
     }
 
     /**
-     * @return mixed
-     */
-    public function getDefaultSshKeyGroups()
-    {
-        return $this->defaultSshKeyGroups;
-    }
-
-    /**
-     * @param mixed $defaultSshKeyGroups
+     * Gets the DNS mail recipients.
      *
-     * @return $this
-     */
-    public function setDefaultSshKeyGroups($defaultSshKeyGroups)
-    {
-        $this->defaultSshKeyGroups = $defaultSshKeyGroups;
-
-        return $this;
-    }
-
-    /**
      * @return string
      */
     public function getDnsMailRecipients()
@@ -142,6 +119,8 @@ class Settings
     }
 
     /**
+     * Sets the DNS mail recipients.
+     *
      * @param string $dnsMailRecipients
      *
      * @return $this
@@ -154,6 +133,8 @@ class Settings
     }
 
     /**
+     * Gets the DNS mail template.
+     *
      * @return string
      */
     public function getDnsMailTemplate()
@@ -162,6 +143,8 @@ class Settings
     }
 
     /**
+     * Sets the DNS mail template.
+     *
      * @param string $dnsMailTemplate
      *
      * @return $this
@@ -174,6 +157,8 @@ class Settings
     }
 
     /**
+     * Gets the sock domain.
+     *
      * @return string
      */
     public function getSockDomain()
@@ -182,6 +167,8 @@ class Settings
     }
 
     /**
+     * Sets the sock domain.
+     *
      * @param string $sockDomain
      *
      * @return $this
@@ -194,6 +181,8 @@ class Settings
     }
 
     /**
+     * Gets the sock user token.
+     *
      * @return string
      */
     public function getSockUserToken()
@@ -202,6 +191,8 @@ class Settings
     }
 
     /**
+     * Sets the sock user token.
+     *
      * @param string $sockUserToken
      *
      * @return $this
@@ -214,6 +205,8 @@ class Settings
     }
 
     /**
+     * Gets the sock client token.
+     *
      * @return string
      */
     public function getSockClientToken()
@@ -222,6 +215,8 @@ class Settings
     }
 
     /**
+     * Sets the sock client token.
+     *
      * @param string $sockClientToken
      *
      * @return $this
@@ -234,13 +229,15 @@ class Settings
     }
 
     /**
+     * Gets the app environment settings for an app environment.
+     *
      * @param null|string|AppEnvironment $appEnvironment
      *
      * @return AppEnvironmentSettings|AppEnvironmentSettings[]
      */
     public function getAppEnvironmentSettings($appEnvironment = null)
     {
-        if ($appEnvironment === null) {
+        if (null === $appEnvironment) {
             return $this->appEnvironmentSettings;
         }
 
@@ -258,6 +255,8 @@ class Settings
     }
 
     /**
+     * Sets the app environment settings.
+     *
      * @param AppEnvironmentSettings[] $appEnvironmentSettings
      *
      * @return $this
@@ -267,29 +266,5 @@ class Settings
         $this->appEnvironmentSettings = $appEnvironmentSettings;
 
         return $this;
-    }
-
-    /**
-     * Add defaultSshKeyGroups.
-     *
-     * @param \DigipolisGent\Domainator9k\CoreBundle\Entity\SshKeyGroup $defaultSshKeyGroups
-     *
-     * @return Settings
-     */
-    public function addDefaultSshKeyGroup(SshKeyGroup $defaultSshKeyGroups)
-    {
-        $this->defaultSshKeyGroups[] = $defaultSshKeyGroups;
-
-        return $this;
-    }
-
-    /**
-     * Remove defaultSshKeyGroups.
-     *
-     * @param \DigipolisGent\Domainator9k\CoreBundle\Entity\SshKeyGroup $defaultSshKeyGroups
-     */
-    public function removeDefaultSshKeyGroup(SshKeyGroup $defaultSshKeyGroups)
-    {
-        $this->defaultSshKeyGroups->removeElement($defaultSshKeyGroups);
     }
 }

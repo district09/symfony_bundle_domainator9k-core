@@ -2,9 +2,10 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Service;
 
-use DigipolisGent\Domainator9k\CoreBundle\Entity\BaseAppType;
-use DigipolisGent\Domainator9k\CoreBundle\Interfaces\CiTypeInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Application;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\BaseAppType;
+use DigipolisGent\Domainator9k\CoreBundle\Interfaces\ApplicationTypeInterface;
+use DigipolisGent\Domainator9k\CoreBundle\Interfaces\CiTypeInterface;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
 class CiAppTypeSettingsService
@@ -13,10 +14,12 @@ class CiAppTypeSettingsService
      * @var Registry
      */
     private $doctrine;
+
     /**
      * @var ApplicationTypeBuilder
      */
     private $applicationTypeBuilder;
+
     /**
      * @var CiTypeBuilder
      */
@@ -42,13 +45,12 @@ class CiAppTypeSettingsService
      *
      * @return mixed
      */
-    public function getSettings(CiTypeInterface $ciType, BaseAppType $appType)
+    public function getSettings(CiTypeInterface $ciType, ApplicationTypeInterface $appType)
     {
         $settings = $this->doctrine->getManager()->getRepository($ciType->getAppTypeSettingsEntityClass())->findOneBy(['appTypeSlug' => $appType->getSlug(), 'ciTypeSlug' => $ciType->getSlug()]);
         if (!$settings) {
             $className = $ciType->getAppTypeSettingsEntityClass();
             $class = new $className($ciType->getSlug(), $appType->getSlug());
-            /* @noinspection PhpUndefinedMethodInspection */
             $class->setAdditionalConfig($ciType->getAdditionalConfig());
 
             return $class;

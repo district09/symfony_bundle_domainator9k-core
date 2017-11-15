@@ -3,11 +3,12 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Service;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\BaseAppType;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationType;
+use DigipolisGent\Domainator9k\CoreBundle\Interfaces\ApplicationTypeInterface;
+use Exception;
 
 class ApplicationTypeBuilder
 {
-    private $applicationTypes;
+    protected $applicationTypes;
 
     public function __construct()
     {
@@ -30,18 +31,19 @@ class ApplicationTypeBuilder
     /**
      * @param $slug
      *
-     * @return BaseAppType|ApplicationType
+     * @throws Exception
      *
-     * @throws \Exception
+     * @return BaseAppType
      */
     public function getType($slug)
     {
         return $this->applicationTypes[$slug];
     }
 
-    //todo interface
-    public function addType(BaseAppType $applicationType)
+    public function addType(ApplicationTypeInterface $applicationType)
     {
         $this->applicationTypes[$applicationType->getSlug()] = $applicationType;
+
+        return $this;
     }
 }

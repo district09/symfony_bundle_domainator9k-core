@@ -14,6 +14,8 @@ trait HasUsers
     protected $users = array();
 
     /**
+     * Gets the users.
+     *
      * @return User[]
      */
     public function getUsers()
@@ -22,27 +24,59 @@ trait HasUsers
     }
 
     /**
+     * Sets the users.
+     *
      * @param User[] $users
      *
      * @return $this
      */
     public function setUsers($users)
     {
-        $this->users = $users;
+        $this->users = ($users instanceof ArrayCollection)
+            ? $users
+            : new ArrayCollection($users);
 
         return $this;
     }
 
+    /**
+     * Adds a user.
+     *
+     * @param User $user
+     *
+     * @return $this
+     */
     public function addUser(User $user)
     {
-        $this->users[] = $user;
+        if (!$this->users instanceof ArrayCollection) {
+            $this->users = new ArrayCollection($this->users);
+        }
+        $this->users->add($user);
+
+        return $this;
     }
 
+    /**
+     * Removes a user.
+     *
+     * @param User $user
+     *
+     * @return $this
+     */
     public function removeUser(User $user)
     {
         $this->users->removeElement($user);
+
+        return $this;
     }
 
+    /**
+     * Checks if the entity has a user.
+     *
+     * @param User $user
+     *
+     * @return bool
+     */
     public function hasUser(User $user)
     {
         return $this->users->contains($user);

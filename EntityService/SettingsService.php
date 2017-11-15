@@ -3,20 +3,22 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\EntityService;
 
 use Ctrl\Common\EntityService\AbstractDoctrineService;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Application;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
 
 class SettingsService extends AbstractDoctrineService
 {
     /**
-     * @return string
+     * {@inhertidoc}
      */
     public function getEntityClass()
     {
-        return 'DigipolisGent\Domainator9k\CoreBundle\Entity\Settings';
+        return Settings::class;
     }
 
     /**
+     * Gets the settings.
+     *
      * @return Settings
      */
     public function getSettings()
@@ -25,7 +27,7 @@ class SettingsService extends AbstractDoctrineService
     }
 
     /**
-     * Apply all defaults to a new Application.
+     * Applies all defaults to a new Application.
      *
      * @param Application $app
      */
@@ -34,9 +36,6 @@ class SettingsService extends AbstractDoctrineService
         $settings = $this->getSettings();
 
         foreach ($app->getAppEnvironments() as $env) {
-            $env->setSshKeyGroups(
-                $settings->getDefaultSshKeyGroups()
-            );
             if ((null !== $env->getDatabaseSettings())) {
                 $env->getDatabaseSettings()->setHost(
                     $settings->getAppEnvironmentSettings($env)->getDatabaseHost()

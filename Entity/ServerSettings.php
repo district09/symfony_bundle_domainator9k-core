@@ -56,9 +56,11 @@ class ServerSettings
     protected $sockAccountId;
 
     /**
+     * Creates new server settings.
+     *
      * @param AppEnvironment $appEnvironment
-     * @param string         $user
-     * @param string         $password
+     * @param string $user
+     * @param string $password
      */
     public function __construct(AppEnvironment $appEnvironment, $user, $password)
     {
@@ -68,6 +70,8 @@ class ServerSettings
     }
 
     /**
+     * Gets the id.
+     *
      * @return int
      */
     public function getId()
@@ -76,6 +80,8 @@ class ServerSettings
     }
 
     /**
+     * Gets the app environment.
+     *
      * @return AppEnvironment
      */
     public function getAppEnvironment()
@@ -84,6 +90,8 @@ class ServerSettings
     }
 
     /**
+     * Sets the app environment.
+     *
      * @param AppEnvironment $appEnvironment
      *
      * @return $this
@@ -96,6 +104,8 @@ class ServerSettings
     }
 
     /**
+     * Gets the ssh port.
+     *
      * @return int
      */
     public function getPortSsh()
@@ -104,6 +114,8 @@ class ServerSettings
     }
 
     /**
+     * Sets the ssh port.
+     *
      * @param int $portSsh
      *
      * @return $this
@@ -116,6 +128,8 @@ class ServerSettings
     }
 
     /**
+     * Gets the user.
+     *
      * @return string
      */
     public function getUser()
@@ -124,6 +138,8 @@ class ServerSettings
     }
 
     /**
+     * Sets the user.
+     *
      * @param string $user
      *
      * @return $this
@@ -136,6 +152,8 @@ class ServerSettings
     }
 
     /**
+     * Gets the password.
+     *
      * @return string
      */
     public function getPassword()
@@ -144,6 +162,8 @@ class ServerSettings
     }
 
     /**
+     * Sets the password.
+     *
      * @param string $password
      *
      * @return $this
@@ -156,6 +176,8 @@ class ServerSettings
     }
 
     /**
+     * Gets the sock account id.
+     *
      * @return mixed
      */
     public function getSockAccountId()
@@ -164,6 +186,8 @@ class ServerSettings
     }
 
     /**
+     * Sets the sock account id.
+     * 
      * @param mixed $sockAccountId
      *
      * @return $this

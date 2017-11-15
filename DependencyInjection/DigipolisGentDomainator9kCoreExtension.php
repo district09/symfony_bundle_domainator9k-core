@@ -11,6 +11,7 @@ use Symfony\Component\DependencyInjection\Loader;
  * This is the class that loads and manages your bundle configuration.
  *
  * @see http://symfony.com/doc/current/cookbook/bundles/extension.html
+ * @codeCoverageIgnore
  */
 class DigipolisGentDomainator9kCoreExtension extends Extension
 {
@@ -22,7 +23,7 @@ class DigipolisGentDomainator9kCoreExtension extends Extension
         $configuration = new Configuration();
         $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
     }
 }

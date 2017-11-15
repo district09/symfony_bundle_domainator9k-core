@@ -18,7 +18,7 @@ class Password extends AbstractAuth
 
     public function authenticate(SSH2 $connection)
     {
-        if ($this->password === null) {
+        if (null === $this->password) {
             $authenticator = new None($this->user);
             $authenticator->authenticate($connection);
 

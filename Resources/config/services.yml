@@ -140,11 +140,3 @@ services:
         public:     false
         tags:
             - { name: security.voter }
-    digip_deploy.provider.entity_type:
-        class: DigipolisGent\Domainator9k\CoreBundle\Provider\EntityTypeProvider
-        tags:
-            - { name: entity_type_provider }
-    digip_deploy.provider.data_type:
-        class: DigipolisGent\Domainator9k\CoreBundle\Provider\DataTypeProvider
-        tags:
-            - { name: data_type_provider }

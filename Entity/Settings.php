@@ -55,12 +55,6 @@ class Settings
     protected $sockClientToken;
 
     /**
-     * @var AppEnvironmentSettings[]
-     * @ORM\OneToMany(targetEntity="DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironmentSettings", mappedBy="settings")
-     */
-    protected $appEnvironmentSettings;
-
-    /**
      * Gets the id.
      *
      * @return int
@@ -224,46 +218,6 @@ class Settings
     public function setSockClientToken($sockClientToken)
     {
         $this->sockClientToken = $sockClientToken;
-
-        return $this;
-    }
-
-    /**
-     * Gets the app environment settings for an app environment.
-     *
-     * @param null|string|AppEnvironment $appEnvironment
-     *
-     * @return AppEnvironmentSettings|AppEnvironmentSettings[]
-     */
-    public function getAppEnvironmentSettings($appEnvironment = null)
-    {
-        if (null === $appEnvironment) {
-            return $this->appEnvironmentSettings;
-        }
-
-        if ($appEnvironment instanceof AppEnvironment) {
-            $appEnvironment = $appEnvironment->getNameCanonical();
-        }
-
-        foreach ($this->appEnvironmentSettings as $settings) {
-            if ($settings->getEnvironment() === $appEnvironment) {
-                return $settings;
-            }
-        }
-
-        throw new \InvalidArgumentException(sprintf('invalid appenvironment given: %s', $appEnvironment));
-    }
-
-    /**
-     * Sets the app environment settings.
-     *
-     * @param AppEnvironmentSettings[] $appEnvironmentSettings
-     *
-     * @return $this
-     */
-    public function setAppEnvironmentSettings($appEnvironmentSettings)
-    {
-        $this->appEnvironmentSettings = $appEnvironmentSettings;
 
         return $this;
     }

@@ -2,14 +2,21 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
+use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="environment")
+ * @UniqueEntity(fields={"name"})
  */
 class Environment
 {
+
+    use SettingImplementationTrait;
+
     /**
      * @var int
      * @ORM\Column(type="integer")
@@ -21,6 +28,7 @@ class Environment
     /**
      * @var string
      * @ORM\Column(type="string")
+     * @Assert\NotBlank();
      */
     protected $name;
 

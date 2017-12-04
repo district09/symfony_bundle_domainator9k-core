@@ -2,6 +2,7 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
+use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -11,6 +12,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Server
 {
+
+    use SettingImplementationTrait;
+
     /**
      * @var int
      * @ORM\Column(type="integer")
@@ -28,25 +32,6 @@ class Server
 
     /**
      * @var string
-     * @ORM\Column(name="sock_id", type="string", length=255, nullable=false)
-     * @Assert\NotBlank()
-     */
-    protected $sockId;
-
-    /**
-     * @var bool
-     * @ORM\Column(name="manage_sock", type="boolean", options={"default": 0})
-     */
-    protected $manageSock = false;
-
-    /**
-     * @var bool
-     * @ORM\Column(name="task_server", type="boolean", options={"default": 0})
-     */
-    protected $taskServer = false;
-
-    /**
-     * @var string
      * @ORM\Column(name="ip", type="string", length=20, nullable=false)
      * @Assert\NotBlank()
      */
@@ -58,6 +43,12 @@ class Server
      * @Assert\NotBlank()
      */
     protected $environment;
+
+    /**
+     * @var boolean
+     * @ORM\Column(name="task_server", type="boolean")
+     */
+    protected $taskServer;
 
     /**
      * Creates a new server.
@@ -110,81 +101,6 @@ class Server
     }
 
     /**
-     * Gets the sock id.
-     *
-     * @return string
-     *
-     * @todo Shouldn't this be in a separate sock bundle??
-     */
-    public function getSockId()
-    {
-        return $this->sockId;
-    }
-
-    /**
-     * Sets the sock id.
-     *
-     * @param string $sockId
-     *
-     * @return $this
-     *
-     * @todo Shouldn't this be in a separate sock bundle??
-     */
-    public function setSockId($sockId)
-    {
-        $this->sockId = $sockId;
-
-        return $this;
-    }
-
-    /**
-     * Checks whether or not this server is managed by sock.
-     *
-     * @return bool
-     */
-    public function manageSock()
-    {
-        return $this->manageSock;
-    }
-
-    /**
-     * Sets whether or not this server is managed by sock.
-     *
-     * @param bool $manageSock
-     *
-     * @return $this
-     */
-    public function setManageSock($manageSock)
-    {
-        $this->manageSock = $manageSock;
-
-        return $this;
-    }
-
-    /**
-     * Checks whether or not this server is a task server.
-     * @return bool
-     */
-    public function isTaskServer()
-    {
-        return $this->taskServer;
-    }
-
-    /**
-     * Sets whether or not this server is a task server.
-     *
-     * @param bool $taskServer
-     *
-     * @return $this
-     */
-    public function setTaskServer($taskServer)
-    {
-        $this->taskServer = $taskServer;
-
-        return $this;
-    }
-
-    /**
      * Gets the server IP.
      *
      * @return string
@@ -231,4 +147,21 @@ class Server
 
         return $this;
     }
+
+    /**
+     * @return bool
+     */
+    public function isTaskServer(): bool
+    {
+        return $this->taskServer;
+    }
+
+    /**
+     * @param bool $taskServer
+     */
+    public function setTaskServer(bool $taskServer)
+    {
+        $this->taskServer = $taskServer;
+    }
+
 }

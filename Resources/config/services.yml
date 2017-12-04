@@ -140,3 +140,9 @@ services:
         public:     false
         tags:
             - { name: security.voter }
+    DigipolisGent\Domainator9k\CoreBundle\Provider\EntityTypeProvider:
+        tags:
+            - { name: entity_type_provider }
+    DigipolisGent\Domainator9k\CoreBundle\Provider\DataTypeProvider:
+        tags:
+            - { name: data_type_provider }

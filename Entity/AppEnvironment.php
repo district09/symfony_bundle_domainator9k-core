@@ -707,7 +707,7 @@ class AppEnvironment
 
     /**
      * Sets whether or not this is the prod environment.
-     * 
+     *
      * @param bool $prod
      *
      * @return $this

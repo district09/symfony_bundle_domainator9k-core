@@ -1,0 +1,331 @@
+<?php
+
+namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="database_settings")
+ */
+class DatabaseSettings
+{
+    /**
+     * @var int
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @var AppEnvironment
+     * @ORM\OneToOne(targetEntity="AppEnvironment", cascade={"all"}, inversedBy="databaseSettings")
+     * * @ORM\JoinColumn(name="environment_id", referencedColumnName="id", nullable=true)
+     */
+    protected $appEnvironment;
+
+    /**
+     * @var string
+     * @ORM\Column(name="name", type="string", nullable=false)
+     * @Assert\NotBlank()
+     * @Assert\Length(min="3", max="255")
+     */
+    protected $name;
+
+    /**
+     * @var string
+     * @ORM\Column(name="host", type="string", nullable=false)
+     * @Assert\NotBlank()
+     */
+    protected $host = 'localhost';
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=false)
+     * @Assert\NotBlank()
+     */
+    protected $engine = 'mysql';
+
+    /**
+     * @var string
+     * @ORM\Column(name="port", type="string", nullable=false)
+     * @Assert\NotBlank()
+     * @Assert\Length(min="1", max="5")
+     */
+    protected $port = '3306';
+
+    /**
+     * @var string
+     * @ORM\Column(name="user", type="string", nullable=false)
+     * @Assert\NotBlank()
+     * @Assert\Length(min="1", max="255")
+     */
+    protected $user = 'root';
+
+    /**
+     * @var string
+     * @ORM\Column(name="password", type="string", nullable=true)
+     * @Assert\Length(min="1", max="255")
+     */
+    protected $password;
+
+    /**
+     * @var int
+     * @ORM\Column(name="sock_database_id", type="integer", nullable=true)
+     */
+    protected $sockDatabaseId;
+
+    /**
+     * @var bool
+     * @ORM\Column(name="is_created", type="boolean", options={"default"="0"})
+     */
+    protected $isCreated = false;
+
+    /**
+     * Creates new database settings.
+     *
+     * @param AppEnvironment $appEnvironment
+     * @param string $name
+     */
+    public function __construct(AppEnvironment $appEnvironment, $name)
+    {
+        $this->appEnvironment = $appEnvironment;
+        $this->name = $name;
+        $this->user = substr($appEnvironment->getApplication()->getNameCanonical(), 0, 14) . '_' . substr($appEnvironment->getNameCanonical(), 0, 1);
+
+        // Generate a random string, hopefully, somebody will set a real password later on...
+        $this->password = substr(str_shuffle('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'), 0, 10);
+    }
+
+    /**
+     * Gets the id.
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Gets the app environment.
+     *
+     * @return AppEnvironment
+     */
+    public function getAppEnvironment()
+    {
+        return $this->appEnvironment;
+    }
+
+    /**
+     * Sets the app environment.
+     *
+     * @param AppEnvironment $appEnvironment
+     *
+     * @return $this
+     */
+    public function setAppEnvironment($appEnvironment)
+    {
+        $this->appEnvironment = $appEnvironment;
+
+        return $this;
+    }
+
+    /**
+     * Gets the name.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Sets the name.
+     *
+     * @param string $name
+     *
+     * @return $this
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Gets the host.
+     *
+     * @return string
+     */
+    public function getHost()
+    {
+        return $this->host;
+    }
+
+    /**
+     * Sets the host.
+     *
+     * @param string $host
+     *
+     * @return $this
+     */
+    public function setHost($host)
+    {
+        $this->host = $host;
+
+        return $this;
+    }
+
+    /**
+     * Gets the port.
+     *
+     * @return string
+     */
+    public function getPort()
+    {
+        return $this->port;
+    }
+
+    /**
+     * Sets the port.
+     *
+     * @param string $port
+     *
+     * @return $this
+     */
+    public function setPort($port)
+    {
+        $this->port = $port;
+
+        return $this;
+    }
+
+    /**
+     * Gets the user.
+     *
+     * @return string
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * Sets the user.
+     *
+     * @param string $user
+     *
+     * @return $this
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Gets the password.
+     *
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * Sets the password.
+     *
+     * @param string $password
+     *
+     * @return $this
+     */
+    public function setPassword($password)
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Gets the sock database id.
+     *
+     * @return int
+     */
+    public function getSockDatabaseId()
+    {
+        return $this->sockDatabaseId;
+    }
+
+    /**
+     * Sets the sock database id.
+     *
+     * @param int $sockDatabaseId
+     *
+     * @return $this
+     */
+    public function setSockDatabaseId($sockDatabaseId)
+    {
+        $this->sockDatabaseId = $sockDatabaseId;
+
+        return $this;
+    }
+
+    /**
+     * Checks whether or not the database is created.
+     *
+     * @return bool
+     */
+    public function isCreated()
+    {
+        return $this->isCreated;
+    }
+
+    /**
+     * Sets whether or not the database is created.
+     *
+     * @param bool $isCreated
+     *
+     * @return $this
+     */
+    public function setIsCreated($isCreated)
+    {
+        $this->isCreated = $isCreated;
+
+        return $this;
+    }
+
+    /**
+     * Gets the engine.
+     *
+     * @return string
+     */
+    public function getEngine()
+    {
+        if (!$this->engine) {
+            $this->engine = 'mysql';
+        }
+
+        return $this->engine;
+    }
+
+    /**
+     * Sets the engine.
+     *
+     * @param string $engine
+     *
+     * @return $this
+     */
+    public function setEngine($engine)
+    {
+        $this->engine = $engine;
+
+        return $this;
+    }
+}

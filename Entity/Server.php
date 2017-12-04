@@ -51,22 +51,6 @@ class Server
     protected $taskServer;
 
     /**
-     * Creates a new server.
-     *
-     * @param string $sockId
-     * @param string $name
-     * @param string $ip
-     * @param string $environment
-     */
-    public function __construct($sockId, $name, $ip, $environment)
-    {
-        $this->sockId = $sockId;
-        $this->name = $name;
-        $this->ip = $ip;
-        $this->environment = $environment;
-    }
-
-    /**
      * Gets the id.
      *
      * @return int
@@ -151,7 +135,7 @@ class Server
     /**
      * @return bool
      */
-    public function isTaskServer(): bool
+    public function isTaskServer()
     {
         return $this->taskServer;
     }
@@ -159,7 +143,7 @@ class Server
     /**
      * @param bool $taskServer
      */
-    public function setTaskServer(bool $taskServer)
+    public function setTaskServer($taskServer)
     {
         $this->taskServer = $taskServer;
     }

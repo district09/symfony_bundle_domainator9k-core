@@ -85,12 +85,6 @@ class AppEnvironment
     protected $cron;
 
     /**
-     * @var ServerSettings
-     * @ORM\OneToOne(targetEntity="ServerSettings", cascade={"all"}, mappedBy="appEnvironment")
-     */
-    protected $serverSettings;
-
-    /**
      * @var DatabaseSettings
      * @ORM\OneToOne(targetEntity="DatabaseSettings", cascade={"all"}, mappedBy="appEnvironment")
      */
@@ -707,7 +701,7 @@ class AppEnvironment
 
     /**
      * Sets whether or not this is the prod environment.
-     *
+     * 
      * @param bool $prod
      *
      * @return $this

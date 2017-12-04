@@ -39,12 +39,6 @@ class Environment
     protected $prod;
 
     /**
-     * @var bool
-     * @ORM\Column(type="boolean")
-     */
-    protected $devPermissions;
-
-    /**
      * @var string
      * @ORM\Column(type="string")
      */
@@ -57,27 +51,6 @@ class Environment
     {
         $this->prod = false;
         $this->urlStructure = '';
-    }
-
-    /**
-     * Checks whether or not devs have permissions on this environment.
-     *
-     * @return bool
-     */
-    public function isDevPermissions()
-    {
-        return $this->devPermissions;
-    }
-
-    /**
-     * Sets whether or not devs have permissions on this environment.
-     * @param bool $devPermissions
-     */
-    public function setDevPermissions($devPermissions)
-    {
-        $this->devPermissions = $devPermissions;
-
-        return $this;
     }
 
     /**

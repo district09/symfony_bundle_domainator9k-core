@@ -3,6 +3,7 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
 use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -39,18 +40,18 @@ class Environment
     protected $prod;
 
     /**
-     * @var string
-     * @ORM\Column(type="string")
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="ApplicationEnvironment",mappedBy="environment",cascade={"remove"})
      */
-    protected $urlStructure;
+    protected $applicationEnvironments;
 
     /**
      * Creates a new environment.
      */
     public function __construct()
     {
-        $this->prod = false;
-        $this->urlStructure = '';
+        $this->applicationEnvironments = new ArrayCollection();
     }
 
     /**
@@ -115,25 +116,15 @@ class Environment
         return $this;
     }
 
-    /**
-     * Gets the url structure.
-     *
-     * @return string
-     */
-    public function getUrlStructure()
-    {
-        return $this->urlStructure;
+    public function addApplicationEnvironment(ApplicationEnvironment $applicationEnvironment){
+        $this->applicationEnvironments->add($applicationEnvironment);
     }
 
     /**
-     * Sets the url structure.
-     *
-     * @param string $urlStructure
+     * @return ArrayCollection
      */
-    public function setUrlStructure($urlStructure)
+    public function getApplicationEnvironments()
     {
-        $this->urlStructure = $urlStructure;
-
-        return $this;
+        return $this->applicationEnvironments;
     }
 }

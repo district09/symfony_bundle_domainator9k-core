@@ -3,6 +3,7 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
 use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -49,6 +50,13 @@ class Server
      * @ORM\Column(name="task_server", type="boolean")
      */
     protected $taskServer;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="ApplicationServer",mappedBy="server",cascade={"remove"})
+     */
+    protected $applicationServers;
 
     /**
      * Gets the id.
@@ -146,6 +154,20 @@ class Server
     public function setTaskServer($taskServer)
     {
         $this->taskServer = $taskServer;
+    }
+
+    /**
+     * @param ApplicationServer $applicationServer
+     */
+    public function addApplicationServer(ApplicationServer $applicationServer){
+        $this->applicationServers->add($applicationServer);
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getApplicationServers(){
+        return $this->applicationServers;
     }
 
 }

@@ -143,6 +143,11 @@ services:
     DigipolisGent\Domainator9k\CoreBundle\Provider\EntityTypeProvider:
         tags:
             - { name: entity_type_provider }
-    DigipolisGent\Domainator9k\CoreBundle\Provider\DataTypeProvider:
+    DigipolisGent\Domainator9k\CoreBundle\EventListener\EnvironmentEventListener:
         tags:
-            - { name: data_type_provider }
+            - { name: doctrine.event_listener, event: postPersist, connection: default }
+            - { name: doctrine.event_listener, event: postRemove, connection: default }
+    DigipolisGent\Domainator9k\CoreBundle\EventListener\ServerEventListener:
+        tags:
+            - { name: doctrine.event_listener, event: postPersist, connection: default }
+            - { name: doctrine.event_listener, event: postRemove, connection: default }

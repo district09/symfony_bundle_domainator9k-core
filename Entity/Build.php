@@ -32,7 +32,7 @@ class Build
 
     /**
      * @var Application
-     * @ORM\ManyToOne(targetEntity="Application", cascade={"all"}, inversedBy="builds")
+     * @ORM\ManyToOne(targetEntity="AbstractApplication", cascade={"all"}, inversedBy="builds")
      * @ORM\JoinColumn(name="application_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
     protected $application;

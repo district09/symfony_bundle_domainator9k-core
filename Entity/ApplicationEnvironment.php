@@ -2,14 +2,9 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\HasRoles;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\HasUsers;
-use DigipolisGent\Domainator9k\CoreBundle\Tools\StringHelper;
 use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * @ORM\Entity

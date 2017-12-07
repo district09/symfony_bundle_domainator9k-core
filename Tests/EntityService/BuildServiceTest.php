@@ -2,7 +2,6 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Tests\EntityService;
 
-use Ctrl\RadBundle\Entity\User;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Application;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Build;
 use DigipolisGent\Domainator9k\CoreBundle\EntityService\BuildService;
@@ -115,18 +114,7 @@ class BuildServiceTest extends TestCase
         $app = $this->getMockBuilder(Application::class)->disableOriginalConstructor()->getMock();
         $app->expects($this->once())->method('getId')->willReturn($appId);
 
-        $user = $this->getMockBuilder(User::class)->disableOriginalConstructor()->getMock();
-
-        $app->expects($this->once())->method('setProvisionBuild')->with($this->callback(
-            function (Build $build) use ($user, $app) {
-                return $build->getUser() === $user
-                    && $build->getApplication() === $app
-                    && Build::TYPE_PROVISION === $build->getType();
-            }
-        ));
-
         $token = $this->getMockBuilder(TokenInterface::class)->disableOriginalConstructor()->getMock();
-        $token->expects($this->once())->method('getUser')->willReturn($user);
 
         $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->disableOriginalConstructor()->getMock();
         $tokenStorage->expects($this->once())->method('getToken')->willReturn($token);
@@ -139,10 +127,9 @@ class BuildServiceTest extends TestCase
             ->expects($this->once())->method('persist')
             ->with(
                 $this->callback(
-                    function (Build $build) use ($user, $app) {
+                    function (Build $build) use ($app) {
                         return Build::TYPE_PROVISION === $build->getType()
-                            && $build->getApplication() === $app
-                            && $build->getUser() === $user;
+                            && $build->getApplication() === $app;
                     }
                 )
             )
@@ -193,18 +180,15 @@ class BuildServiceTest extends TestCase
         $app = $this->getMockBuilder(Application::class)->disableOriginalConstructor()->getMock();
         $app->expects($this->once())->method('getId')->willReturn($appId);
 
-        $user = $this->getMockBuilder(User::class)->disableOriginalConstructor()->getMock();
 
         $app->expects($this->once())->method('setProvisionBuild')->with($this->callback(
-            function (Build $build) use ($user, $app) {
-                return $build->getUser() === $user
-                    && $build->getApplication() === $app
+            function (Build $build) use ($app) {
+                return $build->getApplication() === $app
                     && Build::TYPE_PROVISION === $build->getType();
             }
         ));
 
         $token = $this->getMockBuilder(TokenInterface::class)->disableOriginalConstructor()->getMock();
-        $token->expects($this->once())->method('getUser')->willReturn($user);
 
         $tokenStorage = $this->getMockBuilder(TokenStorageInterface::class)->disableOriginalConstructor()->getMock();
         $tokenStorage->expects($this->once())->method('getToken')->willReturn($token);
@@ -217,10 +201,9 @@ class BuildServiceTest extends TestCase
             ->expects($this->once())->method('persist')
             ->with(
                 $this->callback(
-                    function (Build $build) use ($user, $app) {
+                    function (Build $build) use ($app) {
                         return Build::TYPE_PROVISION === $build->getType()
-                            && $build->getApplication() === $app
-                            && $build->getUser() === $user;
+                            && $build->getApplication() === $app;
                     }
                 )
             )

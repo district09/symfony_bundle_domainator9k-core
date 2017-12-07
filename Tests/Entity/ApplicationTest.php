@@ -2,7 +2,6 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Entity;
 
-use Ctrl\RadBundle\Entity\User;
 use DateTime;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Application;
@@ -74,8 +73,6 @@ class ApplicationTest extends EntityTest
         $this->assertInstanceOf(DateTime::class, $app->getCreatedAt());
         $this->assertInstanceOf(DateTime::class, $app->getUpdatedAt());
         $this->assertInstanceOf(ArrayCollection::class, $app->getAppEnvironments());
-        $this->assertInstanceOf(ArrayCollection::class, $app->getRoles());
-        $this->assertInstanceOf(ArrayCollection::class, $app->getUsers());
         $this->assertEmpty($app->getParent());
     }
 

@@ -2,7 +2,6 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
-use Ctrl\RadBundle\Entity\User;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use InvalidArgumentException;
@@ -68,23 +67,11 @@ class Build
     protected $success = false;
 
     /**
-     * @var User
-     * @ORM\ManyToOne(targetEntity="\Ctrl\RadBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="SET NULL")
-     */
-    protected $user;
-
-    /**
      * @var int
      * @ORM\Column(name="pid", type="integer", nullable=true, options={"default"=NULL})
      */
     protected $pid;
 
-    /**
-     * @var string
-     * @ORM\Column(name="deleted_user", type="string")
-     */
-    protected $deletedUser;
 
     /**
      * Creates a new build.
@@ -143,42 +130,6 @@ class Build
         $this->type = $type;
 
         return $this;
-    }
-
-    /**
-     * Gets the user.
-     *
-     * @return User
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
-     * Sets the user.
-     *
-     * @param User $user
-     *
-     * @return $this
-     */
-    public function setUser(User $user)
-    {
-        $this->user = $user;
-
-        $this->deletedUser = $user->getUsername();
-
-        return $this;
-    }
-
-    /**
-     * Gets the deleted user.
-     *
-     * @return string
-     */
-    public function getDeletedUser()
-    {
-        return $this->deletedUser;
     }
 
     /**

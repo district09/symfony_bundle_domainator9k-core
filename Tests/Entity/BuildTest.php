@@ -2,7 +2,6 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Entity;
 
-use Ctrl\RadBundle\Entity\User;
 use DateTime;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AppEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Application;
@@ -65,15 +64,6 @@ class BuildTest extends EntityTest
         $this->assertInstanceOf(DateTime::class, $build->getTimestamp());
     }
 
-    public function testSetUser()
-    {
-        $build = $this->getEntity();
-        $username = $this->getAlphaNumeric();
-        $user = $this->getMockBuilder(User::class)->disableOriginalConstructor()->getMock();
-        $user->expects($this->any())->method('getUsername')->willReturn($username);
-        $build->setUser($user);
-        $this->assertEquals($username, $build->getDeletedUser());
-    }
 
     public function testSetCompleted()
     {
@@ -88,8 +78,6 @@ class BuildTest extends EntityTest
         return [
             ['id', uniqid()],
             ['type', $this->getAlphaNumeric()],
-            ['user', $this->getMockBuilder(User::class)->disableOriginalConstructor()->getMock()],
-            ['deletedUser', $this->getAlphaNumeric()],
             ['application', $this->getMockBuilder(Application::class)->disableOriginalConstructor()->getMock()],
             ['appEnvironment', $this->getMockBuilder(AppEnvironment::class)->disableOriginalConstructor()->getMock()],
             ['timestamp', new DateTime()],
@@ -105,7 +93,6 @@ class BuildTest extends EntityTest
     {
         return [
             ['type', $this->getAlphaNumeric()],
-            ['user', $this->getMockBuilder(User::class)->disableOriginalConstructor()->getMock()],
             ['application', $this->getMockBuilder(Application::class)->disableOriginalConstructor()->getMock()],
             ['appEnvironment', $this->getMockBuilder(AppEnvironment::class)->disableOriginalConstructor()->getMock()],
             ['timestamp', new DateTime()],

@@ -46,12 +46,21 @@ class Environment
      */
     protected $applicationEnvironments;
 
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="ApplicationTypeEnvironment",mappedBy="environment",cascade={"remove"})
+     */
+    protected $applicationTypeEnvironments;
+
     /**
      * Creates a new environment.
      */
     public function __construct()
     {
         $this->applicationEnvironments = new ArrayCollection();
+        $this->applicationTypeEnvironments = new ArrayCollection();
     }
 
     /**
@@ -126,5 +135,12 @@ class Environment
     public function getApplicationEnvironments()
     {
         return $this->applicationEnvironments;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getApplicationTypeEnvironments(){
+        return $this->applicationTypeEnvironments;
     }
 }

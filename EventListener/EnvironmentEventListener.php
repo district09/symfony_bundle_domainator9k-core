@@ -6,6 +6,8 @@ namespace DigipolisGent\Domainator9k\CoreBundle\EventListener;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AbstractApplication;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationEnvironment;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationType;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationTypeEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Environment;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
@@ -35,6 +37,17 @@ class EnvironmentEventListener
                 $entityManager->persist($applicationEnvironment);
                 $entityManager->flush();
             }
+
+            $applicationTypes = $entityManager->getRepository(ApplicationType::class)->findAll();
+
+            foreach ($applicationTypes as $applicationType){
+                $applicationTypeEnvironment = new ApplicationTypeEnvironment();
+                $applicationTypeEnvironment->setApplicationType($applicationType);
+                $applicationTypeEnvironment->setEnvironment($entity);
+
+                $entityManager->persist($applicationTypeEnvironment);
+                $entityManager->flush();
+            }
         }
     }
 
@@ -49,6 +62,11 @@ class EnvironmentEventListener
         if ($entity instanceof Environment) {
             foreach ($entity->getApplicationEnvironments() as $applicationEnvironment) {
                 $entityManager->remove($applicationEnvironment);
+                $entityManager->flush();
+            }
+
+            foreach ($entity->getApplicationTypeEnvironments() as $applicationTypeEnvironment){
+                $entityManager->remove($applicationTypeEnvironment);
                 $entityManager->flush();
             }
         }

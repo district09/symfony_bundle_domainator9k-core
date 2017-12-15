@@ -3,6 +3,7 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
 use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -22,6 +23,14 @@ class ApplicationEnvironment
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Build",mappedBy="applicationEnvironment")
+     */
+    protected $builds;
 
     /**
      * @var AbstractApplication
@@ -94,6 +103,11 @@ class ApplicationEnvironment
      * @Assert\NotBlank()
      */
     protected $gitRef;
+
+    public function __construct()
+    {
+        $this->builds = new ArrayCollection();
+    }
 
     /**
      * @param AbstractApplication $application
@@ -250,5 +264,12 @@ class ApplicationEnvironment
     public function setGitRef(string $gitRef)
     {
         $this->gitRef = $gitRef;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getBuilds(){
+        return $this->builds;
     }
 }

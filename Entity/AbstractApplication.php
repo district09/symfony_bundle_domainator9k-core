@@ -63,13 +63,6 @@ abstract class AbstractApplication
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Build", mappedBy="application", cascade={"all"}, orphanRemoval=true)
-     */
-    protected $builds;
-
-    /**
-     * @var ArrayCollection
-     *
      * @ORM\OneToMany(targetEntity="ApplicationEnvironment", mappedBy="application", cascade={"all"},fetch="EAGER")
      * @Assert\Valid()
      * @Assert\NotNull()

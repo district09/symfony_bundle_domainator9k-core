@@ -4,6 +4,7 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
 
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\IdentifiableTrait;
 use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,14 +19,7 @@ class ApplicationType
 {
 
     use SettingImplementationTrait;
-
-    /**
-     * @var int
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use IdentifiableTrait;
 
     /**
      * @var string
@@ -42,13 +36,8 @@ class ApplicationType
     protected $applicationTypeEnvironments;
 
     /**
-     * @return int
+     * ApplicationType constructor.
      */
-    public function getId()
-    {
-        return $this->id;
-    }
-
     public function __construct()
     {
         $this->applicationTypeEnvironments = new ArrayCollection();

@@ -10,6 +10,8 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\Server;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Settings;
 use DigipolisGent\Domainator9k\CoreBundle\Interfaces\CiProcessorInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Task\Messenger;
+use DigipolisGent\SockAPIBundle\Service\AccountService;
+use DigipolisGent\SockAPIBundle\Service\DatabaseService;
 use DigipolisGent\SockAPIBundle\Service\Event\Poller;
 use DigipolisGent\SockAPIBundle\Service\Promise\EntityCreatePromise;
 use DigipolisGent\SockAPIBundle\Service\Promise\PromiseQueue;
@@ -380,77 +382,81 @@ cron:               %s', $build->getApplication()->getName(), ($ciActive) ? 'On'
     {
         $app = $env->getApplication();
 
+        /** @var AppEnvironmentService $envService */
         $envService = $this->container->get('digip_deploy.entity.appenvironment');
+        /** @var AccountService $sockAccountService */
         $sockAccountService = $this->container->get('digip_deploy.sock_api.account');
+        /** @var \DigipolisGent\SockAPIBundle\Service\ApplicationService $sockAppService */
         $sockAppService = $this->container->get('digip_deploy.sock_api.application');
+        /** @var DatabaseService $sockDbService */
         $sockDbService = $this->container->get('digip_deploy.sock_api.database');
         $queue = new PromiseQueue();
 
-        if ($app->getParent()) {
-            Messenger::send(
-                sprintf(
-                    'using existing account "%s" as parent on Sock Virtual Server %s', $app->getParent()->getName(), $server->getSockId()
-                )
-            );
-            $applicationName = $app->getName();
-        } else {
-            Messenger::send(
-                sprintf(
-                    'requesting account "%s" on Sock Virtual Server %s', $env->getServerSettings()->getUser(), $server->getSockId()
-                )
-            );
-            $queue->addPromise(
-                $envService
-                    ->createSockAccount($env, $server, $sockAccountService)
-                    ->then(function (EntityCreatePromise $promise) use ($env, $server) {
-                        Messenger::send(
-                            sprintf(
-                                $promise->getDidExist() ?
-                                    'account "%s" already exists on Sock Virtual Server %s' :
-                                    'account "%s" created on Sock Virtual Server %s', $env->getServerSettings()->getUser(), $server->getSockId()
-                            )
-                        );
-                    })
-                    ->error(function (EntityCreatePromise $promise) {
-                        $msg = 'error creating account';
-                        if ($promise->getPoller() && Poller::STATE_EXPIRED === $promise->getPoller()->getState()) {
-                            $msg .= ': polling event queue timed out';
-                        }
-                        Messenger::send($msg);
-
-                        throw new RuntimeException($msg);
-                    })
-            );
-
-            $applicationName = 'default';
-        }
-
-        Messenger::send(sprintf(
-                'requesting application "%s" on Sock Account %s', $applicationName, $env->getServerSettings()->getSockAccountId()
-        ));
-        $queue->addPromise(
-            $envService
-                ->createSockApplication($env, $sockAppService)
-                ->then(function (EntityCreatePromise $promise) use ($env, $server) {
-                    Messenger::send(
-                        sprintf(
-                            $promise->getDidExist() ?
-                                'application "%s" already exists on Sock Virtual Server %s' :
-                                'application "%s" created on Sock Virtual Server %s', $env->getServerSettings()->getUser(), $server->getSockId()
-                        )
-                    );
-                })
-                ->error(function (EntityCreatePromise $promise) {
-                    $msg = 'error creating application';
-                    if ($promise->getPoller() && Poller::STATE_EXPIRED === $promise->getPoller()->getState()) {
-                        $msg .= ': polling event queue timed out';
-                    }
-                    Messenger::send($msg);
-
-                    throw new RuntimeException($msg);
-                })
-        );
-
+//        if ($app->getParent()) {
+//            Messenger::send(
+//                sprintf(
+//                    'using existing account "%s" as parent on Sock Virtual Server %s', $app->getParent()->getName(), $server->getSockId()
+//                )
+//            );
+//            $applicationName = $app->getName();
+//        } else {
+//            Messenger::send(
+//                sprintf(
+//                    'requesting account "%s" on Sock Virtual Server %s', $env->getServerSettings()->getUser(), $server->getSockId()
+//                )
+//            );
+//            $queue->addPromise(
+//                $envService
+//                    ->createSockAccount($env, $server, $sockAccountService)
+//                    ->then(function (EntityCreatePromise $promise) use ($env, $server) {
+//                        Messenger::send(
+//                            sprintf(
+//                                $promise->getDidExist() ?
+//                                    'account "%s" already exists on Sock Virtual Server %s' :
+//                                    'account "%s" created on Sock Virtual Server %s', $env->getServerSettings()->getUser(), $server->getSockId()
+//                            )
+//                        );
+//                    })
+//                    ->error(function (EntityCreatePromise $promise) {
+//                        $msg = 'error creating account';
+//                        if ($promise->getPoller() && Poller::STATE_EXPIRED === $promise->getPoller()->getState()) {
+//                            $msg .= ': polling event queue timed out';
+//                        }
+//                        Messenger::send($msg);
+//
+//                        throw new RuntimeException($msg);
+//                    })
+//            );
+//
+//            $applicationName = 'default';
+//        }
+//
+//        Messenger::send(sprintf(
+//                'requesting application "%s" on Sock Account %s', $applicationName, $env->getServerSettings()->getSockAccountId()
+//        ));
+//        $queue->addPromise(
+//            $envService
+//                ->createSockApplication($env, $sockAppService)
+//                ->then(function (EntityCreatePromise $promise) use ($env, $server) {
+//                    Messenger::send(
+//                        sprintf(
+//                            $promise->getDidExist() ?
+//                                'application "%s" already exists on Sock Virtual Server %s' :
+//                                'application "%s" created on Sock Virtual Server %s', $env->getServerSettings()->getUser(), $server->getSockId()
+//                        )
+//                    );
+//                })
+//                ->error(function (EntityCreatePromise $promise) {
+//                    $msg = 'error creating application';
+//                    if ($promise->getPoller() && Poller::STATE_EXPIRED === $promise->getPoller()->getState()) {
+//                        $msg .= ': polling event queue timed out';
+//                    }
+//                    Messenger::send($msg);
+//
+//                    throw new RuntimeException($msg);
+//                })
+//        );
+//
         if ($env->getApplication()->hasDatabase()) {
             Messenger::send(sprintf(
                     'requesting database "%s" on Sock Account %s', $env->getDatabaseSettings()->getName(), $env->getServerSettings()->getSockAccountId()

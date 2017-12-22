@@ -2,6 +2,7 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\IdentifiableTrait;
 use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,20 +16,13 @@ class ApplicationEnvironment
 {
 
     use SettingImplementationTrait;
-
-    /**
-     * @var int
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use IdentifiableTrait;
 
 
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Build",mappedBy="applicationEnvironment")
+     * @ORM\OneToMany(targetEntity="Build",mappedBy="applicationEnvironment",cascade={"remove"})
      */
     protected $builds;
 
@@ -52,39 +46,12 @@ class ApplicationEnvironment
      * @var string
      *
      * @ORM\Column(name="database_name",type="string",nullable=true)
-     * @Assert\NotBlank()
      */
     protected $databaseName;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="database_host",type="string",nullable=true)
-     * @Assert\NotBlank()
-     */
-    protected $databaseHost;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="database_port",type="integer",nullable=true)
-     * @Assert\NotBlank()
-     */
-    protected $databasePort;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="database_engine",type="string",nullable=true)
-     * @Assert\NotBlank()
-     */
-    protected $databaseEngine;
-
-    /**
-     * @var string
-     *
      * @ORM\Column(name="database_user",type="string",nullable=true)
-     * @Assert\NotBlank()
      */
     protected $databaseUser;
 
@@ -92,7 +59,6 @@ class ApplicationEnvironment
      * @var string
      *
      * @ORM\Column(name="database_password",type="string",nullable=true)
-     * @Assert\NotBlank()
      */
     protected $databasePassword;
 
@@ -103,6 +69,14 @@ class ApplicationEnvironment
      * @Assert\NotBlank()
      */
     protected $gitRef;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="domain",type="string",nullable=true)
+     * @Assert\NotBlank()
+     */
+    protected $domain;
 
     public function __construct()
     {
@@ -136,7 +110,7 @@ class ApplicationEnvironment
     /**
      * @param string $databaseName
      */
-    public function setDatabaseName(string $databaseName)
+    public function setDatabaseName(string $databaseName = null)
     {
         $this->databaseName = $databaseName;
     }
@@ -158,64 +132,11 @@ class ApplicationEnvironment
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getId()
-    {
-        return $this->id;
-    }
-
     public function getEnvironmentName()
     {
         return $this->getEnvironment()->getName();
-    }
-
-    /**
-     * @return string
-     */
-    public function getDatabaseHost()
-    {
-        return $this->databaseHost;
-    }
-
-    /**
-     * @param string $databaseHost
-     */
-    public function setDatabaseHost(string $databaseHost)
-    {
-        $this->databaseHost = $databaseHost;
-    }
-
-    /**
-     * @return int
-     */
-    public function getDatabasePort()
-    {
-        return $this->databasePort;
-    }
-
-    /**
-     * @param int $databasePort
-     */
-    public function setDatabasePort(int $databasePort)
-    {
-        $this->databasePort = $databasePort;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDatabaseEngine()
-    {
-        return $this->databaseEngine;
-    }
-
-    /**
-     * @param string $databaseEngine
-     */
-    public function setDatabaseEngine(string $databaseEngine)
-    {
-        $this->databaseEngine = $databaseEngine;
     }
 
     /**
@@ -229,7 +150,7 @@ class ApplicationEnvironment
     /**
      * @param string $databaseUser
      */
-    public function setDatabaseUser(string $databaseUser)
+    public function setDatabaseUser(string $databaseUser = null)
     {
         $this->databaseUser = $databaseUser;
     }
@@ -245,7 +166,7 @@ class ApplicationEnvironment
     /**
      * @param string $databasePassword
      */
-    public function setDatabasePassword(string $databasePassword)
+    public function setDatabasePassword(string $databasePassword = null)
     {
         $this->databasePassword = $databasePassword;
     }
@@ -269,7 +190,24 @@ class ApplicationEnvironment
     /**
      * @return ArrayCollection
      */
-    public function getBuilds(){
+    public function getBuilds()
+    {
         return $this->builds;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDomain()
+    {
+        return $this->domain;
+    }
+
+    /**
+     * @param string $domain
+     */
+    public function setDomain(string $domain)
+    {
+        $this->domain = $domain;
     }
 }

@@ -3,8 +3,11 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\IdentifiableTrait;
+use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -15,17 +18,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table()
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr",type="string")
+ * @UniqueEntity(fields={"name"})
  */
 abstract class AbstractApplication
 {
 
-    /**
-     * @var inta
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use SettingImplementationTrait;
+    use IdentifiableTrait;
 
     /**
      * @var string
@@ -35,15 +34,6 @@ abstract class AbstractApplication
      * @Assert\Length(min="3", max="255")
      */
     protected $name;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="name_canonical", type="string", nullable=false)
-     * @Assert\NotBlank()
-     * @Assert\Length(min="3", max="255")
-     */
-    protected $nameCanonical;
 
     /**
      * @var string
@@ -89,14 +79,6 @@ abstract class AbstractApplication
     }
 
     /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * @return string
      */
     public function getName()
@@ -117,15 +99,8 @@ abstract class AbstractApplication
      */
     public function getNameCanonical()
     {
-        return $this->nameCanonical;
-    }
-
-    /**
-     * @param string $nameCanonical
-     */
-    public function setNameCanonical(string $nameCanonical)
-    {
-        $this->nameCanonical = $nameCanonical;
+        $name = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "", $this->getName()));
+        return substr($name, 0, 12);
     }
 
     /**
@@ -221,7 +196,8 @@ abstract class AbstractApplication
     /**
      * @return ArrayCollection
      */
-    public function getApplicationServers(){
+    public function getApplicationServers()
+    {
         return $this->applicationServers;
     }
 }

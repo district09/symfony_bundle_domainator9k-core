@@ -3,6 +3,7 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
 use DateTime;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\IdentifiableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -13,14 +14,10 @@ class Build
 {
 
     const STATUS_NEW = 'new';
+    const STATUS_PROCESSED = 'processed';
+    const IN_PROGRESS = 'in_progress';
 
-    /**
-     * @var int
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use IdentifiableTrait;
 
     /**
      * @var DateTime
@@ -55,20 +52,13 @@ class Build
      */
     protected $applicationEnvironment;
 
+    /**
+     * Build constructor.
+     */
     public function __construct()
     {
         $this->created = new \DateTime();
         $this->status = self::STATUS_NEW;
-    }
-
-    /**
-     * Gets the id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**

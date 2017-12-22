@@ -3,6 +3,7 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\IdentifiableTrait;
 use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -16,14 +17,7 @@ class ApplicationTypeEnvironment
 {
 
     use SettingImplementationTrait;
-
-    /**
-     * @var int
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use IdentifiableTrait;
 
     /**
      * @var ApplicationType
@@ -36,18 +30,10 @@ class ApplicationTypeEnvironment
     /**
      * @var  Environment
      *
-     * @ORM\ManyToOne(targetEntity="Environment")
+     * @ORM\ManyToOne(targetEntity="Environment",inversedBy="applicationTypeEnvironments")
      * @ORM\JoinColumn(referencedColumnName="id")
      */
     protected $environment;
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * @return ApplicationType

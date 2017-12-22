@@ -2,6 +2,7 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\IdentifiableTrait;
 use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,14 +16,7 @@ class Server
 {
 
     use SettingImplementationTrait;
-
-    /**
-     * @var int
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use IdentifiableTrait;
 
     /**
      * @var string
@@ -39,9 +33,11 @@ class Server
     protected $ip;
 
     /**
-     * @var string
-     * @ORM\Column(name="environment", type="string", length=20, nullable=false)
-     * @Assert\NotBlank()
+     * @var Environment
+     *
+     * @ORM\ManyToOne(targetEntity="Environment",inversedBy="servers")
+     * @ORM\JoinColumn(referencedColumnName="id")
+     * @Assert\NotNull()
      */
     protected $environment;
 
@@ -57,16 +53,6 @@ class Server
      * @ORM\OneToMany(targetEntity="ApplicationServer",mappedBy="server",cascade={"remove"})
      */
     protected $applicationServers;
-
-    /**
-     * Gets the id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * Gets the name.
@@ -117,30 +103,6 @@ class Server
     }
 
     /**
-     * Gets the environment.
-     *
-     * @return string
-     */
-    public function getEnvironment()
-    {
-        return $this->environment;
-    }
-
-    /**
-     * Sets the environment.
-     *
-     * @param string $environment
-     *
-     * @return $this
-     */
-    public function setEnvironment($environment)
-    {
-        $this->environment = $environment;
-
-        return $this;
-    }
-
-    /**
      * @return bool
      */
     public function isTaskServer()
@@ -168,6 +130,20 @@ class Server
      */
     public function getApplicationServers(){
         return $this->applicationServers;
+    }
+
+    /**
+     * @param Environment $environment
+     */
+    public function setEnvironment(Environment $environment){
+        $this->environment = $environment;
+    }
+
+    /**
+     * @return Environment
+     */
+    public function getEnvironment(){
+        return $this->environment;
     }
 
 }

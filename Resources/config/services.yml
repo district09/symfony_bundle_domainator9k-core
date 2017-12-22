@@ -26,12 +26,6 @@ services:
     digip_deploy.ci_apptype_settings_service:
         arguments: ["@doctrine", "@digip_deploy.application_type_builder", "@digip_deploy.ci_type_builder"]
         class: DigipolisGent\Domainator9k\CoreBundle\Service\CiAppTypeSettingsService
-    digip_deploy.apptype_injector_listener:
-        arguments: ["@digip_deploy.application_type_builder"]
-        class: DigipolisGent\Domainator9k\CoreBundle\EventListener\AppTypeInjectorListener
-        tags:
-            - { name: doctrine.event_listener, event: postLoad }
-
     digip_deploy.shell_factory:
       arguments: []
       class: DigipolisGent\Domainator9k\CoreBundle\Ssh\Factory\SshShellFactory
@@ -96,7 +90,7 @@ services:
 
     digip_deploy.entity.build:
         class: DigipolisGent\Domainator9k\CoreBundle\EntityService\BuildService
-        arguments: [%digip_deploy.workspace_dir%, %kernel.root_dir%]
+        arguments: ['%digip_deploy.workspace_dir%', '%kernel.root_dir%']
         calls:
             - [setContainer, ["@service_container"]]
         tags:
@@ -151,3 +145,10 @@ services:
         tags:
             - { name: doctrine.event_listener, event: postPersist, connection: default }
             - { name: doctrine.event_listener, event: postRemove, connection: default }
+    DigipolisGent\Domainator9k\CoreBundle\Service\BuildLoggerService:
+        autowire: true
+    DigipolisGent\Domainator9k\CoreBundle\EventListener\BuildEventListener:
+        autowire: true
+        tags:
+            - { name: kernel.event_listener, event: domainator.build, method: onStartBuild, priority: 99 }
+            - { name: kernel.event_listener, event: domainator.build, method: onEndBuild, priority: 1 }

@@ -2,6 +2,7 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\IdentifiableTrait;
 use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,14 +18,7 @@ class Environment
 {
 
     use SettingImplementationTrait;
-
-    /**
-     * @var int
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use IdentifiableTrait;
 
     /**
      * @var string
@@ -55,22 +49,20 @@ class Environment
     protected $applicationTypeEnvironments;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Server",mappedBy="environment")
+     */
+    protected $servers;
+
+    /**
      * Creates a new environment.
      */
     public function __construct()
     {
         $this->applicationEnvironments = new ArrayCollection();
         $this->applicationTypeEnvironments = new ArrayCollection();
-    }
-
-    /**
-     * Gets the id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
+        $this->servers = new ArrayCollection();
     }
 
     /**
@@ -142,5 +134,12 @@ class Environment
      */
     public function getApplicationTypeEnvironments(){
         return $this->applicationTypeEnvironments;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getServers(){
+        return $this->servers;
     }
 }

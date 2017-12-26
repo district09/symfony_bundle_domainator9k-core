@@ -152,3 +152,5 @@ services:
         tags:
             - { name: kernel.event_listener, event: domainator.build, method: onStartBuild, priority: 99 }
             - { name: kernel.event_listener, event: domainator.build, method: onEndBuild, priority: 1 }
+    DigipolisGent\Domainator9k\CoreBundle\Service\TemplateService:
+        autowire: true

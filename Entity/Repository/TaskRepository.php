@@ -5,18 +5,21 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Entity\Repository;
 
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Build;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Task;
 use Doctrine\ORM\EntityRepository;
 
-class BuildRepository extends EntityRepository
+class TaskRepository extends EntityRepository
 {
 
-    public function getNextBuild()
+    public function getNextTask($type)
     {
         return $this->_em->createQueryBuilder()
             ->select('b')
-            ->from(Build::class, 'b')
+            ->from(Task::class, 'b')
             ->where('b.status=:status')
-            ->setParameter('status', Build::STATUS_NEW)
+            ->andWhere('b.type=:type')
+            ->setParameter('status', Task::STATUS_NEW)
+            ->setParameter('type', $type)
             ->orderBy('b.created')
             ->setMaxResults(1)
             ->getQuery()

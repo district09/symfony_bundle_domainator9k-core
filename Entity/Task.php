@@ -7,15 +7,18 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\IdentifiableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="DigipolisGent\Domainator9k\CoreBundle\Entity\Repository\BuildRepository")
+ * @ORM\Entity(repositoryClass="DigipolisGent\Domainator9k\CoreBundle\Entity\Repository\TaskRepository")
  * @ORM\Table(name="build")
  */
-class Build
+class Task
 {
 
     const STATUS_NEW = 'new';
+    const STATUS_IN_PROGRESS = 'in_progress';
     const STATUS_PROCESSED = 'processed';
-    const IN_PROGRESS = 'in_progress';
+
+    const TYPE_BUILD = 'build';
+    const TYPE_DESTROY = 'destroy';
 
     use IdentifiableTrait;
 
@@ -32,12 +35,6 @@ class Build
     protected $log;
 
     /**
-     * @var int
-     * @ORM\Column(name="pid", type="integer", nullable=true, options={"default"=NULL})
-     */
-    protected $pid;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="status",type="string")
@@ -47,10 +44,17 @@ class Build
     /**
      * @var ApplicationEnvironment
      *
-     * @ORM\ManyToOne(targetEntity="ApplicationEnvironment",inversedBy="builds")
+     * @ORM\ManyToOne(targetEntity="ApplicationEnvironment",inversedBy="tasks")
      * @ORM\JoinColumn(referencedColumnName="id")
      */
     protected $applicationEnvironment;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="type",type="string")
+     */
+    protected $type;
 
     /**
      * Build constructor.
@@ -102,30 +106,6 @@ class Build
     }
 
     /**
-     * Gets the process id.
-     *
-     * @return int
-     */
-    public function getPid()
-    {
-        return $this->pid;
-    }
-
-    /**
-     * Sets the process id.
-     *
-     * @param int $pid
-     *
-     * @return $this
-     */
-    public function setPid($pid)
-    {
-        $this->pid = $pid;
-
-        return $this;
-    }
-
-    /**
      * @param ApplicationEnvironment $applicationEnvironment
      */
     public function setApplicationEnvironment(ApplicationEnvironment $applicationEnvironment)
@@ -155,5 +135,21 @@ class Build
     public function setStatus(string $status)
     {
         $this->status = $status;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType(string $type)
+    {
+        $this->type = $type;
     }
 }

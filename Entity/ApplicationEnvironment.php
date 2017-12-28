@@ -22,9 +22,9 @@ class ApplicationEnvironment implements TokenTemplateInterface
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Build",mappedBy="applicationEnvironment",cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="Task",mappedBy="applicationEnvironment",cascade={"remove"})
      */
-    protected $builds;
+    protected $tasks;
 
     /**
      * @var AbstractApplication
@@ -80,7 +80,7 @@ class ApplicationEnvironment implements TokenTemplateInterface
 
     public function __construct()
     {
-        $this->builds = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
     }
 
     /**
@@ -190,9 +190,9 @@ class ApplicationEnvironment implements TokenTemplateInterface
     /**
      * @return ArrayCollection
      */
-    public function getBuilds()
+    public function getTasks()
     {
-        return $this->builds;
+        return $this->tasks;
     }
 
     /**

@@ -136,14 +136,6 @@ abstract class AbstractApplication
     }
 
     /**
-     * @return ArrayCollection
-     */
-    public function getBuilds()
-    {
-        return $this->builds;
-    }
-
-    /**
      * @param ArrayCollection $builds
      */
     public function setBuilds(ArrayCollection $builds)

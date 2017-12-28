@@ -5,20 +5,20 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Service;
 
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Build;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Task;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Class BuildLoggerService
+ * Class TaskLoggerService
  * @package DigipolisGent\Domainator9k\CoreBundle\Service
  */
-class BuildLoggerService
+class TaskLoggerService
 {
 
     private $entityManager;
-    private $build;
+    private $task;
 
     /**
-     * BuildLoggerService constructor.
      * @param EntityManagerInterface $entityManager
      */
     public function __construct(EntityManagerInterface $entityManager)
@@ -29,9 +29,9 @@ class BuildLoggerService
     /**
      * @param Build $build
      */
-    public function setBuild(Build $build)
+    public function setTask(Task $task)
     {
-        $this->build = $build;
+        $this->task = $task;
     }
 
     /**
@@ -39,11 +39,11 @@ class BuildLoggerService
      */
     public function addLine(string $line)
     {
-        $log = $this->build->getLog();
+        $log = $this->task->getLog();
         $log .= $line . PHP_EOL;
 
-        $this->build->setLog($log);
-        $this->entityManager->persist($this->build);
+        $this->task->setLog($log);
+        $this->entityManager->persist($this->task);
         $this->entityManager->flush();
     }
 

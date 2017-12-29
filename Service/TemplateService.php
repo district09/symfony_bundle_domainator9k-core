@@ -10,6 +10,7 @@ use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
 use DigipolisGent\SettingBundle\Service\DataValueService;
 use DigipolisGent\SettingBundle\Service\EntityTypeCollector;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Debug\Exception\ContextErrorException;
 
 /**
  * Class TemplateService
@@ -83,16 +84,47 @@ class TemplateService
                 $tokenReplacements = $entity::getTokenReplacements();
 
                 foreach ($tokenReplacements as $tokenReplacementKey => $tokenReplacementValue) {
-                    $key = '[[ ' . $entityKey . ':token:' . $tokenReplacementKey . ' ]]';
+                    $replacementArguments = [];
+                    $originalArguments = [];
 
-                    if (strpos($text, $key) !== false) {
-                        $methods = explode('.', $tokenReplacementValue);
-                        $value = $entity;
-                        foreach ($methods as $method) {
-                            $value = $value->{$method}();
+                    $pattern = '[[ ' . $entityKey . ':token:' . $tokenReplacementKey . ' ]]';
+
+                    preg_match('#\((.*?)\)#', $tokenReplacementKey, $match);
+                    if (isset($match[1]) && $match[1] != '') {
+                        $originalArguments = explode(',', $match[1]);
+                    }
+
+                    $pattern = str_replace(['(', ')', '[', ']'], ['\(', '\)', '\[', '\]'], $pattern);
+
+                    foreach ($originalArguments as $argument) {
+                        $pattern = str_replace($argument, '(.*)', $pattern);
+                    }
+
+                    $hasMatch = preg_match('/' . $pattern . '/', $text, $matches);
+
+                    if ($hasMatch) {
+
+                        $replacementValue = $entity;
+
+                        foreach ($originalArguments as $key => $value) {
+                            $replacementArguments[$value] = $matches[$key + 1];
                         }
 
-                        $text = str_replace($key, $value, $text);
+                        $functions = explode('.', $tokenReplacementValue);
+                        foreach ($functions as $function) {
+                            preg_match('/^([a-zA-Z]*)(\((.*)\))?/', $function, $result);
+                            $arguments = [];
+                            $method = $result[1];
+                            if (isset($result[3]) && $result[3] != '') {
+                                $arguments = explode(',', $result[3]);
+                                foreach ($arguments as $key => $value) {
+                                    $arguments[$key] = $replacementArguments[$value];
+                                }
+                            }
+
+                            $replacementValue = call_user_func_array(array($replacementValue, $method), $arguments);
+                        }
+                        $text = preg_replace('/' . $pattern . '/', $replacementValue, $text);
                     }
                 }
             }
@@ -105,7 +137,7 @@ class TemplateService
                 foreach ($entityType->getSettingDataTypes() as $settingDataType) {
                     $key = '[[ ' . $entityKey . ':config:' . $settingDataType->getKey() . ' ]]';
                     if (strpos($text, $key) !== false) {
-                        $value = $this->dataValueService->getValue($entity,$settingDataType->getKey());
+                        $value = $this->dataValueService->getValue($entity, $settingDataType->getKey());
                         $text = str_replace($key, $value, $text);
                     }
                 }
@@ -115,5 +147,4 @@ class TemplateService
 
         return $text;
     }
-
 }

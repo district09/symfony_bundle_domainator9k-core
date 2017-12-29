@@ -211,7 +211,7 @@ class ApplicationEnvironment implements TokenTemplateInterface
         $this->domain = $domain;
     }
 
-    /**
+    /**zzz
      * @return string
      */
     public function getServerIps(): string
@@ -231,10 +231,7 @@ class ApplicationEnvironment implements TokenTemplateInterface
     public static function getTokenReplacements(): array
     {
         return [
-            'server_ips' => 'getServerIps',
-            'canonical_name' => 'getApplication.getNameCanonical',
+            'serverIps()' => 'getServerIps()'
         ];
     }
-
-
 }

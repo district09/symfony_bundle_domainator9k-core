@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\DiscriminatorColumn(name="discr",type="string")
  * @UniqueEntity(fields={"name"})
  */
-abstract class AbstractApplication
+abstract class AbstractApplication implements TokenTemplateInterface
 {
 
     use SettingImplementationTrait;
@@ -191,5 +191,30 @@ abstract class AbstractApplication
     public function getApplicationServers()
     {
         return $this->applicationServers;
+    }
+
+    /**
+     * @param $name
+     * @return mixed|null
+     */
+    public function getApplicationEnvironmentByEnvironmentName(string $name)
+    {
+        foreach ($this->applicationEnvironments as $applicationEnvironment) {
+            if ($applicationEnvironment->getEnvironment()->getName() == $name) {
+                return $applicationEnvironment;
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * @return array
+     */
+    public static function getTokenReplacements(): array
+    {
+        return [
+            'serverIps(dev_environment_name,random)' => 'getApplicationEnvironmentByEnvironmentName(dev_environment_name,).getServerIps(random)'
+        ];
     }
 }

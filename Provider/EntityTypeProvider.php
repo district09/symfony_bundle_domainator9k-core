@@ -27,6 +27,7 @@ class EntityTypeProvider implements EntityTypeProviderInterface
             'application_environment' => ApplicationEnvironment::class,
             'application_server' => ApplicationServer::class,
             'application_type_environment' => ApplicationTypeEnvironment::class,
+            'application_type' => ApplicationType::class,
         ];
     }
 }

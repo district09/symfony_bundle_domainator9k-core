@@ -231,7 +231,8 @@ class ApplicationEnvironment implements TokenTemplateInterface
     public static function getTokenReplacements(): array
     {
         return [
-            'serverIps()' => 'getServerIps()'
+            'serverIps()' => 'getServerIps()',
+            'environmentName()' => 'getEnvironment().getName()'
         ];
     }
 }

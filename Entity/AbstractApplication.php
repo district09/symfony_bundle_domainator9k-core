@@ -214,7 +214,9 @@ abstract class AbstractApplication implements TokenTemplateInterface
     public static function getTokenReplacements(): array
     {
         return [
-            'serverIps(dev_environment_name,random)' => 'getApplicationEnvironmentByEnvironmentName(dev_environment_name,).getServerIps(random)'
+            'serverIps(dev_environment_name,random)' => 'getApplicationEnvironmentByEnvironmentName(dev_environment_name,).getServerIps(random)',
+            'nameCanonical()' => 'getNameCanonical()'
+
         ];
     }
 }

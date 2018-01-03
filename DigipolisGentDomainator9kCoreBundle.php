@@ -10,10 +10,4 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class DigipolisGentDomainator9kCoreBundle extends Bundle
 {
-    public function build(ContainerBuilder $container)
-    {
-        $container->addCompilerPass(new ApplicationTypePass());
-        $container->addCompilerPass(new CiTypePass());
-        $container->addCompilerPass(new TaskPass());
-    }
 }

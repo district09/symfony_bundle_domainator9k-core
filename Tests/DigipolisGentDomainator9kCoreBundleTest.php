@@ -2,9 +2,6 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Tests;
 
-use DigipolisGent\Domainator9k\CoreBundle\DependencyInjection\Compiler\ApplicationTypePass;
-use DigipolisGent\Domainator9k\CoreBundle\DependencyInjection\Compiler\CiTypePass;
-use DigipolisGent\Domainator9k\CoreBundle\DependencyInjection\Compiler\TaskPass;
 use DigipolisGent\Domainator9k\CoreBundle\DigipolisGentDomainator9kCoreBundle;
 use Symfony\Bundle\FrameworkBundle\Tests\TestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

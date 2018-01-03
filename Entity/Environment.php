@@ -117,7 +117,8 @@ class Environment
         return $this;
     }
 
-    public function addApplicationEnvironment(ApplicationEnvironment $applicationEnvironment){
+    public function addApplicationEnvironment(ApplicationEnvironment $applicationEnvironment)
+    {
         $this->applicationEnvironments->add($applicationEnvironment);
     }
 
@@ -132,14 +133,16 @@ class Environment
     /**
      * @return ArrayCollection
      */
-    public function getApplicationTypeEnvironments(){
+    public function getApplicationTypeEnvironments()
+    {
         return $this->applicationTypeEnvironments;
     }
 
     /**
      * @return ArrayCollection
      */
-    public function getServers(){
+    public function getServers()
+    {
         return $this->servers;
     }
 }

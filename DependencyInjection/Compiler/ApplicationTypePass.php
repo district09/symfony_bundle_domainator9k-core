@@ -2,8 +2,8 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 class ApplicationTypePass implements CompilerPassInterface
@@ -26,7 +26,8 @@ class ApplicationTypePass implements CompilerPassInterface
         foreach ($taggedServices as $id => $tags) {
             $typeService = $container->findDefinition($id);
             $typeService->addMethodCall('parseYamlConfig', array(new Reference($id)));
-            $typeService->addMethodCall('setAppTypeSettingsService', [new Reference('digip_deploy.application_type_settings_service')]);
+            $typeService->addMethodCall('setAppTypeSettingsService',
+                [new Reference('digip_deploy.application_type_settings_service')]);
             $typeService->addMethodCall('setEnvironmentService', [new Reference('digip_deploy.environment_service')]);
 
             // add the transport service to the ChainTransport service

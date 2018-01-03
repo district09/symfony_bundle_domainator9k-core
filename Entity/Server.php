@@ -121,28 +121,32 @@ class Server
     /**
      * @param ApplicationServer $applicationServer
      */
-    public function addApplicationServer(ApplicationServer $applicationServer){
+    public function addApplicationServer(ApplicationServer $applicationServer)
+    {
         $this->applicationServers->add($applicationServer);
     }
 
     /**
      * @return ArrayCollection
      */
-    public function getApplicationServers(){
+    public function getApplicationServers()
+    {
         return $this->applicationServers;
     }
 
     /**
      * @param Environment $environment
      */
-    public function setEnvironment(Environment $environment){
+    public function setEnvironment(Environment $environment)
+    {
         $this->environment = $environment;
     }
 
     /**
      * @return Environment
      */
-    public function getEnvironment(){
+    public function getEnvironment()
+    {
         return $this->environment;
     }
 

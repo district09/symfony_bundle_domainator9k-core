@@ -3,7 +3,6 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Trait IdentifiableTrait

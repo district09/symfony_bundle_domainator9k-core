@@ -4,17 +4,11 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\EventListener;
 
 
-use DigipolisGent\Domainator9k\CoreBundle\Entity\AbstractApplication;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationEnvironment;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationServer;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Build;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Server;
 use DigipolisGent\Domainator9k\CoreBundle\Event\BuildEvent;
 use DigipolisGent\Domainator9k\CoreBundle\Event\DestroyEvent;
 use DigipolisGent\Domainator9k\CoreBundle\Service\BuildLoggerService;
 use DigipolisGent\Domainator9k\CoreBundle\Tools\StringHelper;
-use DigipolisGent\Domainator9k\SockBundle\Service\ApiService;
-use DigipolisGent\SettingBundle\Service\DataValueService;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**

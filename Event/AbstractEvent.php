@@ -16,7 +16,8 @@ class AbstractEvent extends Event
         $this->task = $task;
     }
 
-    public function getTask(){
+    public function getTask()
+    {
         return $this->task;
     }
 }

@@ -70,7 +70,8 @@ class ApplicationTypeEnvironment
     /**
      * @return string
      */
-    public function getEnvironmentName(){
+    public function getEnvironmentName()
+    {
         return $this->getEnvironment()->getName();
     }
 }

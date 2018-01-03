@@ -40,7 +40,7 @@ class EnvironmentEventListener
 
             $applicationTypes = $entityManager->getRepository(ApplicationType::class)->findAll();
 
-            foreach ($applicationTypes as $applicationType){
+            foreach ($applicationTypes as $applicationType) {
                 $applicationTypeEnvironment = new ApplicationTypeEnvironment();
                 $applicationTypeEnvironment->setApplicationType($applicationType);
                 $applicationTypeEnvironment->setEnvironment($entity);
@@ -65,7 +65,7 @@ class EnvironmentEventListener
                 $entityManager->flush();
             }
 
-            foreach ($entity->getApplicationTypeEnvironments() as $applicationTypeEnvironment){
+            foreach ($entity->getApplicationTypeEnvironments() as $applicationTypeEnvironment) {
                 $entityManager->remove($applicationTypeEnvironment);
                 $entityManager->flush();
             }

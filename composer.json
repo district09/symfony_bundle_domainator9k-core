@@ -1,26 +1,26 @@
 {
-    "name": "digipolisgent/domainator9k-core-bundle",
-    "type": "symfony-bundle",
-    "description": "",
-    "license": "MIT",
-    "authors": [],
-    "support": {},
-    "minimum-stability": "stable",
-    "require": {
-        "php": ">=7.1",
-        "symfony/symfony": ">=3.4",
-        "digipolisgent/setting-bundle": "dev-develop",
-        "doctrine/doctrine-bundle": "^1.6",
-        "symfony/swiftmailer-bundle": "^2.3",
-        "phpseclib/phpseclib": "^2.0",
-        "webmozart/path-util": "^2.3"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^5.7"
-    },
-    "autoload": {
-        "psr-4": {
-            "DigipolisGent\\Domainator9k\\CoreBundle\\": ""
-        }
+  "name": "digipolisgent/domainator9k-core-bundle",
+  "type": "symfony-bundle",
+  "description": "",
+  "license": "MIT",
+  "authors": [],
+  "support": {},
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=7.1",
+    "symfony/symfony": ">=3.4",
+    "digipolisgent/setting-bundle": "dev-develop",
+    "doctrine/doctrine-bundle": "^1.6",
+    "symfony/swiftmailer-bundle": "^2.3",
+    "phpseclib/phpseclib": "^2.0",
+    "webmozart/path-util": "^2.3"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "DigipolisGent\\Domainator9k\\CoreBundle\\": ""
     }
+  }
 }

@@ -62,7 +62,8 @@ class ApplicationType
     /**
      * @param ApplicationTypeEnvironment $applicationTypeEnvironment
      */
-    public function addApplicationTypeEnvironment(ApplicationTypeEnvironment $applicationTypeEnvironment){
+    public function addApplicationTypeEnvironment(ApplicationTypeEnvironment $applicationTypeEnvironment)
+    {
         $this->applicationTypeEnvironments->add($applicationTypeEnvironment);
         $applicationTypeEnvironment->setApplicationType($this);
     }
@@ -70,14 +71,16 @@ class ApplicationType
     /**
      * @param ApplicationTypeEnvironment $applicationTypeEnvironment
      */
-    public function removeApplicationTypeEnvironment(ApplicationTypeEnvironment $applicationTypeEnvironment){
+    public function removeApplicationTypeEnvironment(ApplicationTypeEnvironment $applicationTypeEnvironment)
+    {
         $this->applicationTypeEnvironments->removeElement($applicationTypeEnvironment);
     }
 
     /**
      * @return ArrayCollection
      */
-    public function getApplicationTypeEnvironments(){
+    public function getApplicationTypeEnvironments()
+    {
         return $this->applicationTypeEnvironments;
     }
 }

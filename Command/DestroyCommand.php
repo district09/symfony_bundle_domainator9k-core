@@ -6,7 +6,6 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Command;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Build;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Task;
-use DigipolisGent\Domainator9k\CoreBundle\Event\BuildEvent;
 use DigipolisGent\Domainator9k\CoreBundle\Event\DestroyEvent;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;

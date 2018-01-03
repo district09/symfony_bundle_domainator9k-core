@@ -5,9 +5,7 @@ namespace DigipolisGent\Domainator9k\CoreBundle\EventListener;
 
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AbstractApplication;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationServer;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Environment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Server;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 

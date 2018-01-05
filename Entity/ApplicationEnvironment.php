@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table(name="application_environment")
  */
-class ApplicationEnvironment
+class ApplicationEnvironment implements TemplateInterface
 {
 
     use SettingImplementationTrait;
@@ -223,5 +223,16 @@ class ApplicationEnvironment
         }
 
         return implode(' ', $serverIps);
+    }
+
+    /**
+     * @return array
+     */
+    public static function getTemplateReplacements(): array
+    {
+        return [
+            'serverIps()' => 'getServerIps()',
+            'environmentName()' => 'getEnvironment().getName()',
+        ];
     }
 }

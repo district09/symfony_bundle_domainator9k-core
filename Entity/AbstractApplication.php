@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\DiscriminatorColumn(name="discr",type="string")
  * @UniqueEntity(fields={"name"})
  */
-abstract class AbstractApplication
+abstract class AbstractApplication implements TemplateInterface
 {
 
     use SettingImplementationTrait;
@@ -208,5 +208,16 @@ abstract class AbstractApplication
         }
 
         return '';
+    }
+
+    /**
+     * @return array
+     */
+    public static function getTemplateReplacements(): array
+    {
+        return [
+            'nameCanonical()' => 'getNameCanonical()',
+            'serverIps(dev_environment_name)' => 'getApplicationEnvironmentByEnvironmentName(dev_environment_name).getServerIps()',
+        ];
     }
 }

@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity
  * @ORM\Table(name="application_environment")
  */
-class ApplicationEnvironment implements TokenTemplateInterface
+class ApplicationEnvironment
 {
 
     use SettingImplementationTrait;
@@ -211,7 +211,7 @@ class ApplicationEnvironment implements TokenTemplateInterface
         $this->domain = $domain;
     }
 
-    /**zzz
+    /**
      * @return string
      */
     public function getServerIps(): string
@@ -223,16 +223,5 @@ class ApplicationEnvironment implements TokenTemplateInterface
         }
 
         return implode(' ', $serverIps);
-    }
-
-    /**
-     * @return array
-     */
-    public static function getTokenReplacements(): array
-    {
-        return [
-            'serverIps()' => 'getServerIps()',
-            'environmentName()' => 'getEnvironment().getName()'
-        ];
     }
 }

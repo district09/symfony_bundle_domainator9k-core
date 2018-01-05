@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\DiscriminatorColumn(name="discr",type="string")
  * @UniqueEntity(fields={"name"})
  */
-abstract class AbstractApplication implements TokenTemplateInterface
+abstract class AbstractApplication
 {
 
     use SettingImplementationTrait;
@@ -68,7 +68,9 @@ abstract class AbstractApplication implements TokenTemplateInterface
      */
     protected $applicationServers;
 
-
+    /**
+     * @return string
+     */
     abstract function getType();
 
     public function __construct()
@@ -206,17 +208,5 @@ abstract class AbstractApplication implements TokenTemplateInterface
         }
 
         return '';
-    }
-
-    /**
-     * @return array
-     */
-    public static function getTokenReplacements(): array
-    {
-        return [
-            'serverIps(dev_environment_name,random)' => 'getApplicationEnvironmentByEnvironmentName(dev_environment_name,).getServerIps(random)',
-            'nameCanonical()' => 'getNameCanonical()'
-
-        ];
     }
 }

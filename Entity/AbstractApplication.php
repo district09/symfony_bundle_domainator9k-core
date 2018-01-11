@@ -60,15 +60,6 @@ abstract class AbstractApplication implements TemplateInterface
     protected $applicationEnvironments;
 
     /**
-     * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="ApplicationServer", mappedBy="application", cascade={"all"},fetch="EAGER")
-     * @Assert\Valid()
-     * @Assert\NotNull()
-     */
-    protected $applicationServers;
-
-    /**
      * @return string
      */
     abstract function getType();
@@ -77,7 +68,6 @@ abstract class AbstractApplication implements TemplateInterface
     {
         $this->builds = new ArrayCollection();
         $this->applicationEnvironments = new ArrayCollection();
-        $this->applicationServers = new ArrayCollection();
     }
 
     /**
@@ -168,31 +158,6 @@ abstract class AbstractApplication implements TemplateInterface
     public function getApplicationEnvironments()
     {
         return $this->applicationEnvironments;
-    }
-
-    /**
-     * @param ApplicationServer $applicationServer
-     */
-    public function addApplicationServer(ApplicationServer $applicationServer)
-    {
-        $this->applicationServers->add($applicationServer);
-        $applicationServer->setApplication($this);
-    }
-
-    /**
-     * @param ApplicationServer $applicationServer
-     */
-    public function removeApplicationServer(ApplicationServer $applicationServer)
-    {
-        $this->applicationServers->removeElement($applicationServer);
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getApplicationServers()
-    {
-        return $this->applicationServers;
     }
 
     /**

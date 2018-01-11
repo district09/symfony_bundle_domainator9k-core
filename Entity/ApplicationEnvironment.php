@@ -3,6 +3,7 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\IdentifiableTrait;
+use DigipolisGent\SettingBundle\Entity\SettingDataValue;
 use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -219,10 +220,20 @@ class ApplicationEnvironment implements TemplateInterface
         $serverIps = [];
         /** @var Server $server */
         foreach ($this->getEnvironment()->getServers() as $server) {
-            $serverIps[] = $server->getIp();
+            $serverIps[] = $server->getHost();
         }
 
         return implode(' ', $serverIps);
+    }
+
+    public function getConfig($key){
+        foreach ($this->getSettingDataValues() as $settingDataValue){
+            if($settingDataValue->getSettingDataType()->getKey() == $key){
+                return $settingDataValue->getValue();
+            }
+        }
+
+        return '';
     }
 
     /**
@@ -233,6 +244,10 @@ class ApplicationEnvironment implements TemplateInterface
         return [
             'serverIps()' => 'getServerIps()',
             'environmentName()' => 'getEnvironment().getName()',
+            'config(key)' => 'getConfig(key)',
+            'databaseName()' => 'getDatabaseName()',
+            'databaseUser()' => 'getDatabaseUser()',
+            'databasePassword()' => 'getDatabasePassword()',
         ];
     }
 }

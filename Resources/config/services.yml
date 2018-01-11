@@ -8,10 +8,6 @@ services:
         tags:
             - { name: doctrine.event_listener, event: postPersist, connection: default }
             - { name: doctrine.event_listener, event: postRemove, connection: default }
-    DigipolisGent\Domainator9k\CoreBundle\EventListener\ServerEventListener:
-        tags:
-            - { name: doctrine.event_listener, event: postPersist, connection: default }
-            - { name: doctrine.event_listener, event: postRemove, connection: default }
     DigipolisGent\Domainator9k\CoreBundle\Service\TaskLoggerService:
     DigipolisGent\Domainator9k\CoreBundle\EventListener\BuildEventListener:
         tags:

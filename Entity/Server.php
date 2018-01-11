@@ -27,10 +27,17 @@ class Server
 
     /**
      * @var string
-     * @ORM\Column(name="ip", type="string", length=20, nullable=false)
+     * @ORM\Column(name="host", type="string", length=20, nullable=false)
      * @Assert\NotBlank()
      */
-    protected $ip;
+    protected $host;
+
+    /**
+     * @var integer
+     * @ORM\Column(name="port", type="integer", nullable=false)
+     * @Assert\NotBlank()
+     */
+    protected $port;
 
     /**
      * @var Environment
@@ -47,12 +54,10 @@ class Server
      */
     protected $taskServer;
 
-    /**
-     * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="ApplicationServer",mappedBy="server",cascade={"remove"})
-     */
-    protected $applicationServers;
+    public function __construct()
+    {
+        $this->port = 22;
+    }
 
     /**
      * Gets the name.
@@ -79,30 +84,6 @@ class Server
     }
 
     /**
-     * Gets the server IP.
-     *
-     * @return string
-     */
-    public function getIp()
-    {
-        return $this->ip;
-    }
-
-    /**
-     * Sets the server IP.
-     *
-     * @param string $ip
-     *
-     * @return $this
-     */
-    public function setIp($ip)
-    {
-        $this->ip = $ip;
-
-        return $this;
-    }
-
-    /**
      * @return bool
      */
     public function isTaskServer()
@@ -116,22 +97,6 @@ class Server
     public function setTaskServer($taskServer)
     {
         $this->taskServer = $taskServer;
-    }
-
-    /**
-     * @param ApplicationServer $applicationServer
-     */
-    public function addApplicationServer(ApplicationServer $applicationServer)
-    {
-        $this->applicationServers->add($applicationServer);
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getApplicationServers()
-    {
-        return $this->applicationServers;
     }
 
     /**
@@ -150,4 +115,35 @@ class Server
         return $this->environment;
     }
 
+    /**
+     * @return string
+     */
+    public function getHost(): string
+    {
+        return $this->host;
+    }
+
+    /**
+     * @param string $host
+     */
+    public function setHost(string $host)
+    {
+        $this->host = $host;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPort(): int
+    {
+        return $this->port;
+    }
+
+    /**
+     * @param int $port
+     */
+    public function setPort(int $port)
+    {
+        $this->port = $port;
+    }
 }

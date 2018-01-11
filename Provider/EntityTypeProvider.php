@@ -6,7 +6,6 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Provider;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AbstractApplication;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationEnvironment;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationServer;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationType;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationTypeEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Environment;
@@ -25,7 +24,6 @@ class EntityTypeProvider implements EntityTypeProviderInterface
             'server' => Server::class,
             'application' => AbstractApplication::class,
             'application_environment' => ApplicationEnvironment::class,
-            'application_server' => ApplicationServer::class,
             'application_type_environment' => ApplicationTypeEnvironment::class,
             'application_type' => ApplicationType::class,
         ];

@@ -35,7 +35,6 @@ class TemplateService
     {
         $hasMatches = false;
 
-
         // Loop over all entities
         foreach ($entities as $entityPrefix => $entity) {
             if (!$entity instanceof TemplateInterface) {
@@ -58,7 +57,7 @@ class TemplateService
 
                 // Get all the arguments out of the pattern so we can match them with the real arguments
                 foreach ($replacementArguments as $replacementArgument) {
-                    $pattern = str_replace($replacementArgument, '(.*)', $pattern);
+                    $pattern = str_replace($replacementArgument, '([^)]*)', $pattern);
                 }
 
                 // Check if the pattern exists in our text
@@ -82,6 +81,7 @@ class TemplateService
                     // Execute these functions on the defined entity with the discovered arguments
                     foreach ($functions as $function) {
                         preg_match('/^([a-zA-Z]*)(\((.*)\))?/', $function, $result);
+
                         $functionArguments = [];
                         $methodName = $result[1];
                         // Get the arguments and replace them by the real values if they are present

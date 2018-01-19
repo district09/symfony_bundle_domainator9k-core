@@ -1,9 +1,6 @@
 services:
     _defaults:
         autowire: true
-    DigipolisGent\Domainator9k\CoreBundle\Provider\EntityTypeProvider:
-        tags:
-            - { name: entity_type_provider }
     DigipolisGent\Domainator9k\CoreBundle\EventListener\EnvironmentEventListener:
         tags:
             - { name: doctrine.event_listener, event: postPersist, connection: default }

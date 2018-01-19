@@ -36,6 +36,14 @@ class ApplicationType
     protected $applicationTypeEnvironments;
 
     /**
+     * @return string
+     */
+    public static function getSettingImplementationName()
+    {
+        return 'application_type';
+    }
+
+    /**
      * ApplicationType constructor.
      */
     public function __construct()

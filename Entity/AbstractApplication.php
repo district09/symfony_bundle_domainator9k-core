@@ -64,6 +64,11 @@ abstract class AbstractApplication implements TemplateInterface
      */
     abstract function getType();
 
+    public static function getSettingImplementationName()
+    {
+        return 'application';
+    }
+
     public function __construct()
     {
         $this->builds = new ArrayCollection();

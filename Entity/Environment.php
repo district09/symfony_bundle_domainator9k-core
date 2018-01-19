@@ -66,6 +66,14 @@ class Environment
     }
 
     /**
+     * @return string
+     */
+    public static function getSettingImplementationName()
+    {
+        return 'environmentss';
+    }
+
+    /**
      * Gets the name.
      *
      * @return string

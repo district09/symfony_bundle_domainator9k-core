@@ -35,6 +35,11 @@ class ApplicationTypeEnvironment
      */
     protected $environment;
 
+    public static function getSettingImplementationName()
+    {
+        return 'application_type_environment';
+    }
+
     /**
      * @return ApplicationType
      */

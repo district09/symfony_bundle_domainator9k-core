@@ -3,7 +3,6 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\IdentifiableTrait;
-use DigipolisGent\SettingBundle\Entity\SettingDataValue;
 use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -85,11 +84,26 @@ class ApplicationEnvironment implements TemplateInterface
     }
 
     /**
-     * @param AbstractApplication $application
+     * @return string
      */
-    public function setApplication(AbstractApplication $application)
+    public static function getSettingImplementationName()
     {
-        $this->application = $application;
+        return 'application_environment';
+    }
+
+    /**
+     * @return array
+     */
+    public static function getTemplateReplacements(): array
+    {
+        return [
+            'serverIps()' => 'getServerIps()',
+            'environmentName()' => 'getEnvironment().getName()',
+            'config(key)' => 'getConfig(key)',
+            'databaseName()' => 'getDatabaseName()',
+            'databaseUser()' => 'getDatabaseUser()',
+            'databasePassword()' => 'getDatabasePassword()',
+        ];
     }
 
     /**
@@ -98,6 +112,14 @@ class ApplicationEnvironment implements TemplateInterface
     public function getApplication()
     {
         return $this->application;
+    }
+
+    /**
+     * @param AbstractApplication $application
+     */
+    public function setApplication(AbstractApplication $application)
+    {
+        $this->application = $application;
     }
 
     /**
@@ -117,11 +139,11 @@ class ApplicationEnvironment implements TemplateInterface
     }
 
     /**
-     * @param Environment $environment
+     * @return string
      */
-    public function setEnvironment(Environment $environment)
+    public function getEnvironmentName()
     {
-        $this->environment = $environment;
+        return $this->getEnvironment()->getName();
     }
 
     /**
@@ -133,11 +155,11 @@ class ApplicationEnvironment implements TemplateInterface
     }
 
     /**
-     * @return string
+     * @param Environment $environment
      */
-    public function getEnvironmentName()
+    public function setEnvironment(Environment $environment)
     {
-        return $this->getEnvironment()->getName();
+        $this->environment = $environment;
     }
 
     /**
@@ -226,28 +248,14 @@ class ApplicationEnvironment implements TemplateInterface
         return implode(' ', $serverIps);
     }
 
-    public function getConfig($key){
-        foreach ($this->getSettingDataValues() as $settingDataValue){
-            if($settingDataValue->getSettingDataType()->getKey() == $key){
+    public function getConfig($key)
+    {
+        foreach ($this->getSettingDataValues() as $settingDataValue) {
+            if ($settingDataValue->getSettingDataType()->getKey() == $key) {
                 return $settingDataValue->getValue();
             }
         }
 
         return '';
-    }
-
-    /**
-     * @return array
-     */
-    public static function getTemplateReplacements(): array
-    {
-        return [
-            'serverIps()' => 'getServerIps()',
-            'environmentName()' => 'getEnvironment().getName()',
-            'config(key)' => 'getConfig(key)',
-            'databaseName()' => 'getDatabaseName()',
-            'databaseUser()' => 'getDatabaseUser()',
-            'databasePassword()' => 'getDatabasePassword()',
-        ];
     }
 }

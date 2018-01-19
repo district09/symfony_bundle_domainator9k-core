@@ -60,6 +60,14 @@ class Server
     }
 
     /**
+     * @return string
+     */
+    public static function getSettingImplementationName()
+    {
+        return 'server';
+    }
+
+    /**
      * Gets the name.
      *
      * @return string

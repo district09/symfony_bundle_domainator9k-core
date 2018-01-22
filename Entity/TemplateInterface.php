@@ -3,7 +3,6 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
-
 /**
  * Interface TemplateInterface
  * @package DigipolisGent\Domainator9k\CoreBundle\Entity

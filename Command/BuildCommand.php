@@ -3,7 +3,6 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Command;
 
-
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Build;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Task;
 use DigipolisGent\Domainator9k\CoreBundle\Event\BuildEvent;
@@ -17,6 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class BuildCommand extends ContainerAwareCommand
 {
+
     public function configure()
     {
         $this->setName('domainator:build');

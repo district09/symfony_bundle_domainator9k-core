@@ -3,10 +3,8 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Service;
 
-
 use DigipolisGent\Domainator9k\CoreBundle\Entity\TemplateInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Exception\TemplateException;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
  * Class TemplateService
@@ -14,17 +12,6 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class TemplateService
 {
-
-    private $entityManager;
-
-    /**
-     * TemplateService constructor.
-     * @param EntityManagerInterface $entityManager
-     */
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
 
     /**
      * @param string $text

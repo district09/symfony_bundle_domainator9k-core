@@ -62,7 +62,7 @@ abstract class AbstractApplication implements TemplateInterface
     /**
      * @return string
      */
-    abstract function getType();
+    abstract public static function getType();
 
     public static function getSettingImplementationName()
     {
@@ -71,7 +71,6 @@ abstract class AbstractApplication implements TemplateInterface
 
     public function __construct()
     {
-        $this->builds = new ArrayCollection();
         $this->applicationEnvironments = new ArrayCollection();
     }
 
@@ -130,14 +129,6 @@ abstract class AbstractApplication implements TemplateInterface
     public function setHasDatabase(bool $hasDatabase)
     {
         $this->hasDatabase = $hasDatabase;
-    }
-
-    /**
-     * @param ArrayCollection $builds
-     */
-    public function setBuilds(ArrayCollection $builds)
-    {
-        $this->builds = $builds;
     }
 
     /**

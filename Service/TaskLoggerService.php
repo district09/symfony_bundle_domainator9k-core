@@ -3,7 +3,6 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Service;
 
-
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Build;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Task;
 use Doctrine\ORM\EntityManagerInterface;
@@ -46,5 +45,4 @@ class TaskLoggerService
         $this->entityManager->persist($this->task);
         $this->entityManager->flush();
     }
-
 }

@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 trait IdentifiableTrait
 {
+
     /**
      * @var string $id
      *

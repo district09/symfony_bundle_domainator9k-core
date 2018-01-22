@@ -70,7 +70,7 @@ class Environment
      */
     public static function getSettingImplementationName()
     {
-        return 'environmentss';
+        return 'environment';
     }
 
     /**
@@ -125,6 +125,9 @@ class Environment
         return $this;
     }
 
+    /**
+     * @param ApplicationEnvironment $applicationEnvironment
+     */
     public function addApplicationEnvironment(ApplicationEnvironment $applicationEnvironment)
     {
         $this->applicationEnvironments->add($applicationEnvironment);
@@ -139,11 +142,28 @@ class Environment
     }
 
     /**
+     * @param ApplicationTypeEnvironment $applicationTypeEnvironment
+     */
+    public function addApplicationTypeEnvironment(ApplicationTypeEnvironment $applicationTypeEnvironment)
+    {
+        $this->applicationTypeEnvironments->add($applicationTypeEnvironment);
+    }
+
+    /**
      * @return ArrayCollection
      */
     public function getApplicationTypeEnvironments()
     {
         return $this->applicationTypeEnvironments;
+    }
+
+    /**
+     * @param Server $server
+     */
+    public function addServer(Server $server)
+    {
+        $this->servers->add($server);
+        $server->setEnvironment($this);
     }
 
     /**

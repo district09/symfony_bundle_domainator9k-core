@@ -59,5 +59,4 @@ class LoadApplicationTypes extends Fixture
 
         $manager->flush();
     }
-
 }

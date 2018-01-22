@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 class DigipolisGentDomainator9kCoreExtension extends Extension
 {
+
     /**
      * {@inheritdoc}
      */

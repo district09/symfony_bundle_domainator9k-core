@@ -3,7 +3,6 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity\Repository;
 
-
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Build;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Task;
 use Doctrine\ORM\EntityRepository;
@@ -25,5 +24,4 @@ class TaskRepository extends EntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
-
 }

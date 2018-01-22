@@ -74,14 +74,6 @@ class Task
     }
 
     /**
-     * @param DateTime $created
-     */
-    public function setCreated(DateTime $created)
-    {
-        $this->created = $created;
-    }
-
-    /**
      * Gets the log.
      *
      * @return string

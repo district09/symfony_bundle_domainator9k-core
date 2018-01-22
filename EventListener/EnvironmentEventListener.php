@@ -3,7 +3,6 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\EventListener;
 
-
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AbstractApplication;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationType;
@@ -71,5 +70,4 @@ class EnvironmentEventListener
             }
         }
     }
-
 }

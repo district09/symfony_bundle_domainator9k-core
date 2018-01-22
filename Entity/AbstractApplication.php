@@ -62,7 +62,7 @@ abstract class AbstractApplication implements TemplateInterface
     /**
      * @return string
      */
-    abstract static function getType();
+    abstract public static function getType();
 
     public static function getSettingImplementationName()
     {

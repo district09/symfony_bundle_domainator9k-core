@@ -10,6 +10,8 @@ services:
         tags:
             - { name: kernel.event_listener, event: domainator.build, method: onStart, priority: 99 }
             - { name: kernel.event_listener, event: domainator.build, method: onEnd, priority: 1 }
+    DigipolisGent\Domainator9k\CoreBundle\EventListener\DestroyEventListener:
+        tags:
             - { name: kernel.event_listener, event: domainator.destroy, method: onStart, priority: 99 }
             - { name: kernel.event_listener, event: domainator.destroy, method: onEnd, priority: 1 }
     DigipolisGent\Domainator9k\CoreBundle\Service\TemplateService:

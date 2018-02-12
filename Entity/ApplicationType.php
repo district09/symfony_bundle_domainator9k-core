@@ -23,9 +23,9 @@ class ApplicationType
     /**
      * @var string
      *
-     * @ORM\Column(name="type",type="string")
+     * @ORM\Column(name="name",type="string")
      */
-    protected $type;
+    protected $name;
 
     /**
      * @var ArrayCollection
@@ -53,17 +53,17 @@ class ApplicationType
     /**
      * @return string
      */
-    public function getType(): string
+    public function getName(): string
     {
-        return $this->type;
+        return $this->name;
     }
 
     /**
      * @param string $type
      */
-    public function setType(string $type)
+    public function setName(string $name)
     {
-        $this->type = $type;
+        $this->name = $name;
     }
 
     /**

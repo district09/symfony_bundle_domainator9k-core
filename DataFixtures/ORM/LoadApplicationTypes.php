@@ -31,8 +31,8 @@ class LoadApplicationTypes extends Fixture
 
         /** @var AbstractApplication $class */
         foreach ($metadata->subClasses as $class) {
-            $type = $class::getApplicationType();
-            $applicationType = $applicationTypeRepository->findOneBy(['type' => $type]);
+            $name = $class::getApplicationType();
+            $applicationType = $applicationTypeRepository->findOneBy(['name' => $name]);
             if (is_null($applicationType)) {
                 $applicationType = new ApplicationType();
                 $applicationType->setType($type);

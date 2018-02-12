@@ -4,7 +4,7 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Entity;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Environment;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Server;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\VirtualServer;
 use PHPUnit\Framework\TestCase;
 
 class ServerTest extends TestCase
@@ -12,12 +12,12 @@ class ServerTest extends TestCase
 
     public function testGetSettingImplementationName()
     {
-        $this->assertEquals('server',Server::getSettingImplementationName());
+        $this->assertEquals('server',VirtualServer::getSettingImplementationName());
     }
 
     public function testGettersAndSetters()
     {
-        $server = new Server();
+        $server = new VirtualServer();
 
         $server->setHost('192.168.1.1');
         $this->assertEquals('192.168.1.1',$server->getHost());

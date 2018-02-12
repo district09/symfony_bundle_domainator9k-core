@@ -3,10 +3,10 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Form\Type;
 
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Server;
-use DigipolisGent\Domainator9k\CoreBundle\Form\Type\ServerFormType;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\VirtualServer;
+use DigipolisGent\Domainator9k\CoreBundle\Form\Type\VirtualServerFormType;
 
-class ServerFormTypeTest extends AbstractFormTypeTest
+class VirtualServerFormTypeTest extends AbstractFormTypeTest
 {
 
     public function testConfigureOptions()
@@ -16,9 +16,9 @@ class ServerFormTypeTest extends AbstractFormTypeTest
         $optionsResolver
             ->expects($this->at(0))
             ->method('setDefault')
-            ->with('data_class', Server::class);
+            ->with('data_class', VirtualServer::class);
 
-        $formType = new ServerFormType($this->getFormServiceMock());
+        $formType = new VirtualServerFormType($this->getFormServiceMock());
         $formType->configureOptions($optionsResolver);
     }
 
@@ -48,7 +48,7 @@ class ServerFormTypeTest extends AbstractFormTypeTest
             ->expects($this->at($index))
             ->method('addEventSubscriber');
 
-        $formType = new ServerFormType($this->getFormServiceMock());
+        $formType = new VirtualServerFormType($this->getFormServiceMock());
         $formType->buildForm($formBuilder, []);
     }
 }

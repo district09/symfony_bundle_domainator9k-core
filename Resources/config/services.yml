@@ -19,7 +19,7 @@ services:
         tags: [form.type]
     DigipolisGent\Domainator9k\CoreBundle\Form\Type\EnvironmentFormType:
         tags: [form.type]
-    DigipolisGent\Domainator9k\CoreBundle\Form\Type\ServerFormType:
+    DigipolisGent\Domainator9k\CoreBundle\Form\Type\VirtualServerFormType:
         tags: [form.type]
     DigipolisGent\Domainator9k\CoreBundle\Form\Type\ApplicationTypeEnvironmentFormType:
         tags: [form.type]

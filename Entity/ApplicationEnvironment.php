@@ -239,8 +239,8 @@ class ApplicationEnvironment implements TemplateInterface
     public function getServerIps(): string
     {
         $serverIps = [];
-        /** @var Server $server */
-        foreach ($this->getEnvironment()->getServers() as $server) {
+        /** @var VirtualServer $server */
+        foreach ($this->getEnvironment()->getVirtualServers() as $server) {
             $serverIps[] = $server->getHost();
         }
 

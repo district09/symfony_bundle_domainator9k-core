@@ -56,9 +56,9 @@ class Environment
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Server",mappedBy="environment")
+     * @ORM\OneToMany(targetEntity="VirtualServer",mappedBy="environment")
      */
-    protected $servers;
+    protected $virtualServers;
 
     /**
      * Creates a new environment.
@@ -67,7 +67,7 @@ class Environment
     {
         $this->applicationEnvironments = new ArrayCollection();
         $this->applicationTypeEnvironments = new ArrayCollection();
-        $this->servers = new ArrayCollection();
+        $this->virtualServers = new ArrayCollection();
     }
 
     /**
@@ -163,19 +163,19 @@ class Environment
     }
 
     /**
-     * @param Server $server
+     * @param VirtualServer $server
      */
-    public function addServer(Server $server)
+    public function addVirtualServer(VirtualServer $virtualServer)
     {
-        $this->servers->add($server);
-        $server->setEnvironment($this);
+        $this->virtualServers->add($virtualServer);
+        $virtualServer->setEnvironment($this);
     }
 
     /**
      * @return ArrayCollection
      */
-    public function getServers()
+    public function getVirtualServers()
     {
-        return $this->servers;
+        return $this->virtualServers;
     }
 }

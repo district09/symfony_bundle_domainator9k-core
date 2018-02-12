@@ -9,9 +9,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="server")
+ * @ORM\Table(name="virtualserver")
  */
-class Server
+class VirtualServer
 {
 
     use SettingImplementationTrait;
@@ -41,7 +41,7 @@ class Server
     /**
      * @var Environment
      *
-     * @ORM\ManyToOne(targetEntity="Environment",inversedBy="servers")
+     * @ORM\ManyToOne(targetEntity="Environment",inversedBy="virtualServers")
      * @ORM\JoinColumn(referencedColumnName="id")
      * @Assert\NotNull()
      */

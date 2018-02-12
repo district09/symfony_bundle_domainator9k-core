@@ -5,7 +5,7 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Entity;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Environment;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Server;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\VirtualServer;
 use DigipolisGent\Domainator9k\CoreBundle\Tests\Fixtures\Entity\QuuxApplication;
 use DigipolisGent\SettingBundle\Entity\SettingDataType;
 use DigipolisGent\SettingBundle\Entity\SettingDataValue;
@@ -80,13 +80,13 @@ class ApplicationEnvironmentTest extends TestCase
         $environment = new Environment();
         $environment->setName('uat');
 
-        $server = new Server();
+        $server = new VirtualServer();
         $server->setHost('0.0.0.0');
-        $environment->addServer($server);
+        $environment->addVirtualServer($server);
 
-        $server = new Server();
+        $server = new VirtualServer();
         $server->setHost('1.1.1.1');
-        $environment->addServer($server);
+        $environment->addVirtualServer($server);
 
         $applicationEnvironment->setEnvironment($environment);
 

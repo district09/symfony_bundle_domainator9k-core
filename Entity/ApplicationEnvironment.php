@@ -116,7 +116,7 @@ class ApplicationEnvironment implements TemplateInterface
     /**
      * @param AbstractApplication $application
      */
-    public function setApplication(AbstractApplication $application)
+    public function setApplication(AbstractApplication $application = null)
     {
         $this->application = $application;
     }

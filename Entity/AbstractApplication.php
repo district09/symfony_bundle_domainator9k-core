@@ -8,7 +8,6 @@ use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -61,12 +60,19 @@ abstract class AbstractApplication implements TemplateInterface
     protected $applicationEnvironments;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="deleted",type="boolean")
+     */
+    protected $deleted = false;
+
+    /**
      * @return string
      */
     abstract public static function getApplicationType(): string;
 
     /**
-     * @return FormType
+     * @return string
      */
     abstract public static function getFormType(): string;
 
@@ -186,5 +192,21 @@ abstract class AbstractApplication implements TemplateInterface
             'nameCanonical()' => 'getNameCanonical()',
             'serverIps(dev_environment_name)' => 'getApplicationEnvironmentByEnvironmentName(dev_environment_name).getServerIps()',
         ];
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDeleted(): bool
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * @param bool $deleted
+     */
+    public function setDeleted(bool $deleted = false)
+    {
+        $this->deleted = $deleted;
     }
 }

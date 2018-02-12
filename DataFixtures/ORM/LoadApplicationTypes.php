@@ -35,7 +35,7 @@ class LoadApplicationTypes extends Fixture
             $applicationType = $applicationTypeRepository->findOneBy(['name' => $name]);
             if (is_null($applicationType)) {
                 $applicationType = new ApplicationType();
-                $applicationType->setType($type);
+                $applicationType->setName($name);
                 $manager->persist($applicationType);
             }
 

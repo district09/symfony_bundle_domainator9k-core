@@ -18,7 +18,6 @@ class ApplicationEnvironment implements TemplateInterface
     use SettingImplementationTrait;
     use IdentifiableTrait;
 
-
     /**
      * @var ArrayCollection
      *

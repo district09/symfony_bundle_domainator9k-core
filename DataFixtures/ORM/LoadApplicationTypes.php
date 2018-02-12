@@ -29,8 +29,9 @@ class LoadApplicationTypes extends Fixture
         $environments = $manager->getRepository(Environment::class)->findAll();
         $applicationTypeEnvironmentRepository = $manager->getRepository(ApplicationTypeEnvironment::class);
 
+        /** @var AbstractApplication $class */
         foreach ($metadata->subClasses as $class) {
-            $type = $class::getType();
+            $type = $class::getApplicationType();
             $applicationType = $applicationTypeRepository->findOneBy(['type' => $type]);
             if (is_null($applicationType)) {
                 $applicationType = new ApplicationType();

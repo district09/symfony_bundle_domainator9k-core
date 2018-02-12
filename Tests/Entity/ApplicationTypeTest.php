@@ -20,7 +20,7 @@ class ApplicationTypeTest extends TestCase
     {
         $applicationType = new ApplicationType();
 
-        $applicationType->setType(QuuxApplication::getType());
+        $applicationType->setType(QuuxApplication::getApplicationType());
         $this->assertEquals('quux_application',$applicationType->getType());
 
         $this->assertCount(0,$applicationType->getApplicationTypeEnvironments());

@@ -24,11 +24,16 @@ class Environment
      * @var string
      * @ORM\Column(type="string")
      * @Assert\NotBlank();
+     * @Assert\Regex(
+     *     pattern="/^[a-z]+$/",
+     *     match=true,
+     *     message="Your name cannot contain a space"
+     * )
      */
     protected $name;
 
     /**
-     * @var bool
+     * @var boolean
      * @ORM\Column(type="boolean")
      */
     protected $prod;

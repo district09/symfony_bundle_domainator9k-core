@@ -8,6 +8,7 @@ use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -62,7 +63,12 @@ abstract class AbstractApplication implements TemplateInterface
     /**
      * @return string
      */
-    abstract public static function getType();
+    abstract public static function getApplicationType(): string;
+
+    /**
+     * @return FormType
+     */
+    abstract public static function getFormType(): string;
 
     public static function getSettingImplementationName()
     {

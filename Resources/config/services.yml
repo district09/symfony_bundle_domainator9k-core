@@ -15,3 +15,11 @@ services:
             - { name: kernel.event_listener, event: domainator.destroy, method: onStart, priority: 99 }
             - { name: kernel.event_listener, event: domainator.destroy, method: onEnd, priority: 1 }
     DigipolisGent\Domainator9k\CoreBundle\Service\TemplateService:
+    DigipolisGent\Domainator9k\CoreBundle\Form\Type\ApplicationEnvironmentFormType:
+        tags: [form.type]
+    DigipolisGent\Domainator9k\CoreBundle\Form\Type\EnvironmentFormType:
+        tags: [form.type]
+    DigipolisGent\Domainator9k\CoreBundle\Form\Type\ServerFormType:
+        tags: [form.type]
+    DigipolisGent\Domainator9k\CoreBundle\Form\Type\ApplicationTypeEnvironmentFormType:
+        tags: [form.type]

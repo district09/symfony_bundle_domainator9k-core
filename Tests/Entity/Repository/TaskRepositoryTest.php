@@ -3,6 +3,7 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Entity\Repository;
 
+use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Repository\TaskRepository;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Task;
 use Doctrine\ORM\AbstractQuery;
@@ -39,6 +40,42 @@ class TaskRepositoryTest extends TestCase
         $repository->getNextTask(Task::TYPE_BUILD);
     }
 
+    public function testGetLastTaskIdWithReturn()
+    {
+        $this->getLastTaskId(new Task());
+    }
+
+    public function testGetLastTaskIdWithoutReturn()
+    {
+        $this->getLastTaskId(null);
+    }
+
+    private function getLastTaskId($returnValue)
+    {
+        $entityManager = $this->getEntityManagerMock();
+        $classMetadata = $this->getClassMetadataMock();
+        $querybuilderMock = $this->getQueryBuilderMock();
+
+        $this->addMethodToQueryBuilder($querybuilderMock, 'select', $querybuilderMock, 0);
+        $this->addMethodToQueryBuilder($querybuilderMock, 'from', $querybuilderMock, 1);
+        $this->addMethodToQueryBuilder($querybuilderMock, 'leftJoin', $querybuilderMock, 2);
+        $this->addMethodToQueryBuilder($querybuilderMock, 'andWhere', $querybuilderMock, 3);
+        $this->addMethodToQueryBuilder($querybuilderMock, 'andWhere', $querybuilderMock, 4);
+        $this->addMethodToQueryBuilder($querybuilderMock, 'setParameter', $querybuilderMock, 5);
+        $this->addMethodToQueryBuilder($querybuilderMock, 'setParameter', $querybuilderMock, 6);
+        $this->addMethodToQueryBuilder($querybuilderMock, 'orderBy', $querybuilderMock, 7);
+        $this->addMethodToQueryBuilder($querybuilderMock, 'setMaxResults', $querybuilderMock, 8);
+        $this->addMethodToQueryBuilder($querybuilderMock, 'getQuery', $this->getQueryMock($returnValue), 9);
+
+        $entityManager
+            ->expects($this->at(0))
+            ->method('createQueryBuilder')
+            ->willReturn($querybuilderMock);
+
+        $repository = new TaskRepository($entityManager, $classMetadata);
+        $repository->getLastTaskId( new ApplicationEnvironment(),Task::TYPE_BUILD);
+    }
+
     private function getEntityManagerMock()
     {
         $mock = $this
@@ -73,11 +110,11 @@ class TaskRepositoryTest extends TestCase
     {
         $queryBuilder
             ->expects($this->at($index))
-            ->method($method)
+            ->method($this->equalTo($method))
             ->willReturn($returnValue);
     }
 
-    private function getQueryMock()
+    private function getQueryMock($returnValue = null)
     {
         $mock = $this
             ->getMockBuilder(AbstractQuery::class)
@@ -86,7 +123,8 @@ class TaskRepositoryTest extends TestCase
 
         $mock
             ->expects($this->at(0))
-            ->method('getOneOrNullResult');
+            ->method('getOneOrNullResult')
+            ->willReturn($returnValue);
 
         return $mock;
     }

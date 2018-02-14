@@ -39,7 +39,7 @@ abstract class AbstractApplication implements TemplateInterface
      * @var string
      *
      * @ORM\Column(name="git_repo", type="string", nullable=false)
-     * @Assert\NotBlank()
+     * @Assert\Regex("/^git@[a-z0-9]*.[a-z]*:[a-zA-Z0-9]*\/[^\s.\\]*.git/")
      */
     protected $gitRepo;
 

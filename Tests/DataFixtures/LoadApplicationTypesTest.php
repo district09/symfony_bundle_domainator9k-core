@@ -88,7 +88,7 @@ class LoadApplicationTypesTest extends TestCase
         $mock
             ->expects($this->at(0))
             ->method('findOneBy')
-            ->with(['type' => $type])
+            ->with(['name' => $type])
             ->willReturn(null);
 
         return $mock;

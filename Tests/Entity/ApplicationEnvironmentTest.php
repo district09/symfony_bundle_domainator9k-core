@@ -28,6 +28,7 @@ class ApplicationEnvironmentTest extends TestCase
             'databaseName()' => 'getDatabaseName()',
             'databaseUser()' => 'getDatabaseUser()',
             'databasePassword()' => 'getDatabasePassword()',
+            'gitRef()' => 'getGitRef()',
         ];
 
         $this->assertEquals($expected, ApplicationEnvironment::getTemplateReplacements());

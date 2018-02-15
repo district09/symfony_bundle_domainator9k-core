@@ -64,5 +64,8 @@ class AbstractApplicationTest extends TestCase
         $this->assertCount(0,$application->getApplicationEnvironments());
 
         $this->assertNull($application->getId());
+        
+        $application->setDeleted(true);
+        $this->assertTrue($application->isDeleted());
     }
 }

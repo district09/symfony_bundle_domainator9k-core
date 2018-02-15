@@ -34,6 +34,7 @@ class VirtualServerFormType extends AbstractType
         parent::buildForm($builder, $options);
         $builder->add('name');
         $builder->add('host');
+        $builder->add('port');
         $builder->add('environment');
         $builder->add('taskServer');
         $builder->addEventSubscriber(new SettingFormListener($this->formService));

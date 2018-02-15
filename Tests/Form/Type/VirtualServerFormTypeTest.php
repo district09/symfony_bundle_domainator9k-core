@@ -29,6 +29,7 @@ class VirtualServerFormTypeTest extends AbstractFormTypeTest
         $arguments = [
             'name',
             'host',
+            'port',
             'environment',
             'taskServer',
         ];

@@ -2,84 +2,80 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\IdentifiableTrait;
+use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="environment")
+ * @UniqueEntity(fields={"name"})
  */
 class Environment
 {
-    /**
-     * @var int
-     * @ORM\Column(type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+
+    use SettingImplementationTrait;
+    use IdentifiableTrait;
 
     /**
      * @var string
      * @ORM\Column(type="string")
+     * @Assert\NotBlank();
+     * @Assert\Regex(
+     *     pattern="/^[a-z]+$/",
+     *     match=true,
+     *     message="Your name cannot contain a space"
+     * )
      */
     protected $name;
 
     /**
-     * @var bool
+     * @var boolean
      * @ORM\Column(type="boolean")
      */
     protected $prod;
 
     /**
-     * @var bool
-     * @ORM\Column(type="boolean")
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="ApplicationEnvironment",mappedBy="environment",cascade={"remove"})
      */
-    protected $devPermissions;
+    protected $applicationEnvironments;
+
 
     /**
-     * @var string
-     * @ORM\Column(type="string")
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="ApplicationTypeEnvironment",mappedBy="environment",cascade={"remove"})
      */
-    protected $urlStructure;
+    protected $applicationTypeEnvironments;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="VirtualServer",mappedBy="environment")
+     */
+    protected $virtualServers;
 
     /**
      * Creates a new environment.
      */
     public function __construct()
     {
-        $this->prod = false;
-        $this->urlStructure = '';
+        $this->applicationEnvironments = new ArrayCollection();
+        $this->applicationTypeEnvironments = new ArrayCollection();
+        $this->virtualServers = new ArrayCollection();
     }
 
     /**
-     * Checks whether or not devs have permissions on this environment.
-     *
-     * @return bool
+     * @return string
      */
-    public function isDevPermissions()
+    public static function getSettingImplementationName()
     {
-        return $this->devPermissions;
-    }
-
-    /**
-     * Sets whether or not devs have permissions on this environment.
-     * @param bool $devPermissions
-     */
-    public function setDevPermissions($devPermissions)
-    {
-        $this->devPermissions = $devPermissions;
-
-        return $this;
-    }
-
-    /**
-     * Gets the id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
+        return 'environment';
     }
 
     /**
@@ -135,24 +131,51 @@ class Environment
     }
 
     /**
-     * Gets the url structure.
-     *
-     * @return string
+     * @param ApplicationEnvironment $applicationEnvironment
      */
-    public function getUrlStructure()
+    public function addApplicationEnvironment(ApplicationEnvironment $applicationEnvironment)
     {
-        return $this->urlStructure;
+        $this->applicationEnvironments->add($applicationEnvironment);
     }
 
     /**
-     * Sets the url structure.
-     *
-     * @param string $urlStructure
+     * @return ArrayCollection
      */
-    public function setUrlStructure($urlStructure)
+    public function getApplicationEnvironments()
     {
-        $this->urlStructure = $urlStructure;
+        return $this->applicationEnvironments;
+    }
 
-        return $this;
+    /**
+     * @param ApplicationTypeEnvironment $applicationTypeEnvironment
+     */
+    public function addApplicationTypeEnvironment(ApplicationTypeEnvironment $applicationTypeEnvironment)
+    {
+        $this->applicationTypeEnvironments->add($applicationTypeEnvironment);
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getApplicationTypeEnvironments()
+    {
+        return $this->applicationTypeEnvironments;
+    }
+
+    /**
+     * @param VirtualServer $server
+     */
+    public function addVirtualServer(VirtualServer $virtualServer)
+    {
+        $this->virtualServers->add($virtualServer);
+        $virtualServer->setEnvironment($this);
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getVirtualServers()
+    {
+        return $this->virtualServers;
     }
 }

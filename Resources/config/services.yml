@@ -1,147 +1,25 @@
-parameters:
-    digip_deploy.workspace_dir: "/tmp"
-
-
-
 services:
-
-    digip_deploy.environment_service:
-        arguments: ["@doctrine"]
-        class: DigipolisGent\Domainator9k\CoreBundle\Service\EnvironmentService
-
-    digip_deploy.application_type_builder:
-        arguments: []
-        class: DigipolisGent\Domainator9k\CoreBundle\Service\ApplicationTypeBuilder
-
-    digip_deploy.application_type_settings_service:
-        arguments: ["@doctrine", "@digip_deploy.application_type_builder"]
-        class: DigipolisGent\Domainator9k\CoreBundle\Service\AppTypeSettingsService
-
-    digip_deploy.ci_type_builder:
-        arguments: []
-        class: DigipolisGent\Domainator9k\CoreBundle\Service\CiTypeBuilder
-    digip_deploy.ci_settings_service:
-        arguments: ["@doctrine"]
-        class: DigipolisGent\Domainator9k\CoreBundle\Service\CiSettingsService
-    digip_deploy.ci_apptype_settings_service:
-        arguments: ["@doctrine", "@digip_deploy.application_type_builder", "@digip_deploy.ci_type_builder"]
-        class: DigipolisGent\Domainator9k\CoreBundle\Service\CiAppTypeSettingsService
-    digip_deploy.apptype_injector_listener:
-        arguments: ["@digip_deploy.application_type_builder"]
-        class: DigipolisGent\Domainator9k\CoreBundle\EventListener\AppTypeInjectorListener
+    _defaults:
+        autowire: true
+    DigipolisGent\Domainator9k\CoreBundle\EventListener\EnvironmentEventListener:
         tags:
-            - { name: doctrine.event_listener, event: postLoad }
-
-    digip_deploy.shell_factory:
-      arguments: []
-      class: DigipolisGent\Domainator9k\CoreBundle\Ssh\Factory\SshShellFactory
-
-    digip_deploy.task_factory:
-      arguments: ["@digip_deploy.shell_factory"]
-      class: DigipolisGent\Domainator9k\CoreBundle\Task\Factory
-
-    digip_deploy.provision_filesystem_task:
-      arguments: []
-      class: DigipolisGent\Domainator9k\CoreBundle\Task\Provision\FilesystemTask
-      tags: [digip_deploy.task]
-
-    digip_deploy.provision_configfiles_task:
-      arguments: []
-      class: DigipolisGent\Domainator9k\CoreBundle\Task\Provision\ConfigFilesTask
-      tags: [digip_deploy.task]
-
-    digip_deploy.provision_cron_task:
-      arguments: []
-      class: DigipolisGent\Domainator9k\CoreBundle\Task\Provision\CronTask
-      tags: [digip_deploy.task]
-
-    digip_deploy.filesystem_createdirectory:
-      arguments: []
-      class: DigipolisGent\Domainator9k\CoreBundle\Task\Filesystem\CreateDirectoryTask
-      tags: [digip_deploy.task]
-
-    digip_deploy.filesystem_createfile:
-      arguments: []
-      class: DigipolisGent\Domainator9k\CoreBundle\Task\Filesystem\CreateFileTask
-      tags: [digip_deploy.task]
-
-    digip_deploy.filesystem_createlink:
-      arguments: []
-      class: DigipolisGent\Domainator9k\CoreBundle\Task\Filesystem\LinkTask
-      tags: [digip_deploy.task]
-
-    digip_deploy.console_cron:
-      arguments: []
-      class: DigipolisGent\Domainator9k\CoreBundle\Task\Console\CronTask
-      tags: [digip_deploy.task]
-    #
-    # entity services
-    #
-
-    digip_deploy.entity.application:
-        class: DigipolisGent\Domainator9k\CoreBundle\EntityService\ApplicationService
+            - { name: doctrine.event_listener, event: postPersist, connection: default }
+            - { name: doctrine.event_listener, event: postRemove, connection: default }
+    DigipolisGent\Domainator9k\CoreBundle\Service\TaskLoggerService:
+    DigipolisGent\Domainator9k\CoreBundle\EventListener\BuildEventListener:
         tags:
-            - { name: ctrl_rad.entity_service }
-
-    digip_deploy.entity.application_type:
-        class: DigipolisGent\Domainator9k\CoreBundle\EntityService\ApplicationTypeService
+            - { name: kernel.event_listener, event: domainator.build, method: onStart, priority: 99 }
+            - { name: kernel.event_listener, event: domainator.build, method: onEnd, priority: 1 }
+    DigipolisGent\Domainator9k\CoreBundle\EventListener\DestroyEventListener:
         tags:
-            - { name: ctrl_rad.entity_service }
-
-    digip_deploy.entity.appenvironment:
-        class: DigipolisGent\Domainator9k\CoreBundle\EntityService\AppEnvironmentService
-        arguments: ["@digip_deploy.settings", "@digip_deploy.application_type_builder", "@digip_deploy.task_factory"]
-        tags:
-            - { name: ctrl_rad.entity_service }
-
-    digip_deploy.entity.server:
-        class: DigipolisGent\Domainator9k\CoreBundle\EntityService\ServerService
-        tags:
-            - { name: ctrl_rad.entity_service }
-
-    digip_deploy.entity.build:
-        class: DigipolisGent\Domainator9k\CoreBundle\EntityService\BuildService
-        arguments: [%digip_deploy.workspace_dir%, %kernel.root_dir%]
-        calls:
-            - [setContainer, ["@service_container"]]
-        tags:
-            - { name: ctrl_rad.entity_service }
-
-    digip_deploy.entity.settings:
-        class: DigipolisGent\Domainator9k\CoreBundle\EntityService\SettingsService
-        tags:
-            - { name: ctrl_rad.entity_service }
-
-    digip_deploy.entity.role:
-        class: DigipolisGent\Domainator9k\CoreBundle\EntityService\RoleService
-        arguments: [ "%security.role_hierarchy.roles%" ]
-        tags:
-            - { name: ctrl_rad.entity_service }
-
-    digip_deploy.entity.environment:
-        class: DigipolisGent\Domainator9k\CoreBundle\EntityService\EnvironmentService
-        tags:
-            - { name: ctrl_rad.entity_service }
-
-    digip_deploy.settings:
-        class: DigipolisGent\Domainator9k\CoreBundle\Entity\Settings
-        factory: ["@digip_deploy.entity.settings", getSettings]
-
-
-    #
-    # Mail service
-    #
-    digip_deploy.mailer:
-        class: DigipolisGent\Domainator9k\CoreBundle\Service\Mail
-        arguments: ["@mailer", "@digip_deploy.environment_service"]
-
-
-    #
-    # Security Voters
-    #
-    digip_deploy.security.application_voter:
-        class:      DigipolisGent\Domainator9k\CoreBundle\Security\Voter\ApplicationVoter
-        arguments:  ["@service_container"]
-        public:     false
-        tags:
-            - { name: security.voter }
+            - { name: kernel.event_listener, event: domainator.destroy, method: onStart, priority: 99 }
+            - { name: kernel.event_listener, event: domainator.destroy, method: onEnd, priority: 1 }
+    DigipolisGent\Domainator9k\CoreBundle\Service\TemplateService:
+    DigipolisGent\Domainator9k\CoreBundle\Form\Type\ApplicationEnvironmentFormType:
+        tags: [form.type]
+    DigipolisGent\Domainator9k\CoreBundle\Form\Type\EnvironmentFormType:
+        tags: [form.type]
+    DigipolisGent\Domainator9k\CoreBundle\Form\Type\VirtualServerFormType:
+        tags: [form.type]
+    DigipolisGent\Domainator9k\CoreBundle\Form\Type\ApplicationTypeEnvironmentFormType:
+        tags: [form.type]

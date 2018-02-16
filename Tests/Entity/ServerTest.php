@@ -1,85 +1,39 @@
 <?php
 
+
 namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Entity;
 
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Role;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Server;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Environment;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\VirtualServer;
+use PHPUnit\Framework\TestCase;
 
-/**
- * Description of ServerTest.
- *
- * @author Jelle Sebreghts
- */
-class ServerTest extends EntityTest
+class ServerTest extends TestCase
 {
-    /**
-     * @var string
-     */
-    protected $sockId;
 
-    /**
-     * @var string
-     */
-    protected $name;
-
-    /**
-     * @var string
-     */
-    protected $ip;
-
-    /**
-     * @var string
-     */
-    protected $environment;
-
-    protected function setUp()
+    public function testGetSettingImplementationName()
     {
-        parent::setUp();
-        $this->sockId = uniqid();
-        $this->name = $this->getAlphaNumeric();
-        $this->ip = $this->getAlphaNumeric();
-        $this->environment = $this->getAlphaNumeric();
+        $this->assertEquals('server',VirtualServer::getSettingImplementationName());
     }
 
-    public function testConstructor()
+    public function testGettersAndSetters()
     {
-        $server = $this->getEntity();
-        $this->assertEquals($this->sockId, $server->getSockId());
-        $this->assertEquals($this->name, $server->getName());
-        $this->assertEquals($this->ip, $server->getIp());
-        $this->assertEquals($this->environment, $server->getEnvironment());
-    }
+        $server = new VirtualServer();
 
-    public function getterTestDataProvider()
-    {
-        return [
-            ['id', uniqid()],
-            ['name', $this->getAlphaNumeric()],
-            ['sockId', uniqid()],
-            ['manageSock', (bool) mt_rand(0, 1), true, ''],
-            ['taskServer', (bool) mt_rand(0, 1), true],
-            ['ip', $this->getAlphaNumeric()],
-            ['environment', $this->getAlphaNumeric()],
-        ];
-    }
+        $server->setHost('192.168.1.1');
+        $this->assertEquals('192.168.1.1',$server->getHost());
 
-    public function setterTestDataProvider()
-    {
-        return [
-            ['name', $this->getAlphaNumeric()],
-            ['sockId', uniqid()],
-            ['manageSock', (bool) mt_rand(0, 1), true, ''],
-            ['taskServer', (bool) mt_rand(0, 1), true],
-            ['ip', $this->getAlphaNumeric()],
-            ['environment', $this->getAlphaNumeric()],
-        ];
-    }
+        $server->setPort(80);
+        $this->assertEquals(80,$server->getPort());
 
-    /**
-     * @return Role
-     */
-    protected function getEntity()
-    {
-        return new Server($this->sockId, $this->name, $this->ip, $this->environment);
+        $environment = new Environment();
+        $server->setEnvironment($environment);
+        $this->assertEquals($environment,$server->getEnvironment());
+
+        $server->setName('server-name');
+        $this->assertEquals('server-name',$server->getName());
+
+        $this->assertNull($server->isTaskServer());
+        $server->setTaskServer(true);
+        $this->assertTrue($server->isTaskServer());
     }
 }

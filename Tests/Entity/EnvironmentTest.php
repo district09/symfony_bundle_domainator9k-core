@@ -1,57 +1,28 @@
 <?php
 
+
 namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Entity;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Environment;
+use PHPUnit\Framework\TestCase;
 
-/**
- * Description of AppEnvironmentSettingsTest.
- *
- * @author Jelle Sebreghts
- */
-class EnvironmentTest extends EntityTest
+class EnvironmentTest extends TestCase
 {
-    public function testConstructor()
+
+    public function testGetSettingImplementationName()
     {
-        $env = $this->getEntity();
-        $this->assertFalse($env->isProd());
-        $this->assertEmpty($env->getUrlStructure());
+        $this->assertEquals('environment',Environment::getSettingImplementationName());
     }
 
-    public function testToString()
+    public function testGettersAndSetters()
     {
-        $env = $this->getEntity();
-        $name = $this->getAlphaNumeric();
-        $env->setName($name);
-        $this->assertEquals($name, (string) $env);
-    }
+        $environment = new Environment();
+        $environment->setName('prod');
 
-    public function getterTestDataProvider()
-    {
-        return [
-            ['devPermissions', (bool) mt_rand(0, 1), true],
-            ['id', uniqid()],
-            ['name', $this->getAlphaNumeric()],
-            ['prod', (bool) mt_rand(0, 1), true],
-            ['urlStructure', $this->getAlphaNumeric()],
-        ];
-    }
+        $this->assertEquals('prod',$environment->__toString());
 
-    public function setterTestDataProvider()
-    {
-        return [
-            ['devPermissions', (bool) mt_rand(0, 1), true],
-            ['name', $this->getAlphaNumeric()],
-            ['prod', (bool) mt_rand(0, 1), true],
-            ['urlStructure', $this->getAlphaNumeric()],
-        ];
-    }
-
-    /**
-     * @return Environment
-     */
-    protected function getEntity()
-    {
-        return new Environment();
+        $this->assertNull($environment->isProd());
+        $environment->setProd(true);
+        $this->assertTrue($environment->isProd());
     }
 }

@@ -189,6 +189,7 @@ abstract class AbstractApplication implements TemplateInterface
     public static function getTemplateReplacements(): array
     {
         return [
+            'name()' => 'getName()',
             'nameCanonical()' => 'getNameCanonical()',
             'serverIps(dev_environment_name)' => 'getApplicationEnvironmentByEnvironmentName(dev_environment_name).getServerIps()',
         ];

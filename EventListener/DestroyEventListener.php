@@ -49,6 +49,7 @@ class DestroyEventListener
      */
     public function onEnd(DestroyEvent $event)
     {
+        $this->taskLoggerService->addLine('Destroy completed');
         $task = $event->getTask();
         $task->setStatus(Task::STATUS_PROCESSED);
         $this->entityManager->persist($task);

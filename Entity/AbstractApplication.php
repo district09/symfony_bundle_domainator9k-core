@@ -54,8 +54,6 @@ abstract class AbstractApplication implements TemplateInterface
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="ApplicationEnvironment", mappedBy="application", cascade={"all"},fetch="EAGER")
-     * @Assert\Valid()
-     * @Assert\NotNull()
      */
     protected $applicationEnvironments;
 

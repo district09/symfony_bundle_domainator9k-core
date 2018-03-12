@@ -42,6 +42,7 @@ class BuildEventListener
 
     public function onEnd(BuildEvent $event)
     {
+        $this->taskLoggerService->addLine('Build completed');
         $task = $event->getTask();
         $task->setStatus(Task::STATUS_PROCESSED);
         $this->entityManager->persist($task);

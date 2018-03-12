@@ -15,6 +15,7 @@ class AbstractApplicationTest extends TestCase
     public function testGetTemplateReplacements()
     {
         $expected = [
+            'name()' => 'getName()',
             'nameCanonical()' => 'getNameCanonical()',
             'serverIps(dev_environment_name)' => 'getApplicationEnvironmentByEnvironmentName(dev_environment_name).getServerIps()',
         ];

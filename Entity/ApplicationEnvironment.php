@@ -104,6 +104,7 @@ class ApplicationEnvironment implements TemplateInterface
             'databaseUser()' => 'getDatabaseUser()',
             'databasePassword()' => 'getDatabasePassword()',
             'gitRef()' => 'getGitRef()',
+            'domain()' => 'getDomain()',
         ];
     }
 

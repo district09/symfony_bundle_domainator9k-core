@@ -97,6 +97,7 @@ class ApplicationEnvironment implements TemplateInterface
     {
         return [
             'serverIps()' => 'getServerIps()',
+            'workerServerIp()' => 'getWorkerServerIp()',
             'environmentName()' => 'getEnvironment().getName()',
             'config(key)' => 'getConfig(key)',
             'databaseName()' => 'getDatabaseName()',
@@ -246,6 +247,22 @@ class ApplicationEnvironment implements TemplateInterface
         }
 
         return implode(' ', $serverIps);
+    }
+
+    /**
+     * @return string
+     */
+    public function getWorkerServerIp(): string
+    {
+        /** @var VirtualServer $server */
+        $servers = $this->getEnvironment()->getVirtualServers();
+        foreach ($servers as $server) {
+            if ($server->isTaskServer()) {
+                return $server->getHost();
+            }
+        }
+
+        return end($servers)->getHost();
     }
 
     public function getConfig($key)

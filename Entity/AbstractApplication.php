@@ -191,6 +191,7 @@ abstract class AbstractApplication implements TemplateInterface
         return [
             'name()' => 'getName()',
             'nameCanonical()' => 'getNameCanonical()',
+            'gitRepo()' => 'getGitRepo()',
             'serverIps(dev_environment_name)' => 'getApplicationEnvironmentByEnvironmentName(dev_environment_name).getServerIps()',
         ];
     }

@@ -26,17 +26,6 @@ class EnvironmentEventListener
         $entityManager = $args->getEntityManager();
 
         if ($entity instanceof Environment) {
-            $applications = $entityManager->getRepository(AbstractApplication::class)->findAll();
-
-            foreach ($applications as $application) {
-                $applicationEnvironment = new ApplicationEnvironment();
-                $applicationEnvironment->setApplication($application);
-                $applicationEnvironment->setEnvironment($entity);
-
-                $entityManager->persist($applicationEnvironment);
-                $entityManager->flush();
-            }
-
             $applicationTypes = $entityManager->getRepository(ApplicationType::class)->findAll();
 
             foreach ($applicationTypes as $applicationType) {

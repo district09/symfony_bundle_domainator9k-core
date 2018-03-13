@@ -23,12 +23,14 @@ class ApplicationEnvironmentTest extends TestCase
     {
         $expected = [
             'serverIps()' => 'getServerIps()',
+            'workerServerIp()' => 'getWorkerServerIp()',
             'environmentName()' => 'getEnvironment().getName()',
             'config(key)' => 'getConfig(key)',
             'databaseName()' => 'getDatabaseName()',
             'databaseUser()' => 'getDatabaseUser()',
             'databasePassword()' => 'getDatabasePassword()',
             'gitRef()' => 'getGitRef()',
+            'domain()' => 'getDomain()',
         ];
 
         $this->assertEquals($expected, ApplicationEnvironment::getTemplateReplacements());

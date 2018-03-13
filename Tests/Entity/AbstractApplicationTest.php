@@ -18,6 +18,7 @@ class AbstractApplicationTest extends TestCase
             'name()' => 'getName()',
             'nameCanonical()' => 'getNameCanonical()',
             'serverIps(dev_environment_name)' => 'getApplicationEnvironmentByEnvironmentName(dev_environment_name).getServerIps()',
+            'gitRepo()' => 'getGitRepo()',
         ];
 
         $this->assertEquals($expected, QuuxApplication::getTemplateReplacements());
@@ -65,7 +66,7 @@ class AbstractApplicationTest extends TestCase
         $this->assertCount(0,$application->getApplicationEnvironments());
 
         $this->assertNull($application->getId());
-        
+
         $application->setDeleted(true);
         $this->assertTrue($application->isDeleted());
     }

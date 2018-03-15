@@ -45,4 +45,11 @@ class TaskLoggerService
         $this->entityManager->persist($this->task);
         $this->entityManager->flush();
     }
+
+    public function endTask()
+    {
+        $this->task->setStatus(Task::STATUS_FAILED);
+        $this->entityManager->persist($this->task);
+        $this->entityManager->flush();
+    }
 }

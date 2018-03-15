@@ -42,6 +42,11 @@ class BuildEventListener
 
     public function onEnd(BuildEvent $event)
     {
+        if ($event->getTask()->getStatus() == Task::STATUS_FAILED) {
+            $this->taskLoggerService->addLine('Build failed');
+            return;
+        }
+
         $this->taskLoggerService->addLine('Build completed');
         $task = $event->getTask();
         $task->setStatus(Task::STATUS_PROCESSED);

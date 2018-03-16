@@ -207,7 +207,7 @@ class ApplicationEnvironment implements TemplateInterface
     /**
      * @param string $gitRef
      */
-    public function setGitRef(string $gitRef)
+    public function setGitRef(string $gitRef = null)
     {
         $this->gitRef = $gitRef;
     }

@@ -190,7 +190,7 @@ class Environment
     /**
      * @return string
      */
-    public function getGitRef(): ?cstring
+    public function getGitRef(): string
     {
         return $this->gitRef;
     }

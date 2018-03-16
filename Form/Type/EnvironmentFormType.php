@@ -37,6 +37,7 @@ class EnvironmentFormType extends AbstractType
         parent::buildForm($builder, $options);
         $builder->add('name');
         $builder->add('prod');
+        $builder->add('gitRef');
         $builder->addEventSubscriber(new SettingFormListener($this->formService));
     }
 

@@ -61,6 +61,14 @@ class Environment
     protected $virtualServers;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="git_ref",type="string",nullable=true)
+     * @Assert\NotBlank()
+     */
+    protected $gitRef;
+
+    /**
      * Creates a new environment.
      */
     public function __construct()
@@ -177,5 +185,21 @@ class Environment
     public function getVirtualServers()
     {
         return $this->virtualServers;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGitRef(): ?cstring
+    {
+        return $this->gitRef;
+    }
+
+    /**
+     * @param string $gitRef
+     */
+    public function setGitRef(string $gitRef)
+    {
+        $this->gitRef = $gitRef;
     }
 }

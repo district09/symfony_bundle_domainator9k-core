@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="environment")
  * @UniqueEntity(fields={"name"})
  */
-class Environment
+class Environment implements TemplateInterface
 {
 
     use SettingImplementationTrait;
@@ -201,5 +201,27 @@ class Environment
     public function setGitRef(string $gitRef)
     {
         $this->gitRef = $gitRef;
+    }
+
+    public function getConfig($key)
+    {
+        foreach ($this->getSettingDataValues() as $settingDataValue) {
+            if ($settingDataValue->getSettingDataType()->getKey() == $key) {
+                return $settingDataValue->getValue();
+            }
+        }
+
+        return '';
+    }
+
+    /**
+     * @return array
+     */
+    public static function getTemplateReplacements(): array
+    {
+        return [
+            'config(key)' => 'getConfig(key)',
+            'gitRef()' => 'getGitRef()',
+        ];
     }
 }

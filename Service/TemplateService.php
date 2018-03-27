@@ -41,6 +41,7 @@ class TemplateService
                 // Complete the pattern and escape all existing special characters
                 $pattern = '[[ ' . $entityPrefix . ':' . $templateReplacementKey . ' ]]';
                 $pattern = str_replace(['(', ')', '[', ']'], ['\(', '\)', '\[', '\]'], $pattern);
+                $replacePattern = $pattern;
 
                 // Get all the arguments out of the pattern so we can match them with the real arguments
                 foreach ($replacementArguments as $replacementArgument) {
@@ -60,6 +61,7 @@ class TemplateService
                     // Get a key value pair of all arguments
                     foreach ($replacementArguments as $key => $value) {
                         $replacementArguments[$value] = $matches[$key + 1];
+                        $replacePattern = str_replace($replacementArguments[$key], $matches[$key + 1 ], $replacePattern);
                     }
 
                     // Get all functions that should be executed
@@ -83,7 +85,7 @@ class TemplateService
                     }
 
                     // Replace the pattern with the found value
-                    $text = preg_replace('/' . $pattern . '/', $passingValue, $text);
+                    $text = preg_replace('/' . $replacePattern . '/', $passingValue, $text);
                 }
             }
         }

@@ -106,7 +106,7 @@ abstract class AbstractApplication implements TemplateInterface
     public function getNameCanonical()
     {
         $name = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "", $this->getName()));
-        return substr($name, 0, 12);
+        return substr($name, 0, 14);
     }
 
     /**

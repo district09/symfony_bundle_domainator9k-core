@@ -48,7 +48,7 @@ class AbstractApplicationTest extends TestCase
 
         $application->setName('My application name');
         $this->assertEquals('My application name', $application->getName());
-        $this->assertEquals('myapplicatio', $application->getNameCanonical());
+        $this->assertEquals('myapplicationn', $application->getNameCanonical());
 
         $this->assertTrue($application->isHasDatabase());
         $application->setHasDatabase(false);

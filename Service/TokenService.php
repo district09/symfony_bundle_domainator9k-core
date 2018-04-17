@@ -6,7 +6,6 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Service;
 use Camel\CaseTransformer;
 use Camel\Format\SnakeCase;
 use Camel\Format\StudlyCaps;
-use DigipolisGent\Domainator9k\CoreBundle\Entity\TemplateInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Token;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
@@ -15,7 +14,7 @@ use Doctrine\ORM\EntityRepository;
  * Class TokenService
  * @package DigipolisGent\Domainator9k\CoreBundle\Service
  */
-class TokenService implements TemplateInterface
+class TokenService
 {
 
     /**
@@ -34,7 +33,7 @@ class TokenService implements TemplateInterface
         $this->caseTransformer = new CaseTransformer(new SnakeCase(), new StudlyCaps());
     }
 
-    public static function getTemplateReplacements(): array
+    public function getTemplateReplacements(): array
     {
         $tokens = $this->repository->findAll();
         $replacements = [];
@@ -51,7 +50,7 @@ class TokenService implements TemplateInterface
             throw new \BadMethodCallException('Call to undefined method ' . static::class . '::' . $name);
         }
 
-        $replacements = static::getTemplateReplacements();
+        $replacements = $this->getTemplateReplacements();
         $tokenName = array_search($name . '()', $replacements);
         if ($tokenName === false) {
             throw new \BadMethodCallException('Call to undefined method ' . static::class . '::' . $name);

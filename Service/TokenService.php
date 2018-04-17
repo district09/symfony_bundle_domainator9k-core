@@ -38,7 +38,7 @@ class TokenService
         $tokens = $this->repository->findAll();
         $replacements = [];
         foreach ($tokens as $token) {
-            $replacements[$token->getName()] = 'get' . $this->caseTransformer->transform($token->getName()) . '()';
+            $replacements[$token->getName() . '()'] = 'get' . $this->caseTransformer->transform($token->getName()) . '()';
         }
 
         return $replacements;

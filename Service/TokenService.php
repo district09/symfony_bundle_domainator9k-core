@@ -11,7 +11,6 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\Token;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 
-
 /**
  * Class TokenService
  * @package DigipolisGent\Domainator9k\CoreBundle\Service
@@ -27,17 +26,11 @@ class TokenService implements TemplateInterface
     /**
      * @var CaseTransformer
      */
-    protected $studlyCapsCaseTransformer;
-
-    /**
-     * @var CaseTransformer
-     */
-    protected $snakeCaseTransformer;
+    protected $caseTransformer;
 
     public function __construct(EntityManager $entityManager) {
         $this->repository = $entityManager->getRepository(Token::class);
-        $this->studlyCapsCaseTransformer = new CaseTransformer(new SnakeCase(), new StudlyCaps());
-        $this->snakeCaseTransformer = new CaseTransformer(new StudlyCaps(), new SnakeCase());
+        $this->caseTransformer = new CaseTransformer(new SnakeCase(), new StudlyCaps());
     }
 
     public static function getTemplateReplacements(): array
@@ -45,7 +38,7 @@ class TokenService implements TemplateInterface
         $tokens = $this->repository->findAll();
         $replacements = [];
         foreach ($tokens as $token) {
-          $replacements[$token->getName()] = 'get' . $this->studlyCapsCaseTransformer->transform($token->getName()) . '()';
+            $replacements[$token->getName()] = 'get' . $this->caseTransformer->transform($token->getName()) . '()';
         }
 
         return $replacements;

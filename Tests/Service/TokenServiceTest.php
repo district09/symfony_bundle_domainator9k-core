@@ -48,8 +48,8 @@ class TokenServiceTest extends TestCase
 
     public function testMagicCallMethod()
     {
-        $name = substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"), 0, 10);;
-        $value = substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"), 0, 10);;
+        $name = substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"), 0, 10);
+        $value = substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"), 0, 10);
         $token = new Token();
         $token->setName($name);
         $token->setValue($value);

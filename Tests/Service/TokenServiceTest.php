@@ -35,7 +35,7 @@ class TokenServiceTest extends TestCase
         $this->tokenService = new TokenService($this->entityManager);
     }
 
-    protected function testGetTemplateReplacements()
+    public function testGetTemplateReplacements()
     {
         $name = uniqid();
         $value = uniqid();
@@ -46,7 +46,7 @@ class TokenServiceTest extends TestCase
         $this->assertEquals([$name . '()' => 'get' . ucfirst($name) . '()'], $this->tokenService->getTemplateReplacements());
     }
 
-    protected function testMagicCallMethod()
+    public function testMagicCallMethod()
     {
         $name = uniqid();
         $value = uniqid();

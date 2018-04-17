@@ -13,12 +13,27 @@ use PHPUnit\Framework\TestCase;
 class TemplateServiceTest extends TestCase
 {
 
+    protected $token;
+    protected $tokenService;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $name = uniqid();
+        $value = uniqid();
+        $token = new Token();
+        $token->setName($name);
+        $token->setValue($value);
+        $this->token = $token;
+        $this->tokenService = $this->getTokenServiceMock();
+    }
+
     /**
      * @expectedException \DigipolisGent\Domainator9k\CoreBundle\Exception\TemplateException
      */
     public function testReplaceKeysWithInvalidEntity()
     {
-        $templateService = new TemplateService();
+        $templateService = new TemplateService($this->tokenService);
 
         $text = <<<EOL
         This is a random text.
@@ -33,12 +48,14 @@ EOL;
 
     public function testReplaceKeysWithValidEntity()
     {
-        $templateService = new TemplateService();
-
+        $templateService = new TemplateService($this->tokenService);
+        $name = ucfirst($this->token->getName());
+        $value = $this->token->getValue();
         $text = <<<EOL
         Primary title : [[ foo:primary() ]].
         Second title : [[ foo:second() ]].
         Result : [[ foo:multiply(3,4) ]].
+        Custom token : [[ token:get{$name}]].
 EOL;
 
         $foo = new Foo();
@@ -55,6 +72,7 @@ EOL;
         Primary title : Pieter.
         Second title : Massoels.
         Result : 12.
+        Custom token : {$value}.
 EOL;
 
         $this->assertEquals($expected, $actual);
@@ -62,7 +80,9 @@ EOL;
 
     public function testReplaceKeysRecursively()
     {
-        $templateService = new TemplateService();
+        $templateService = new TemplateService($this->tokenService);
+        $name = ucfirst($this->token->getName());
+        $value = $this->token->getValue();
 
         $text = <<<EOL
         Qux title : [[ foo:quxTitle() ]].
@@ -70,7 +90,7 @@ EOL;
 EOL;
 
         $qux = new Qux();
-        $qux->setTitle('Qux title example');
+        $qux->setTitle("[[ token:get{$name}]]");
         $qux->setSubTitle('[[ foo:primary() ]]');
 
         $foo = new Foo();
@@ -85,10 +105,16 @@ EOL;
         $actual = $templateService->replaceKeys($text, $entities);
 
         $expected = <<<EOL
-        Qux title : Qux title example.
+        Qux title : {$value}.
         Qux subtitle : Pieter.
 EOL;
 
         $this->assertEquals($expected, $actual);
+    }
+
+    protected function getTokenServiceMock()
+    {
+        $this->repository->expects($this->any())->method('findAll')->willReturn([$this->token]);
+        $this->repository->expects($this->any())->method('findOneBy')->with(['name' => $this->token->getName()])->willReturn($this->token);
     }
 }

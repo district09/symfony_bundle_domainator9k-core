@@ -5,7 +5,7 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Service;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Token;
 use DigipolisGent\Domainator9k\CoreBundle\Service\TokenService;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
 
@@ -24,7 +24,7 @@ class TokenServiceTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
         $this->entityManager = $this
-            ->getMockBuilder(EntityManagerInterface::class)
+            ->getMockBuilder(EntityManager::class)
             ->disableOriginalConstructor()
             ->getMock();
         $this->entityManager
@@ -37,8 +37,8 @@ class TokenServiceTest extends TestCase
 
     public function testGetTemplateReplacements()
     {
-        $name = uniqid();
-        $value = uniqid();
+        $name = substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"), 0, 10);
+        $value = substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"), 0, 10);
         $token = new Token();
         $token->setName($name);
         $token->setValue($value);
@@ -48,8 +48,8 @@ class TokenServiceTest extends TestCase
 
     public function testMagicCallMethod()
     {
-        $name = uniqid();
-        $value = uniqid();
+        $name = substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"), 0, 10);;
+        $value = substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"), 0, 10);;
         $token = new Token();
         $token->setName($name);
         $token->setValue($value);

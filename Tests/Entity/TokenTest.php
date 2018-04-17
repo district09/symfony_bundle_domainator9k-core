@@ -11,8 +11,8 @@ class TokenTest extends TestCase
 
     public function testGettersAndSetters()
     {
-        $name = uniqid();
-        $value= uniqid();
+        $name = substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"), 0, 10);;
+        $value= substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"), 0, 10);;
         $token = new Token();
         $this->assertSame($token, $token->setName($name));
         $this->assertSame($token, $token->setValue($value));

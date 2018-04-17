@@ -3,11 +3,14 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Service;
 
-
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Token;
 use DigipolisGent\Domainator9k\CoreBundle\Service\TemplateService;
+use DigipolisGent\Domainator9k\CoreBundle\Service\TokenService;
 use DigipolisGent\Domainator9k\CoreBundle\Tests\Fixtures\Entity\Bar;
 use DigipolisGent\Domainator9k\CoreBundle\Tests\Fixtures\Entity\Foo;
 use DigipolisGent\Domainator9k\CoreBundle\Tests\Fixtures\Entity\Qux;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
 
 class TemplateServiceTest extends TestCase
@@ -15,17 +18,31 @@ class TemplateServiceTest extends TestCase
 
     protected $token;
     protected $tokenService;
+    protected $repository;
 
     protected function setUp()
     {
         parent::setUp();
-        $name = uniqid();
-        $value = uniqid();
         $token = new Token();
-        $token->setName($name);
-        $token->setValue($value);
+        $token->setName(substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"), 0, 10));
+        $token->setValue(substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"), 0, 10));
         $this->token = $token;
-        $this->tokenService = $this->getTokenServiceMock();
+        $this->repository = $this
+            ->getMockBuilder(EntityRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->repository->expects($this->any())->method('findAll')->willReturn([$token]);
+        $this->repository->expects($this->any())->method('findOneBy')->with(['name' => $token->getName()])->willReturn($token);
+        $this->entityManager = $this
+            ->getMockBuilder(EntityManager::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->entityManager
+            ->expects($this->once())
+            ->method('getRepository')
+            ->with(Token::class)
+            ->willReturn($this->repository);
+        $this->tokenService = new TokenService($this->entityManager);
     }
 
     /**
@@ -49,13 +66,13 @@ EOL;
     public function testReplaceKeysWithValidEntity()
     {
         $templateService = new TemplateService($this->tokenService);
-        $name = ucfirst($this->token->getName());
+        $name = $this->token->getName();
         $value = $this->token->getValue();
         $text = <<<EOL
         Primary title : [[ foo:primary() ]].
         Second title : [[ foo:second() ]].
         Result : [[ foo:multiply(3,4) ]].
-        Custom token : [[ token:get{$name}]].
+        Custom token : [[ token:{$name}() ]].
 EOL;
 
         $foo = new Foo();
@@ -81,7 +98,7 @@ EOL;
     public function testReplaceKeysRecursively()
     {
         $templateService = new TemplateService($this->tokenService);
-        $name = ucfirst($this->token->getName());
+        $name = $this->token->getName();
         $value = $this->token->getValue();
 
         $text = <<<EOL
@@ -90,7 +107,7 @@ EOL;
 EOL;
 
         $qux = new Qux();
-        $qux->setTitle("[[ token:get{$name}]]");
+        $qux->setTitle("[[ token:{$name}() ]]");
         $qux->setSubTitle('[[ foo:primary() ]]');
 
         $foo = new Foo();
@@ -110,11 +127,5 @@ EOL;
 EOL;
 
         $this->assertEquals($expected, $actual);
-    }
-
-    protected function getTokenServiceMock()
-    {
-        $this->repository->expects($this->any())->method('findAll')->willReturn([$this->token]);
-        $this->repository->expects($this->any())->method('findOneBy')->with(['name' => $this->token->getName()])->willReturn($this->token);
     }
 }

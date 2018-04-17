@@ -101,7 +101,7 @@ class TemplateService
 
         // If we have a match for the pattern we substitute it
         if (!$hasMatch) {
-            return;
+            return $text;
         }
         $hasMatches = true;
 

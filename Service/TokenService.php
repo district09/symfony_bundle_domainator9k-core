@@ -55,6 +55,7 @@ class TokenService
         if ($tokenName === false) {
             throw new \BadMethodCallException('Call to undefined method ' . static::class . '::' . $name);
         }
+        $tokenName = substr($tokenName, 0, -2);
 
         $token = $this->repository->findOneBy(['name' => $tokenName]);
         if (!$token) {

@@ -34,15 +34,16 @@ class TemplateService
             $text = $this->doReplacement(
                 $text,
                 [
-                  'prefix' => 'token',
-                  'entity' => $this->tokenService,
-                  'key' => $templateReplacementKey,
-                  'callback' => $templateReplacementValueCallback,
+                    'prefix' => 'token',
+                    'entity' => $this->tokenService,
+                    'key' => $templateReplacementKey,
+                    'callback' => $templateReplacementValueCallback,
                 ],
                 $hasMatches
             );
         }
-        // Loop over all entities
+
+        // Loop over all entities.
         foreach ($entities as $entityPrefix => $entity) {
             if (!$entity instanceof TemplateInterface) {
                 throw new TemplateException('This object doesn\'t implement the TemplateInterface');
@@ -52,13 +53,13 @@ class TemplateService
                 $text = $this->doReplacement(
                     $text,
                     [
-                      'prefix' => $entityPrefix,
-                      'entity' => $entity,
-                      'key' => $templateReplacementKey,
-                      'callback' => $templateReplacementValueCallback,
+                        'prefix' => $entityPrefix,
+                        'entity' => $entity,
+                        'key' => $templateReplacementKey,
+                        'callback' => $templateReplacementValueCallback,
                     ],
                     $hasMatches
-              );
+                );
             }
         }
 

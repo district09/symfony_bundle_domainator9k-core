@@ -28,7 +28,8 @@ class TokenService implements TemplateInterface
      */
     protected $caseTransformer;
 
-    public function __construct(EntityManager $entityManager) {
+    public function __construct(EntityManager $entityManager)
+    {
         $this->repository = $entityManager->getRepository(Token::class);
         $this->caseTransformer = new CaseTransformer(new SnakeCase(), new StudlyCaps());
     }

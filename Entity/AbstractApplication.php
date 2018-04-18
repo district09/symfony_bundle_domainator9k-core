@@ -18,7 +18,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table()
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr",type="string")
- * @UniqueEntity(fields={"name"})
+ * @UniqueEntity(fields={"name"})]
+ * @ORM\HasLifecycleCallbacks()
  */
 abstract class AbstractApplication implements TemplateInterface
 {
@@ -63,6 +64,13 @@ abstract class AbstractApplication implements TemplateInterface
      * @ORM\Column(name="deleted",type="boolean")
      */
     protected $deleted = false;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="application_type",type="string")
+     */
+    protected $applicationType;
 
     /**
      * @return string
@@ -208,5 +216,12 @@ abstract class AbstractApplication implements TemplateInterface
     public function setDeleted(bool $deleted = false)
     {
         $this->deleted = $deleted;
+    }
+
+    /**
+     * @ORM\PrePersist()
+     */
+    public function prePersist(){
+        $this->applicationType = $this::getApplicationType();
     }
 }

@@ -17,6 +17,7 @@ class Task
     const STATUS_IN_PROGRESS = 'in_progress';
     const STATUS_PROCESSED = 'processed';
     const STATUS_FAILED = 'failed';
+    const STATUS_CANCEL= 'cancel';
 
     const TYPE_BUILD = 'build';
     const TYPE_DESTROY = 'destroy';

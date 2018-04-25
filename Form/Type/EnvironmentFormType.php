@@ -38,6 +38,7 @@ class EnvironmentFormType extends AbstractType
         $builder->add('name');
         $builder->add('prod');
         $builder->add('gitRef');
+        $builder->add('priority');
         $builder->addEventSubscriber(new SettingFormListener($this->formService));
     }
 

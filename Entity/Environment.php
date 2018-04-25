@@ -69,6 +69,13 @@ class Environment implements TemplateInterface
     protected $gitRef;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="priority",type="integer",nullable=true)
+     */
+    protected $priority;
+
+    /**
      * Creates a new environment.
      */
     public function __construct()
@@ -223,5 +230,21 @@ class Environment implements TemplateInterface
             'config(key)' => 'getConfig(key)',
             'gitRef()' => 'getGitRef()',
         ];
+    }
+
+    /**
+     * @return int
+     */
+    public function getPriority(): ?int
+    {
+        return $this->priority;
+    }
+
+    /**
+     * @param int $priority
+     */
+    public function setPriority(int $priority = null)
+    {
+        $this->priority = $priority;
     }
 }

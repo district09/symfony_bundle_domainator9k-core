@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @package DigipolisGent\Domainator9k\CoreBundle\Entity
  *
  * @ORM\Entity(repositoryClass="DigipolisGent\Domainator9k\CoreBundle\Repository\ApplicationTypeEnvironmentRepository")
+ * @ORM\Table(name="application_type_environment")
  */
 class ApplicationTypeEnvironment
 {

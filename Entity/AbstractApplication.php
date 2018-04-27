@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @package DigipolisGent\Domainator9k\CoreBundle\Entity
  *
  * @ORM\Entity()
- * @ORM\Table()
+ * @ORM\Table(name="abstract_application")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr",type="string")
  * @UniqueEntity(fields={"name"})]

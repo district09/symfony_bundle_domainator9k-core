@@ -8,93 +8,254 @@ use DigipolisGent\Domainator9k\CoreBundle\Exception\TemplateException;
 
 /**
  * Class TemplateService
+ *
  * @package DigipolisGent\Domainator9k\CoreBundle\Service
  */
 class TemplateService
 {
 
     /**
+     * The service for custom tokens.
+     *
+     * @var TokenService
+     */
+    protected $tokenService;
+
+    /**
+     * The replacements.
+     *
+     * @var array
+     */
+    protected $replacements;
+
+    /**
+     * Class constructor.
+     *
+     * @param TokenService $tokenService
+     *   The token service.
+     */
+    public function __construct(TokenService $tokenService)
+    {
+        $this->tokenService = $tokenService;
+    }
+
+    /**
+     * Replace all keys.
+     *
      * @param string $text
+     *   The text to replace in.
      * @param array $entities
+     *   The template entities keyed by prefix.
+     *
      * @return string
+     *   The processed text.
      */
     public function replaceKeys($text, array $entities = array()): string
     {
-        $hasMatches = false;
-
-        // Loop over all entities
-        foreach ($entities as $entityPrefix => $entity) {
-            if (!$entity instanceof TemplateInterface) {
-                throw new TemplateException('This object doesn\'t implement the TemplateInterface');
-            }
-
-            foreach ($entity::getTemplateReplacements() as $templateReplacementKey => $templateReplacementValue) {
-
-                // Define the replacement arguments
-                $replacementArguments = [];
-
-                preg_match('#\((.*?)\)#', $templateReplacementKey, $match);
-                if (isset($match[1]) && $match[1] != '') {
-                    $replacementArguments = explode(',', $match[1]);
-                }
-
-                // Complete the pattern and escape all existing special characters
-                $pattern = '[[ ' . $entityPrefix . ':' . $templateReplacementKey . ' ]]';
-                $pattern = str_replace(['(', ')', '[', ']'], ['\(', '\)', '\[', '\]'], $pattern);
-                $replacePattern = $pattern;
-
-                // Get all the arguments out of the pattern so we can match them with the real arguments
-                foreach ($replacementArguments as $replacementArgument) {
-                    $pattern = str_replace($replacementArgument, '([^)]*)', $pattern);
-                }
-
-                // Check if the pattern exists in our text
-                $hasMatch = preg_match('/' . $pattern . '/', $text, $matches);
-
-                // If we have a match for the pattern we substitute it
-                if ($hasMatch) {
-                    $hasMatches = true;
-
-                    // The value can be called recursive
-                    $passingValue = $entity;
-
-                    // Get a key value pair of all arguments
-                    foreach ($replacementArguments as $key => $value) {
-                        $replacementArguments[$value] = $matches[$key + 1];
-                        $replacePattern = str_replace($replacementArguments[$key], $matches[$key + 1 ], $replacePattern);
-                    }
-
-                    // Get all functions that should be executed
-                    $functions = explode('.', $templateReplacementValue);
-
-                    // Execute these functions on the defined entity with the discovered arguments
-                    foreach ($functions as $function) {
-                        preg_match('/^([a-zA-Z]*)(\((.*)\))?/', $function, $result);
-
-                        $functionArguments = [];
-                        $methodName = $result[1];
-                        // Get the arguments and replace them by the real values if they are present
-                        if (isset($result[3]) && $result[3] != '') {
-                            $functionArguments = explode(',', $result[3]);
-                            foreach ($functionArguments as $key => $value) {
-                                $functionArguments[$key] = $replacementArguments[$value];
-                            }
-                        }
-
-                        $passingValue = call_user_func_array(array($passingValue, $methodName), $functionArguments);
-                    }
-
-                    // Replace the pattern with the found value
-                    $text = preg_replace('/' . $replacePattern . '/', $passingValue, $text);
-                }
-            }
+        // Register the replacements.
+        $this->resetReplacements();
+        foreach ($entities as $type => $entity) {
+            $this->registerReplacements($type, $entity);
         }
 
-        // Recursivly go trough this function until no matches are found
-        if ($hasMatches) {
-            $text = $this->replaceKeys($text, $entities);
-        }
+        // Replace the tokens.
+        do {
+            $result = preg_replace_callback('#
+                \[\[
+                    [ ]*
+                    ([a-zA-Z][a-zA-Z0-9_]*)
+                    :
+                    ([a-zA-Z][a-zA-Z0-9_]*)
+                    \(
+                        [ ]*
+                        (
+                            [^,\s]+
+                            (?:[ ]*,[ ]*[^,\s]+)*
+                        )?
+                        [ ]*
+                    \)
+                    [ ]*
+                \]\]
+                #x', [$this, 'doReplace'], $text);
+
+            if ($result === $text) {
+                break;
+            }
+
+            $text = $result;
+        } while (true);
 
         return $text;
     }
+
+    /**
+     * Replace a key match.
+     *
+     * @param array $matches
+     *   The replacement matches.
+     *
+     * @return string
+     *   The replacement text.
+     */
+    protected function doReplace(array $matches): string
+    {
+        // Use readable variables names.
+        $matches[] = null;
+        list ($original, $type, $key, $params) = $matches;
+
+        if (isset($this->replacements[$type][$key])) {
+            // Get the replacement.
+            $replacement = $this->replacements[$type][$key];
+
+            // Prepare the parameters.
+            if (!$replacement['params'] || $params === '') {
+                $params = [];
+            } else {
+                $params = explode(',', str_replace(' ', '', $params));
+                $count1 = count($params);
+                $count2 = count($replacement['params']);
+
+                // Ensure both arrays have the same number of parameters.
+                if ($count1 > $count2) {
+                    $params = array_slice($params, 0, $count2);
+                } elseif ($count2 > $count1) {
+                    $params = array_merge($params, array_fill(0, ($count2 - $count1), null));
+                }
+
+                // Create an associative array.
+                $params = array_combine($replacement['params'], $params);
+            }
+
+            $result = $replacement['object'];
+
+            foreach ($replacement['callbacks'] as $callback => $callbackParams) {
+                // Get the parameters.
+                foreach ($callbackParams as $name => &$value) {
+                    if (array_key_exists($name, $params)) {
+                        $value = $params[$name];
+                    }
+                }
+
+                // Execute the callback.
+                $result = call_user_func_array([$result, $callback], $callbackParams);
+            }
+
+            return $result;
+        }
+
+        return $original;
+    }
+
+    /**
+     * Reset the replacements.
+     */
+    protected function resetReplacements()
+    {
+        if ($this->replacements === null) {
+            $this->replacements = [];
+            $this->registerReplacements('token', $this->tokenService);
+        } else {
+            $this->replacements = [
+                'token' => $this->replacements['token'],
+            ];
+        }
+    }
+
+    /**
+     * Register new replacements.
+     *
+     * @param string $type
+     *   The replacement type.
+     * @param TemplateInterface|TokenService $object
+     *   The object to use.
+     * @param array $replacements
+     *   Array of replacements, leave null to get them from the object.
+     */
+    protected function registerReplacements(string $type, $object, array $replacements = null)
+    {
+        // Initialize the replacements.
+        if ($this->replacements === null) {
+            $this->resetReplacements();
+        }
+
+        // Get the default replacements.
+        if ($replacements === null) {
+            if ($object instanceof TemplateInterface) {
+                $replacements = $object::getTemplateReplacements();
+            } elseif ($object instanceof TokenService) {
+                $replacements = $object->getTemplateReplacements();
+            } else {
+                throw new TemplateException("The object doesn't specify default replacements.");
+            }
+        }
+
+        foreach ($replacements as $replacementKey => $replacementValueCallback) {
+            // Extract the key and parameters.
+            if (!preg_match('#^
+                ([a-zA-Z][a-zA-Z0-9_]*)
+                \(
+                    [ ]*
+                    (
+                        [a-zA-Z][a-zA-Z0-9_]*
+                        (?:[ ]*,[ ]*[a-zA-Z][a-zA-Z0-9_]*)*
+                    )?
+                    [ ]*
+                \)
+                $#x', $replacementKey, $matches)) {
+                continue;
+            }
+
+            $key = $matches[1];
+
+            // Prepare the parameters.
+            if (isset($matches[2])) {
+                $keyParams = explode(',', str_replace(' ', '', $matches[2]));
+            } else {
+                $keyParams = [];
+            }
+
+            // Extract the callbacks.
+            $callbacks = [];
+            $replacementValueCallback = explode('.', $replacementValueCallback);
+            foreach ($replacementValueCallback as $callback) {
+                // Extract the method and parameters.
+                if (!preg_match('#^
+                    ([a-zA-Z][a-zA-Z0-9_]*)
+                    \(
+                        [ ]*
+                        (
+                            [a-zA-Z][a-zA-Z0-9_]*
+                            (?:[ ]*,[ ]*[a-zA-Z][a-zA-Z0-9_]*)*
+                        )?
+                        [ ]*
+                    \)
+                    $#x', $callback, $matches)) {
+                    continue 2;
+                }
+
+                // Prepare the parameters.
+                if (isset($matches[2])) {
+                    $params = explode(',', str_replace(' ', '', $matches[2]));
+
+                    if (array_diff($params, $keyParams)) {
+                        throw new TemplateException('The replacement value callback uses unknown parameters.');
+                    }
+
+                    $params = array_fill_keys($params, null);
+                } else {
+                    $params = [];
+                }
+
+                $callbacks[$matches[1]] = $params;
+            }
+
+            // Add the replacement.
+            $this->replacements[$type][$key] = [
+                'params' => $keyParams,
+                'callbacks' => $callbacks,
+                'object' => $object,
+            ];
+        }
+    }
+
 }

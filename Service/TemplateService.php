@@ -60,7 +60,23 @@ class TemplateService
 
         // Replace the tokens.
         do {
-            $result = preg_replace_callback('#\[\[[ ]*([a-zA-Z][a-zA-Z0-9_]*):([a-zA-Z][a-zA-Z0-9_]*)\([ ]*([a-zA-Z][a-zA-Z0-9_]*(?:[ ]*,[ ]*[a-zA-Z][a-zA-Z0-9_]*)*)?[ ]*\)[ ]*\]\]#', [$this, 'doReplace'], $text);
+            $result = preg_replace_callback('#
+                \[\[
+                    [ ]*
+                    ([a-zA-Z][a-zA-Z0-9_]*)
+                    :
+                    ([a-zA-Z][a-zA-Z0-9_]*)
+                    \(
+                        [ ]*
+                        (
+                            [^,\s]+
+                            (?:[ ]*,[ ]*[^,\s]+)*
+                        )?
+                        [ ]*
+                    \)
+                    [ ]*
+                \]\]
+                #x', [$this, 'doReplace'], $text);
 
             if ($result === $text) {
                 break;
@@ -174,13 +190,23 @@ class TemplateService
                 $replacements = $object->getTemplateReplacements();
             }
             else {
-                throw new \InvalidArgumentException("The object doesn't specify default replacements.");
+                throw new TemplateException("The object doesn't specify default replacements.");
             }
         }
 
         foreach ($replacements as $replacementKey => $replacementValueCallback) {
             // Extract the key and parameters.
-            if (!preg_match('#^([a-zA-Z][a-zA-Z0-9_]*)\([ ]*([a-zA-Z][a-zA-Z0-9_]*(?:[ ]*,[ ]*[a-zA-Z][a-zA-Z0-9_]*)*)?[ ]*\)$#', $replacementKey, $matches)) {
+            if (!preg_match('#^
+                ([a-zA-Z][a-zA-Z0-9_]*)
+                \(
+                    [ ]*
+                    (
+                        [a-zA-Z][a-zA-Z0-9_]*
+                        (?:[ ]*,[ ]*[a-zA-Z][a-zA-Z0-9_]*)*
+                    )?
+                    [ ]*
+                \)
+                $#x', $replacementKey, $matches)) {
                 continue;
             }
 
@@ -199,7 +225,17 @@ class TemplateService
             $replacementValueCallback = explode('.', $replacementValueCallback);
             foreach ($replacementValueCallback as $callback) {
                 // Extract the method and parameters.
-                if (!preg_match('#^([a-zA-Z][a-zA-Z0-9_]*)\([ ]*([a-zA-Z][a-zA-Z0-9_]*(?:[ ]*,[ ]*[a-zA-Z][a-zA-Z0-9_]*)*)?[ ]*\)$#', $callback, $matches)) {
+                if (!preg_match('#^
+                    ([a-zA-Z][a-zA-Z0-9_]*)
+                    \(
+                        [ ]*
+                        (
+                            [a-zA-Z][a-zA-Z0-9_]*
+                            (?:[ ]*,[ ]*[a-zA-Z][a-zA-Z0-9_]*)*
+                        )?
+                        [ ]*
+                    \)
+                    $#x', $callback, $matches)) {
                     continue 2;
                 }
 

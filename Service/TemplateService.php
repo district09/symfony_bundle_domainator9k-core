@@ -83,7 +83,7 @@ class TemplateService
             }
 
             $text = $result;
-        } while (TRUE);
+        } while (true);
 
         return $text;
     }
@@ -110,8 +110,7 @@ class TemplateService
             // Prepare the parameters.
             if (!$replacement['params'] || $params === '') {
                 $params = [];
-            }
-            else {
+            } else {
                 $params = explode(',', str_replace(' ', '', $params));
                 $count1 = count($params);
                 $count2 = count($replacement['params']);
@@ -119,8 +118,7 @@ class TemplateService
                 // Ensure both arrays have the same number of parameters.
                 if ($count1 > $count2) {
                     $params = array_slice($params, 0, $count2);
-                }
-                elseif ($count2 > $count1) {
+                } elseif ($count2 > $count1) {
                     $params = array_merge($params, array_fill(0, ($count2 - $count1), null));
                 }
 
@@ -156,8 +154,7 @@ class TemplateService
         if ($this->replacements === null) {
             $this->replacements = [];
             $this->registerReplacements('token', $this->tokenService);
-        }
-        else {
+        } else {
             $this->replacements = [
                 'token' => $this->replacements['token'],
             ];
@@ -185,11 +182,9 @@ class TemplateService
         if ($replacements === null) {
             if ($object instanceof TemplateInterface) {
                 $replacements = $object::getTemplateReplacements();
-            }
-            elseif ($object instanceof TokenService) {
+            } elseif ($object instanceof TokenService) {
                 $replacements = $object->getTemplateReplacements();
-            }
-            else {
+            } else {
                 throw new TemplateException("The object doesn't specify default replacements.");
             }
         }
@@ -215,8 +210,7 @@ class TemplateService
             // Prepare the parameters.
             if (isset($matches[2])) {
                 $keyParams = explode(',', str_replace(' ', '', $matches[2]));
-            }
-            else {
+            } else {
                 $keyParams = [];
             }
 
@@ -248,8 +242,7 @@ class TemplateService
                     }
 
                     $params = array_fill_keys($params, null);
-                }
-                else {
+                } else {
                     $params = [];
                 }
 

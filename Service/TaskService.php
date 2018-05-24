@@ -61,7 +61,7 @@ class TaskService
     public function run(Task $task)
     {
         if ($task->getStatus() !== Task::STATUS_NEW) {
-            throw new \InvalidArgumentException(sprintf('Task %s has already run and cannot be restarted.', $task->getId()));
+            throw new \InvalidArgumentException(sprintf('Task "%s" cannot be restarted.', $task->getId()));
         }
 
         // Set the task in progress.
@@ -313,9 +313,10 @@ class TaskService
      * @return AbstractEvent
      *   The event object.
      */
-    protected function createEvent(Task $task) {
+    protected function createEvent(Task $task)
+    {
         switch ($task->getType()) {
-            case Task::TYPE_BUILD;
+            case Task::TYPE_BUILD:
                 $class = BuildEvent::class;
                 break;
 
@@ -349,5 +350,4 @@ class TaskService
 
         return $text;
     }
-
 }

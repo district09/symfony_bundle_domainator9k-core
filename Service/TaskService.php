@@ -152,7 +152,7 @@ class TaskService
      */
     public function addLogHeader(Task $task, string $header, int $indent = 0, bool $persist = false): self
     {
-        if (($log = $task->getLog()) !== '') {
+        if ($log = $task->getLog()) {
             $log .= PHP_EOL;
         }
 
@@ -190,7 +190,7 @@ class TaskService
      */
     public function addLogMessage(Task $task, string $type, string $message, int $indent = 1, bool $persist = true): self
     {
-        if (($log = $task->getLog()) !== '') {
+        if ($log = $task->getLog()) {
             $log .= PHP_EOL;
         }
 

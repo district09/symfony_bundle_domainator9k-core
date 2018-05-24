@@ -150,7 +150,7 @@ class TaskService
      *
      * @return self
      */
-    public function addLogHeader(Task $task, string $header, int $indent = 0, bool $persist = false)
+    public function addLogHeader(Task $task, string $header, int $indent = 0, bool $persist = false): self
     {
         if (($log = $task->getLog()) !== '') {
             $log .= PHP_EOL;
@@ -188,7 +188,7 @@ class TaskService
      *
      * @return self
      */
-    public function addLogMessage(Task $task, string $type, string $message, int $indent = 1, bool $persist = true)
+    public function addLogMessage(Task $task, string $type, string $message, int $indent = 1, bool $persist = true): self
     {
         if (($log = $task->getLog()) !== '') {
             $log .= PHP_EOL;
@@ -227,7 +227,7 @@ class TaskService
      *
      * @return self
      */
-    public function addInfoLogMessage(Task $task, string $message, int $indent = 1, bool $persist = true)
+    public function addInfoLogMessage(Task $task, string $message, int $indent = 1, bool $persist = true): self
     {
         return $this->addLogMessage($task, self::LOG_TYPE_INFO, $message, $indent, $persist);
     }
@@ -246,7 +246,7 @@ class TaskService
      *
      * @return self
      */
-    public function addWarningLogMessage(Task $task, string $message, int $indent = 1, bool $persist = false)
+    public function addWarningLogMessage(Task $task, string $message, int $indent = 1, bool $persist = false): self
     {
         return $this->addLogMessage($task, self::LOG_TYPE_WARNING, $message, $indent, $persist);
     }
@@ -265,7 +265,7 @@ class TaskService
      *
      * @return self
      */
-    public function addErrorLogMessage(Task $task, string $message, int $indent = 1, bool $persist = false)
+    public function addErrorLogMessage(Task $task, string $message, int $indent = 1, bool $persist = false): self
     {
         return $this->addLogMessage($task, self::LOG_TYPE_ERROR, $message, $indent, $persist);
     }
@@ -284,7 +284,7 @@ class TaskService
      *
      * @return self
      */
-    public function addSuccessLogMessage(Task $task, string $message, int $indent = 1, bool $persist = true)
+    public function addSuccessLogMessage(Task $task, string $message, int $indent = 1, bool $persist = true): self
     {
         return $this->addLogMessage($task, self::LOG_TYPE_SUCCESS, $message, $indent, $persist);
     }
@@ -303,7 +303,7 @@ class TaskService
      *
      * @return self
      */
-    public function addFailedLogMessage(Task $task, string $message, int $indent = 1, bool $persist = true)
+    public function addFailedLogMessage(Task $task, string $message, int $indent = 1, bool $persist = true): self
     {
         return $this->addLogMessage($task, self::LOG_TYPE_FAILED, $message, $indent, $persist);
     }
@@ -317,7 +317,7 @@ class TaskService
      * @return AbstractEvent
      *   The event object.
      */
-    protected function createEvent(Task $task)
+    protected function createEvent(Task $task): AbstractEvent
     {
         switch ($task->getType()) {
             case Task::TYPE_BUILD:

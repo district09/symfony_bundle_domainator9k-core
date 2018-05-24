@@ -160,6 +160,8 @@ class TaskService
 
         $log .= $this->indentText($header, $indent);
 
+        $task->setLog($log);
+
         if ($persist) {
             $this->entityManager->persist($task);
             $this->entityManager->flush();

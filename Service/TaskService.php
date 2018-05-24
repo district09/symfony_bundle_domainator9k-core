@@ -348,10 +348,6 @@ class TaskService
      */
     protected function indentText(string $text, int $indent)
     {
-        if ($indent > 0) {
-            $text = preg_replace('/(^|[\r\n]+)/', '$1' . str_repeat('>', $indent) . str_repeat('   ', $indent), $text);
-        }
-
-        return $text;
+        return preg_replace('/(^|[\r\n]+\t*)/', '$1' . str_repeat("\t", $indent), $text);
     }
 }

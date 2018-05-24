@@ -87,11 +87,13 @@ class TaskService
         // Add a log message or simply persist any changes.
         switch ($task->getStatus()) {
             case Task::STATUS_PROCESSED:
-                $this->addInfoLogMessage($task, 'Task run completed.');
+                $this->addLogMessage($task, '', '', 0);
+                $this->addSuccessLogMessage($task, 'Task run completed.', 0);
                 break;
 
             case Task::STATUS_FAILED:
-                $this->addInfoLogMessage($task, 'Task run failed.');
+                $this->addLogMessage($task, '', '', 0);
+                $this->addFailedLogMessage($task, 'Task run failed.', 0);
                 break;
 
             default:
@@ -195,7 +197,7 @@ class TaskService
         $message = trim($message);
         $message = str_replace(["\r\n", "\r", "\n"], PHP_EOL, $message);
 
-        if ($type !== self::LOG_TYPE_INFO) {
+        if ($type && $type !== self::LOG_TYPE_INFO) {
             $message .= ' [' . $type . ']';
         }
 

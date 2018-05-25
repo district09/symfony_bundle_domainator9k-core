@@ -356,7 +356,7 @@ class TaskService
             }
 
             if (isset($matches[2])) {
-                $suffix = str_repeat('    ', strlen($matches[2]));
+                $suffix .= str_repeat('    ', strlen($matches[2]));
             }
 
             return $matches[1] . $suffix;

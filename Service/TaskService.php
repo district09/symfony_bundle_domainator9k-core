@@ -348,6 +348,18 @@ class TaskService
      */
     protected function indentText(string $text, int $indent)
     {
-        return preg_replace('/(^|[\r\n]+\t*)/', '$1' . str_repeat("\t", $indent), $text);
+        return preg_replace_callback('/(^|[\r\n]+)(\t+)?/', function($matches) {
+            $suffix = '';
+
+            if ($indent) {
+                $suffix .= str_repeat("\t", $indent);
+            }
+
+            if (isset($matches[2])) {
+                $suffix = str_repeat('    ', strlen($matches[2]));
+            }
+
+            return $matches[1] . $suffix;
+        }, $text);
     }
 }

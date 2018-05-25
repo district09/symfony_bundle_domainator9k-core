@@ -5,15 +5,7 @@ services:
         tags:
             - { name: doctrine.event_listener, event: postPersist, connection: default }
             - { name: doctrine.event_listener, event: postRemove, connection: default }
-    DigipolisGent\Domainator9k\CoreBundle\Service\TaskLoggerService:
-    DigipolisGent\Domainator9k\CoreBundle\EventListener\BuildEventListener:
-        tags:
-            - { name: kernel.event_listener, event: domainator.build, method: onStart, priority: 99 }
-            - { name: kernel.event_listener, event: domainator.build, method: onEnd, priority: 1 }
-    DigipolisGent\Domainator9k\CoreBundle\EventListener\DestroyEventListener:
-        tags:
-            - { name: kernel.event_listener, event: domainator.destroy, method: onStart, priority: 99 }
-            - { name: kernel.event_listener, event: domainator.destroy, method: onEnd, priority: 1 }
+    DigipolisGent\Domainator9k\CoreBundle\Service\TaskService:
     DigipolisGent\Domainator9k\CoreBundle\Service\TemplateService:
     DigipolisGent\Domainator9k\CoreBundle\Service\TokenService:
     DigipolisGent\Domainator9k\CoreBundle\Form\Type\ApplicationEnvironmentFormType:

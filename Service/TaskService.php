@@ -348,7 +348,7 @@ class TaskService
      */
     protected function indentText(string $text, int $indent)
     {
-        return preg_replace_callback('/(^|[\r\n]+)(\t+)?/', function($matches) {
+        return preg_replace_callback('/(^|[\r\n]+)(\t+)?/', function($matches) use ($indent) {
             $suffix = '';
 
             if ($indent) {

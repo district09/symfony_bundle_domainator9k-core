@@ -32,7 +32,7 @@ abstract class AbstractApplication implements TemplateInterface
      *
      * @ORM\Column(name="name", type="string", nullable=false)
      * @Assert\NotBlank()
-     * @Assert\Length(min="3", max="255")
+     * @Assert\Length(min="2", max="255")
      */
     protected $name;
 

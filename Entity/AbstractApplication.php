@@ -4,6 +4,7 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\IdentifiableTrait;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\TemplateImplementationTrait;
 use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -26,6 +27,7 @@ abstract class AbstractApplication implements TemplateInterface
 
     use SettingImplementationTrait;
     use IdentifiableTrait;
+    use TemplateImplementationTrait;
 
     /**
      * @var string
@@ -95,7 +97,7 @@ abstract class AbstractApplication implements TemplateInterface
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -111,7 +113,7 @@ abstract class AbstractApplication implements TemplateInterface
     /**
      * @return string
      */
-    public function getNameCanonical()
+    public function getNameCanonical(): string
     {
         $name = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "", $this->getName()));
         return substr($name, 0, 14);
@@ -120,7 +122,7 @@ abstract class AbstractApplication implements TemplateInterface
     /**
      * @return string
      */
-    public function getGitRepo()
+    public function getGitRepo(): string
     {
         return $this->gitRepo;
     }
@@ -169,7 +171,7 @@ abstract class AbstractApplication implements TemplateInterface
     /**
      * @return ArrayCollection
      */
-    public function getApplicationEnvironments()
+    public function getApplicationEnvironments(): ArrayCollection
     {
         return $this->applicationEnvironments;
     }
@@ -178,7 +180,7 @@ abstract class AbstractApplication implements TemplateInterface
      * @param $name
      * @return mixed|null
      */
-    public function getApplicationEnvironmentByEnvironmentName(string $name)
+    public function getApplicationEnvironmentByEnvironmentName(string $name): ApplicationEnvironment
     {
         foreach ($this->applicationEnvironments as $applicationEnvironment) {
             if ($applicationEnvironment->getEnvironment()->getName() == $name) {
@@ -186,18 +188,16 @@ abstract class AbstractApplication implements TemplateInterface
             }
         }
 
-        return '';
+        return null;
     }
 
     /**
      * @return array
      */
-    public static function getTemplateReplacements(): array
+    public static function additionalTemplateReplacements(): array
     {
+        // Backward compatibility.
         return [
-            'name()' => 'getName()',
-            'nameCanonical()' => 'getNameCanonical()',
-            'gitRepo()' => 'getGitRepo()',
             'serverIps(dev_environment_name)' => 'getApplicationEnvironmentByEnvironmentName(dev_environment_name).getServerIps()',
         ];
     }

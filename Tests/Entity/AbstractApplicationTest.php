@@ -17,8 +17,20 @@ class AbstractApplicationTest extends TestCase
         $expected = [
             'name()' => 'getName()',
             'nameCanonical()' => 'getNameCanonical()',
-            'serverIps(dev_environment_name)' => 'getApplicationEnvironmentByEnvironmentName(dev_environment_name).getServerIps()',
             'gitRepo()' => 'getGitRepo()',
+            'applicationEnvironmentDatabaseName(name)' => 'getApplicationEnvironmentByEnvironmentName(name).getDatabaseName()',
+            'applicationEnvironmentEnvironmentName(name)' => 'getApplicationEnvironmentByEnvironmentName(name).getEnvironmentName()',
+            'applicationEnvironmentEnvironmentGitRef(name)' => 'getApplicationEnvironmentByEnvironmentName(name).getEnvironment().getGitRef()',
+            'applicationEnvironmentEnvironmentConfig(name,key)' => 'getApplicationEnvironmentByEnvironmentName(name).getEnvironment().getConfig(key)',
+            'applicationEnvironmentEnvironmentPriority(name)' => 'getApplicationEnvironmentByEnvironmentName(name).getEnvironment().getPriority()',
+            'applicationEnvironmentDatabaseUser(name)' => 'getApplicationEnvironmentByEnvironmentName(name).getDatabaseUser()',
+            'applicationEnvironmentDatabasePassword(name)' => 'getApplicationEnvironmentByEnvironmentName(name).getDatabasePassword()',
+            'applicationEnvironmentGitRef(name)' => 'getApplicationEnvironmentByEnvironmentName(name).getGitRef()',
+            'applicationEnvironmentDomain(name)' => 'getApplicationEnvironmentByEnvironmentName(name).getDomain()',
+            'applicationEnvironmentServerIps(name)' => 'getApplicationEnvironmentByEnvironmentName(name).getServerIps()',
+            'applicationEnvironmentWorkerServerIp(name)' => 'getApplicationEnvironmentByEnvironmentName(name).getWorkerServerIp()',
+            'applicationEnvironmentConfig(name,key)' => 'getApplicationEnvironmentByEnvironmentName(name).getConfig(key)',
+            'serverIps(dev_environment_name)' => 'getApplicationEnvironmentByEnvironmentName(dev_environment_name).getServerIps()',
         ];
 
         $this->assertEquals($expected, QuuxApplication::getTemplateReplacements());

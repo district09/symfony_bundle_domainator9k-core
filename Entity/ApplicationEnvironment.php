@@ -135,7 +135,7 @@ class ApplicationEnvironment implements TemplateInterface
     /**
      * @return Environment
      */
-    public function getEnvironment(): Environment
+    public function getEnvironment(): ?Environment
     {
         return $this->environment;
     }

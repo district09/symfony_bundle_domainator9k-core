@@ -97,7 +97,7 @@ abstract class AbstractApplication implements TemplateInterface
     /**
      * @return string
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -113,7 +113,7 @@ abstract class AbstractApplication implements TemplateInterface
     /**
      * @return string
      */
-    public function getNameCanonical(): string
+    public function getNameCanonical(): ?string
     {
         $name = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "", $this->getName()));
         return substr($name, 0, 14);
@@ -180,7 +180,7 @@ abstract class AbstractApplication implements TemplateInterface
      * @param $name
      * @return mixed|null
      */
-    public function getApplicationEnvironmentByEnvironmentName(string $name): ApplicationEnvironment
+    public function getApplicationEnvironmentByEnvironmentName(string $name): ?ApplicationEnvironment
     {
         foreach ($this->applicationEnvironments as $applicationEnvironment) {
             if ($applicationEnvironment->getEnvironment()->getName() == $name) {

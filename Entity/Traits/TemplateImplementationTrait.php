@@ -88,6 +88,11 @@ trait TemplateImplementationTrait {
         if ($maxDepth < 0 || in_array((string)$returnType, $skip)) {
             return [];
         }
+        foreach ($skip as $skipClass) {
+          if (is_a($skipClass, (string) $returnType, true)) {
+            return [];
+          }
+        }
         $replacements = [];
         $subs = call_user_func(array((string)$returnType, 'getTemplateReplacements'), $maxDepth, $skip);
         foreach ($subs as $subTemplate => $replacementSubCallback) {

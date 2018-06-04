@@ -122,7 +122,7 @@ abstract class AbstractApplication implements TemplateInterface
     /**
      * @return string
      */
-    public function getGitRepo(): string
+    public function getGitRepo(): ?string
     {
         return $this->gitRepo;
     }
@@ -138,7 +138,7 @@ abstract class AbstractApplication implements TemplateInterface
     /**
      * @return bool
      */
-    public function isHasDatabase(): bool
+    public function isHasDatabase(): ?bool
     {
         return $this->hasDatabase;
     }
@@ -205,7 +205,7 @@ abstract class AbstractApplication implements TemplateInterface
     /**
      * @return bool
      */
-    public function isDeleted(): bool
+    public function isDeleted(): ?bool
     {
         return $this->deleted;
     }

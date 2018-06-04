@@ -14,7 +14,8 @@ class TemplateHelpExtension extends AbstractExtension
 
     protected $tokenService;
 
-    public function __construct(TokenService $tokenService) {
+    public function __construct(TokenService $tokenService)
+    {
         $this->tokenService = $tokenService;
     }
 
@@ -55,6 +56,7 @@ class TemplateHelpExtension extends AbstractExtension
             [
                 'templates' => $templates,
                 'textarea' => $textarea,
-            ]);
+            ]
+        );
     }
 }

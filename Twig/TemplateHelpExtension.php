@@ -19,20 +19,28 @@ class TemplateHelpExtension extends AbstractExtension {
 
   public function getFunctions()
   {
-      return array(
+      return [
           new TwigFunction(
               'template_help',
-              array($this, 'templateHelp'),
-              array('needs_environment' => true, 'is_safe' => array('html'))
+              [
+                  $this,
+                  'templateHelp',
+              ],
+              [
+                  'needs_environment' => true,
+                  'is_safe' => [
+                      'html',
+                  ],
+              ]
           ),
-      );
+      ];
   }
 
   public function templateHelp(Environment $environment, array $classes, $textarea)
   {
 
       $templates = [
-        'token' => array_keys($this->tokenService->getTemplateReplacements()),
+          'token' => array_keys($this->tokenService->getTemplateReplacements()),
       ];
       foreach ($classes as $key => $class) {
           if (!is_a($class, TemplateInterface::class, true)) {
@@ -41,6 +49,11 @@ class TemplateHelpExtension extends AbstractExtension {
           $templates[$key] = array_keys(call_user_func([$class, 'getTemplateReplacements']));
       }
 
-      return $environment->render('@DigipolisGentDomainator9kCore/Template/templatehelper.twig', ['templates' => $templates, 'textarea' => $textarea]);
+      return $environment->render(
+          '@DigipolisGentDomainator9kCore/Template/templatehelper.twig',
+          [
+              'templates' => $templates,
+              'textarea' => $textarea,
+          ]);
   }
 }

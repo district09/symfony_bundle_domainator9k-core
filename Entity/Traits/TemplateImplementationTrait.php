@@ -10,7 +10,8 @@ use Roave\BetterReflection\Reflection\ReflectionMethod;
  * Trait IdentifiableTrait
  * @package DigipolisGent\Domainator9k\CoreBundle\Entity\Traits
  */
-trait TemplateImplementationTrait {
+trait TemplateImplementationTrait
+{
     /**
      * {@inheritdoc}
      */
@@ -68,15 +69,21 @@ trait TemplateImplementationTrait {
             $returnType = $method->getReturnType();
             // Whose return type is scalar or implements TemplateInterface and
             // is different from the current class (prevent loops).
-            if (!$returnType->isBuiltin() && (!class_exists($returnType) || !is_a((string)$returnType, TemplateInterface::class, true))) {
+            if (
+                !$returnType->isBuiltin()
+                && (
+                    !class_exists($returnType)
+                  || !is_a((string)$returnType, TemplateInterface::class, true)
+                )
+            ) {
                 continue;
             }
             // Whose parameters are scalar (or non existant).
             foreach ($method->getParameters() as $parameter) {
-              $parameterType = $parameter->getType();
-              if (!is_null($parameterType) && !$parameterType->isBuiltin()) {
-                  continue 2;
-              }
+                $parameterType = $parameter->getType();
+                if (!is_null($parameterType) && !$parameterType->isBuiltin()) {
+                    continue 2;
+                }
             }
             $relevantMethods[$method->getName()] = $method;
         }
@@ -105,7 +112,7 @@ trait TemplateImplementationTrait {
         $returnType = $method->getReturnType();
         $parameters = [];
         foreach ($method->getParameters() as $parameter) {
-          $parameters[] = $parameter->getName();
+            $parameters[] = $parameter->getName();
         }
         $replacementParameters =  implode(',', $parameters);
         $replacementCallback = $method->getName() . '(' . $replacementParameters . ')';
@@ -127,9 +134,9 @@ trait TemplateImplementationTrait {
         // abstract class) we also check if the return type is a parent class of
         // any of the classes to skip.
         foreach ($skip as $skipClass) {
-          if (is_a($skipClass, (string) $returnType, true)) {
-            return [];
-          }
+            if (is_a($skipClass, (string) $returnType, true)) {
+                return [];
+            }
         }
         return static::getSubReplacementsForMethod($method, $maxDepth, $skip);
     }
@@ -155,7 +162,7 @@ trait TemplateImplementationTrait {
         $returnType = $method->getReturnType();
         $parameters = [];
         foreach ($method->getParameters() as $parameter) {
-          $parameters[] = $parameter->getName();
+            $parameters[] = $parameter->getName();
         }
         $replacementParameters =  implode(',', $parameters);
         $replacementCallback = $method->getName() . '(' . $replacementParameters . ')';
@@ -167,11 +174,15 @@ trait TemplateImplementationTrait {
             // Since we're chaining, we prepend the classname, with 'Abstract' or
             // 'Interface' stripped off, to the method for uniqueness.
             $template = lcfirst(
-                str_replace(['Abstract', 'Interface'], ['', ''], ReflectionClass::createFromName((string)$returnType)->getShortName())
+                str_replace(
+                    ['Abstract', 'Interface'],
+                    ['', ''],
+                    ReflectionClass::createFromName((string)$returnType)->getShortName()
+                )
             )
             // And we append the parameters of chained methods to the template.
             . ucfirst(
-                  str_replace(
+                str_replace(
                     ['(,', ',)'],
                     ['(', ')'],
                     preg_replace(
@@ -179,7 +190,7 @@ trait TemplateImplementationTrait {
                         '(' . $replacementParameters . ',$1)',
                         $subTemplate
                     )
-                  )
+                )
             );
             $replacements[$template] = $replacementCallback . '.' . $replacementSubCallback;
         }

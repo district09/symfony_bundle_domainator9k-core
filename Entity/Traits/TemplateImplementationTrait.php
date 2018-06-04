@@ -12,7 +12,7 @@ use Roave\BetterReflection\Reflection\ReflectionMethod;
  */
 trait TemplateImplementationTrait {
     /**
-     * @return array
+     * {@inheritdoc}
      */
     public static function getTemplateReplacements(int $maxDepth = 3, array $skip = []): array
     {
@@ -20,7 +20,6 @@ trait TemplateImplementationTrait {
         $skip[] = static::class;
         $methods = static::getRelevantMethods($reflection);
         $replacements = [];
-        $maxDepth--;
         foreach ($methods as $method) {
             $replacements += static::getTemplateReplacementsForMethod($method, $maxDepth, $skip);
         }
@@ -32,8 +31,20 @@ trait TemplateImplementationTrait {
 
     /**
      * Get relevant methods for template replacements.
+     *
+     * This function returns methods that are:
+     *   - Not abstract or static
+     *   - Start with -but are not equal to- 'get'.
+     *   - Have a return type
+     *   - Whose return type is scalar or implements TemplateInterface and is
+     *     different from the current class (prevent loops).
+     *   - Whose parameters are scalar (or non existant).
+     *
      * @param \ReflectionClass $class
+     *   The class to get the relevant methods of.
+     *
      * @return \ReflectionMethod[]
+     *   The relevant methods to build the templates.
      */
     protected static function getRelevantMethods(ReflectionClass $class)
     {
@@ -72,6 +83,23 @@ trait TemplateImplementationTrait {
         return $relevantMethods;
     }
 
+    /**
+     * Get all template replacements for a method.
+     *
+     * If this method's return type is scalar it'll have one template. If the
+     * return type implements TemplateInterface, it is chained (as a prefix) to
+     * the templates of that return type.
+     *
+     * @param ReflectionMethod $method
+     *   The method to get the templates for.
+     * @param int $maxDepth
+     *   The maximum depth to chain.
+     * @param array $skip
+     *   An array of classes to skip chaining for.
+     *
+     * @return array
+     *   The templates generated for this method.
+     */
     protected static function getTemplateReplacementsForMethod(ReflectionMethod $method, int $maxDepth, array $skip)
     {
         $returnType = $method->getReturnType();
@@ -81,24 +109,40 @@ trait TemplateImplementationTrait {
         }
         $replacementParameters =  implode(',', $parameters);
         $replacementCallback = $method->getName() . '(' . $replacementParameters . ')';
+
+        // Scalar return type, do not chain.
         if ($returnType->isBuiltin()) {
+            // Strip off 'get' from the keyword and lowercase the first letter.
             $template = lcfirst(substr($method->getName(), 3)) . '(' . $replacementParameters . ')';
             return [$template => $replacementCallback];
         }
-        if ($maxDepth < 0 || in_array((string)$returnType, $skip)) {
+
+        // We've reached max depth or we should skip chaining for the return
+        // type.
+        if ($maxDepth <= 0 || in_array((string)$returnType, $skip)) {
             return [];
         }
+
+        // Since method return type are usually more generic (interface,
+        // abstract class) we also check if the return type is a parent class of
+        // any of the classes to skip.
         foreach ($skip as $skipClass) {
           if (is_a($skipClass, (string) $returnType, true)) {
             return [];
           }
         }
+
+        // Build the templates
         $replacements = [];
+        $maxDepth--;
         $subs = call_user_func(array((string)$returnType, 'getTemplateReplacements'), $maxDepth, $skip);
         foreach ($subs as $subTemplate => $replacementSubCallback) {
+            // Since we're chaining, we prepend the classname, with 'Abstract' or
+            // 'Interface' stripped off, to the method for uniqueness.
             $template = lcfirst(
-                str_replace('Abstract', '', ReflectionClass::createFromName((string)$returnType)->getShortName())
+                str_replace(['Abstract', 'Interface'], ['', ''], ReflectionClass::createFromName((string)$returnType)->getShortName())
             )
+            // And we append the parameters of chained methods to the template.
             . ucfirst(
                   str_replace(
                     ['(,', ',)'],

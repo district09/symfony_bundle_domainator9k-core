@@ -86,7 +86,7 @@ trait TemplateImplementationTrait {
     /**
      * Get all template replacements for a method.
      *
-     * If this method's return type is scalar it'll have one template. If the
+     * If this method's return type is scalar, it'll have one template. If the
      * return type implements TemplateInterface, it is chained (as a prefix) to
      * the templates of that return type.
      *
@@ -131,7 +131,34 @@ trait TemplateImplementationTrait {
             return [];
           }
         }
+        return static::getSubReplacementsForMethod($method, $maxDepth, $skip);
+    }
 
+    /**
+     * Get all subtemplate replacements for a method.
+     *
+     * The methods return type should implement TemplateInterface. This return
+     * type is chained (as a prefix) to the templates of that return type.
+     *
+     * @param ReflectionMethod $method
+     *   The method to get the templates for.
+     * @param int $maxDepth
+     *   The maximum depth to chain.
+     * @param array $skip
+     *   An array of classes to skip chaining for.
+     *
+     * @return array
+     *   The templates generated for this method.
+     */
+    protected static function getSubReplacementsForMethod(ReflectionMethod $method, int $maxDepth, array $skip)
+    {
+        $returnType = $method->getReturnType();
+        $parameters = [];
+        foreach ($method->getParameters() as $parameter) {
+          $parameters[] = $parameter->getName();
+        }
+        $replacementParameters =  implode(',', $parameters);
+        $replacementCallback = $method->getName() . '(' . $replacementParameters . ')';
         // Build the templates
         $replacements = [];
         $maxDepth--;

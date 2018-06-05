@@ -179,9 +179,9 @@ trait TemplateImplementationTrait
                     ['', ''],
                     ReflectionClass::createFromName((string)$returnType)->getShortName()
                 )
-            )
+            );
             // And we append the parameters of chained methods to the template.
-            . ucfirst(
+            $template .= ucfirst(
                 str_replace(
                     ['(,', ',)'],
                     ['(', ')'],

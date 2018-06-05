@@ -18,3 +18,5 @@ services:
         tags: [form.type]
     DigipolisGent\Domainator9k\CoreBundle\Form\Type\ApplicationTypeEnvironmentFormType:
         tags: [form.type]
+    DigipolisGent\Domainator9k\CoreBundle\Twig\TemplateHelpExtension:
+        tags: [twig.extension]

@@ -1,0 +1,12 @@
+<script src="{{ asset('bundles/digipolisgentdomainator9kcore/js/templatehelper.js') }}"></script>
+<dialog data-template-helper-textarea="{{ textarea }}">
+  {% for key,template_items in templates %}
+    <details>
+      <summary>{{ key }}</summary>
+      {% for template in template_items %}
+        <div><a href="#" data-template-value="[[ {{ key }}:{{template}} ]]">[[ {{ key }}:{{template}} ]]</a></div>
+      {% endfor %}
+    </details>
+  {% endfor %}
+  <button class="close-template-dialog">Close</button>
+</dialog>

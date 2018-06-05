@@ -5,11 +5,13 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Fixtures\Entity;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\TemplateInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\IdentifiableTrait;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\TemplateImplementationTrait;
 
 class Foo implements TemplateInterface
 {
 
     use IdentifiableTrait;
+    use TemplateImplementationTrait;
 
     private $primaryTitle;
 
@@ -17,13 +19,11 @@ class Foo implements TemplateInterface
 
     private $qux;
 
-    public static function getTemplateReplacements(): array
+    public static function additionalTemplateReplacements(): array
     {
         return [
             'primary()' => 'getPrimaryTitle()',
             'second()' => 'getSecondTitle()',
-            'quxTitle()' => 'getQux().getTitle()',
-            'quxSubtitle()' => 'getQux().getSubtitle()',
             'multiply(a,b)' => 'multiplyNumbers(a,b)',
         ];
     }
@@ -31,7 +31,7 @@ class Foo implements TemplateInterface
     /**
      * @return mixed
      */
-    public function getPrimaryTitle()
+    public function getPrimaryTitle(): string
     {
         return $this->primaryTitle;
     }
@@ -39,7 +39,7 @@ class Foo implements TemplateInterface
     /**
      * @param mixed $primaryTitle
      */
-    public function setPrimaryTitle($primaryTitle)
+    public function setPrimaryTitle(string $primaryTitle)
     {
         $this->primaryTitle = $primaryTitle;
     }
@@ -47,7 +47,7 @@ class Foo implements TemplateInterface
     /**
      * @return mixed
      */
-    public function getSecondTitle()
+    public function getSecondTitle(): string
     {
         return $this->secondTitle;
     }
@@ -55,7 +55,7 @@ class Foo implements TemplateInterface
     /**
      * @param mixed $secondTitle
      */
-    public function setSecondTitle($secondTitle)
+    public function setSecondTitle(string $secondTitle)
     {
         $this->secondTitle = $secondTitle;
     }
@@ -63,7 +63,7 @@ class Foo implements TemplateInterface
     /**
      * @return mixed
      */
-    public function getQux()
+    public function getQux(): Qux
     {
         return $this->qux;
     }
@@ -76,7 +76,7 @@ class Foo implements TemplateInterface
         $this->qux = $qux;
     }
 
-    public function multiplyNumbers($a, $b)
+    public function multiplyNumbers(int $a, int $b): int
     {
         return $a * $b;
     }

@@ -3,6 +3,7 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\IdentifiableTrait;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\TemplateImplementationTrait;
 use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,6 +20,7 @@ class Environment implements TemplateInterface
 
     use SettingImplementationTrait;
     use IdentifiableTrait;
+    use TemplateImplementationTrait;
 
     /**
      * @var string
@@ -98,7 +100,7 @@ class Environment implements TemplateInterface
      *
      * @return string
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -156,7 +158,7 @@ class Environment implements TemplateInterface
     /**
      * @return ArrayCollection
      */
-    public function getApplicationEnvironments()
+    public function getApplicationEnvironments(): ArrayCollection
     {
         return $this->applicationEnvironments;
     }
@@ -172,7 +174,7 @@ class Environment implements TemplateInterface
     /**
      * @return ArrayCollection
      */
-    public function getApplicationTypeEnvironments()
+    public function getApplicationTypeEnvironments(): ArrayCollection
     {
         return $this->applicationTypeEnvironments;
     }
@@ -189,7 +191,7 @@ class Environment implements TemplateInterface
     /**
      * @return ArrayCollection
      */
-    public function getVirtualServers()
+    public function getVirtualServers(): ArrayCollection
     {
         return $this->virtualServers;
     }
@@ -210,7 +212,7 @@ class Environment implements TemplateInterface
         $this->gitRef = $gitRef;
     }
 
-    public function getConfig($key)
+    public function getConfig(string $key): ?string
     {
         foreach ($this->getSettingDataValues() as $settingDataValue) {
             if ($settingDataValue->getSettingDataType()->getKey() == $key) {
@@ -219,17 +221,6 @@ class Environment implements TemplateInterface
         }
 
         return '';
-    }
-
-    /**
-     * @return array
-     */
-    public static function getTemplateReplacements(): array
-    {
-        return [
-            'config(key)' => 'getConfig(key)',
-            'gitRef()' => 'getGitRef()',
-        ];
     }
 
     /**

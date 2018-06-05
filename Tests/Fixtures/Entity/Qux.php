@@ -5,28 +5,22 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Fixtures\Entity;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\TemplateInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\IdentifiableTrait;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\TemplateImplementationTrait;
 
 class Qux implements TemplateInterface
 {
 
     use IdentifiableTrait;
+    use TemplateImplementationTrait;
 
     private $title;
 
     private $subtitle;
 
-    public static function getTemplateReplacements(): array
-    {
-        return [
-            'title()' => 'getTitle()',
-            'subtitle()' => 'getSub()',
-        ];
-    }
-
     /**
      * @return mixed
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -42,7 +36,7 @@ class Qux implements TemplateInterface
     /**
      * @return mixed
      */
-    public function getSubtitle()
+    public function getSubtitle(): string
     {
         return $this->subtitle;
     }

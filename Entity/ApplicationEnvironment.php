@@ -6,6 +6,7 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\IdentifiableTrait;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\TemplateImplementationTrait;
 use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -199,7 +200,7 @@ class ApplicationEnvironment implements TemplateInterface
     /**
      * @return ArrayCollection
      */
-    public function getTasks(): ArrayCollection
+    public function getTasks(): Collection
     {
         return $this->tasks;
     }

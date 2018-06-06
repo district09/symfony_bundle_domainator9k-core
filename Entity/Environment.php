@@ -6,6 +6,7 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\IdentifiableTrait;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\TemplateImplementationTrait;
 use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -158,7 +159,7 @@ class Environment implements TemplateInterface
     /**
      * @return ArrayCollection
      */
-    public function getApplicationEnvironments(): ArrayCollection
+    public function getApplicationEnvironments(): Collection
     {
         return $this->applicationEnvironments;
     }
@@ -174,7 +175,7 @@ class Environment implements TemplateInterface
     /**
      * @return ArrayCollection
      */
-    public function getApplicationTypeEnvironments(): ArrayCollection
+    public function getApplicationTypeEnvironments(): Collection
     {
         return $this->applicationTypeEnvironments;
     }
@@ -191,7 +192,7 @@ class Environment implements TemplateInterface
     /**
      * @return ArrayCollection
      */
-    public function getVirtualServers(): ArrayCollection
+    public function getVirtualServers(): Collection
     {
         return $this->virtualServers;
     }

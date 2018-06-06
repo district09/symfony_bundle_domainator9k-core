@@ -7,6 +7,7 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\IdentifiableTrait;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\TemplateImplementationTrait;
 use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -171,7 +172,7 @@ abstract class AbstractApplication implements TemplateInterface
     /**
      * @return ArrayCollection
      */
-    public function getApplicationEnvironments(): ArrayCollection
+    public function getApplicationEnvironments(): Collection
     {
         return $this->applicationEnvironments;
     }

@@ -3,6 +3,9 @@
   document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll('dialog[data-template-helper-textarea]').forEach(function (dialog) {
       if (!dialog.dataset.templateHelperProcessed) {
+        if (typeof window.dialogPolyfill !== 'undefined') {
+          window.dialogPolyfill.registerDialog(dialog);
+        }
         var selector = dialog.dataset.templateHelperTextarea;
         window.templateHelpers[selector] = new TemplateHelper(dialog);
         dialog.dataset.templateHelperProcessed = true;

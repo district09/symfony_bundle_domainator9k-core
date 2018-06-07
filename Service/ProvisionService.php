@@ -83,7 +83,8 @@ class ProvisionService
      * @param Task $task
      *   The destroy task.
      */
-    protected function destroy(Task $task) {
+    protected function destroy(Task $task)
+    {
         foreach ($this->destroyProvisioners as $provisioner) {
             $provisioner->run($task);
             if ($task->isFailed()) {

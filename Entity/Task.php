@@ -186,7 +186,7 @@ class Task
      */
     public function isNew()
     {
-        return $this->getStatus === static::STATUS_NEW;
+        return $this->getStatus() === static::STATUS_NEW;
     }
 
     /**
@@ -196,7 +196,7 @@ class Task
      */
     public function isInProgress()
     {
-        $this->setStatus(static::STATUS_IN_PROGRESS);
+        return $this->getStatus() === static::STATUS_IN_PROGRESS;
     }
 
     /**
@@ -206,7 +206,7 @@ class Task
      */
     public function isProcessed()
     {
-        $this->setStatus(static::STATUS_PROCESSED);
+        return $this->getStatus() === static::STATUS_PROCESSED;
     }
 
     /**
@@ -216,7 +216,7 @@ class Task
      */
     public function isFailed()
     {
-        $this->setStatus(static::STATUS_FAILED);
+        return $this->getStatus() === static::STATUS_FAILED;
     }
 
     /**
@@ -226,6 +226,6 @@ class Task
      */
     public function isCancelled()
     {
-        $this->setStatus(static::STATUS_CANCEL);
+        return $this->getStatus() === static::STATUS_CANCEL;
     }
 }

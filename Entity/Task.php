@@ -146,4 +146,86 @@ class Task
 
         return $this;
     }
+
+    /**
+     * Mark this task as in progress.
+     */
+    public function setInProgress()
+    {
+        $this->setStatus(static::STATUS_IN_PROGRESS);
+    }
+
+    /**
+     * Mark this task as processed.
+     */
+    public function setProcessed()
+    {
+        $this->setStatus(static::STATUS_PROCESSED);
+    }
+
+    /**
+     * Mark this task as failed.
+     */
+    public function setFailed()
+    {
+        $this->setStatus(static::STATUS_FAILED);
+    }
+
+    /**
+     * Mark this task as in cancelled.
+     */
+    public function setCancelled()
+    {
+        $this->setStatus(static::STATUS_CANCEL);
+    }
+
+    /**
+     * Check if this task is new.
+     *
+     * @return boolean
+     */
+    public function isNew()
+    {
+        return $this->getStatus === static::STATUS_NEW;
+    }
+
+    /**
+     * Check if this task is in progress.
+     *
+     * @return boolean
+     */
+    public function isInProgress()
+    {
+        $this->setStatus(static::STATUS_IN_PROGRESS);
+    }
+
+    /**
+     * Check if this task is processed.
+     *
+     * @return boolean
+     */
+    public function isProcessed()
+    {
+        $this->setStatus(static::STATUS_PROCESSED);
+    }
+
+    /**
+     * Check if this task is failed.
+     *
+     * @return boolean
+     */
+    public function isFailed()
+    {
+        $this->setStatus(static::STATUS_FAILED);
+    }
+
+    /**
+     * Check if this task is cancelled.
+     *
+     * @return boolean
+     */
+    public function isCancelled()
+    {
+        $this->setStatus(static::STATUS_CANCEL);
+    }
 }

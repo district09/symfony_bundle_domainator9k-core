@@ -2,13 +2,9 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Service;
 
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Build;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Task;
-use DigipolisGent\Domainator9k\CoreBundle\Event\AbstractEvent;
-use DigipolisGent\Domainator9k\CoreBundle\Event\BuildEvent;
-use DigipolisGent\Domainator9k\CoreBundle\Event\DestroyEvent;
+use DigipolisGent\Domainator9k\CoreBundle\Service\ProvisionService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Class TaskService
@@ -32,24 +28,24 @@ class TaskService
     private $entityManager;
 
     /**
-     * The event dispatcher service.
+     * The provision service.
      *
-     * @var EventDispatcherInterface
+     * @var ProvisionService
      */
-    private $eventDispatcher;
+    private $provisionService;
 
     /**
      * Class constructor.
      *
      * @param EntityManagerInterface $entityManager
      *   The entity manager service.
-     * @param EventDispatcherInterface $eventDispatcher
-     *   The event dispatcher service.
+     * @param ProvisionService $provisionService
+     *   The provision service.
      */
-    public function __construct(EntityManagerInterface $entityManager, EventDispatcherInterface $eventDispatcher)
+    public function __construct(EntityManagerInterface $entityManager, ProvisionService $provisionService)
     {
         $this->entityManager = $entityManager;
-        $this->eventDispatcher = $eventDispatcher;
+        $this->provisionService = $provisionService;
     }
 
     /**
@@ -69,19 +65,11 @@ class TaskService
         $this->entityManager->persist($task);
         $this->entityManager->flush();
 
-        // Create and dispatch the event.
-        $event = $this->createEvent($task);
-        $this->eventDispatcher->dispatch($event::NAME, $event);
-        $task = $event->getTask();
+        $this->provisionService->run($task);
 
         // Update the status.
         if ($task->getStatus() === Task::STATUS_IN_PROGRESS) {
-            $status = Task::STATUS_PROCESSED;
-            if ($event->isPropagationStopped()) {
-                $status = Task::STATUS_FAILED;
-            }
-
-            $task->setStatus($status);
+            $task->setStatus(Task::STATUS_PROCESSED);
         }
 
         // Add a log message or simply persist any changes.
@@ -306,33 +294,6 @@ class TaskService
     public function addFailedLogMessage(Task $task, string $message, int $indent = 1, bool $persist = true): self
     {
         return $this->addLogMessage($task, self::LOG_TYPE_FAILED, $message, $indent, $persist);
-    }
-
-    /**
-     * Create an event object for a task.
-     *
-     * @param Task $task
-     *   The task.
-     *
-     * @return AbstractEvent
-     *   The event object.
-     */
-    protected function createEvent(Task $task): AbstractEvent
-    {
-        switch ($task->getType()) {
-            case Task::TYPE_BUILD:
-                $class = BuildEvent::class;
-                break;
-
-            case Task::TYPE_DESTROY:
-                $class = DestroyEvent::class;
-                break;
-
-            default:
-                throw new \InvalidArgumentException(sprintf('Task type %s is not supported.', $task->getType()));
-        }
-
-        return new $class($task);
     }
 
     /**

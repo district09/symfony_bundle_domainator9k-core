@@ -53,6 +53,10 @@ class TaskService
      *
      * @param Task $task
      *   The task to run.
+     *
+     * @return boolean
+     *   True when the task has been processed succesfully, false for any other
+     *   status.
      */
     public function run(Task $task)
     {
@@ -89,6 +93,8 @@ class TaskService
                 $this->entityManager->flush();
                 break;
         }
+
+        return $task->isProcessed();
     }
 
     /**

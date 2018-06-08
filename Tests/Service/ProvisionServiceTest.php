@@ -18,31 +18,6 @@ use PHPUnit\Framework\TestCase;
 class ProvisionServiceTest extends TestCase
 {
 
-    protected function setUp()
-    {
-        parent::setUp();
-        $token = new Token();
-        $token->setName(substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"), 0, 10));
-        $token->setValue(substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"), 0, 10));
-        $this->token = $token;
-        $this->repository = $this
-            ->getMockBuilder(EntityRepository::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->repository->expects($this->any())->method('findAll')->willReturn([$token]);
-        $this->repository->expects($this->any())->method('findOneBy')->with(['name' => $token->getName()])->willReturn($token);
-        $this->entityManager = $this
-            ->getMockBuilder(EntityManager::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $this->entityManager
-            ->expects($this->once())
-            ->method('getRepository')
-            ->with(Token::class)
-            ->willReturn($this->repository);
-        $this->tokenService = new TokenService($this->entityManager);
-    }
-
     public function testBuild()
     {
         $task = new Task();
@@ -174,7 +149,7 @@ class ProvisionServiceTest extends TestCase
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessageRegExp /Task type (.*) is not supported\./
      */
-    public function testInvalidType ()
+    public function testInvalidType()
     {
         $task = new Task();
         $task->setType(uniqid());

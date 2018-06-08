@@ -42,10 +42,6 @@ class ProvisionService
      * @param Task $task
      *   The task to run the provisioners for.
      *
-     * @return boolean
-     *   True when the task has been processed succesfully, false for any other
-     *   status.
-     *
      * @throws \InvalidArgumentException
      *   If the task type is not supported.
      */
@@ -63,8 +59,6 @@ class ProvisionService
             default:
                 throw new \InvalidArgumentException(sprintf('Task type %s is not supported.', $task->getType()));
         }
-
-        return $task->isProcessed();
     }
 
     /**

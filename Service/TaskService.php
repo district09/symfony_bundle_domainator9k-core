@@ -56,30 +56,30 @@ class TaskService
      */
     public function run(Task $task)
     {
-        if ($task->getStatus() !== Task::STATUS_NEW) {
+        if (!$task->isNew()) {
             throw new \InvalidArgumentException(sprintf('Task "%s" cannot be restarted.', $task->getId()));
         }
 
         // Set the task in progress.
-        $task->setStatus(Task::STATUS_IN_PROGRESS);
+        $task->setInProgress();
         $this->entityManager->persist($task);
         $this->entityManager->flush();
 
         $this->provisionService->run($task);
 
         // Update the status.
-        if ($task->getStatus() === Task::STATUS_IN_PROGRESS) {
-            $task->setStatus(Task::STATUS_PROCESSED);
+        if ($task->isInProgress()) {
+            $task->setProcessed();
         }
 
         // Add a log message or simply persist any changes.
-        switch ($task->getStatus()) {
-            case Task::STATUS_PROCESSED:
+        switch (true) {
+            case $task->isProcessed():
                 $this->addLogMessage($task, '', '', 0);
                 $this->addSuccessLogMessage($task, 'Task run completed.', 0);
                 break;
 
-            case Task::STATUS_FAILED:
+            case $task->isFailed():
                 $this->addLogMessage($task, '', '', 0);
                 $this->addFailedLogMessage($task, 'Task run failed.', 0);
                 break;

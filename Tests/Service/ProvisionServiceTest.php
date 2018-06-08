@@ -169,4 +169,16 @@ class ProvisionServiceTest extends TestCase
         $provisionService = new ProvisionService([], $destroyProvisioners);
         $provisionService->run($task);
     }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessageRegExp /Task type (.*) is not supported\./
+     */
+    public function testInvalidType ()
+    {
+        $task = new Task();
+        $task->setType(uniqid());
+        $provisionService = new ProvisionService([], []);
+        $provisionService->run($task);
+    }
 }

@@ -207,5 +207,4 @@ class TaskRunnerService
         $task->setStatus(Task::STATUS_CANCEL);
         $this->logger->addInfoLogMessage($task, 'Task run cancelled.');
     }
-
 }

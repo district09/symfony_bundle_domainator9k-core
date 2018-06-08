@@ -12,7 +12,8 @@ services:
       arguments: [
           !tagged domainator.provisioner.build,
           !tagged domainator.provisioner.destroy,
-          '@doctrine.orm.entity_manager'
+          '@doctrine.orm.entity_manager',
+          '@DigipolisGent\Domainator9k\CoreBundle\Service\TaskLoggerService'
       ]
     DigipolisGent\Domainator9k\CoreBundle\Form\Type\ApplicationEnvironmentFormType:
         tags: [form.type]

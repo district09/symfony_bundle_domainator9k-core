@@ -3,6 +3,7 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Service;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Task;
+use DigipolisGent\Domainator9k\CoreBundle\Exception\LoggedException;
 use DigipolisGent\Domainator9k\CoreBundle\Provisioner\ProvisionerInterface;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -124,48 +125,31 @@ class TaskRunnerService
      */
     protected function runProvisioners(Task $task)
     {
+        $provisioners = [];
         switch ($task->getType()) {
             case Task::TYPE_BUILD:
-                $this->build($task);
+                $provisioners = $this->buildProvisioners;
                 break;
 
             case Task::TYPE_DESTROY:
-                $this->destroy($task);
+                $provisioners = $this->destroyProvisioners;
                 break;
 
             default:
                 throw new \InvalidArgumentException(sprintf('Task type %s is not supported.', $task->getType()));
         }
-    }
-
-    /**
-     * Run a build task.
-     *
-     * @param Task $task
-     *   The build task.
-     */
-    protected function build(Task $task)
-    {
-        foreach ($this->buildProvisioners as $provisioner) {
-            $provisioner->run($task);
-            if ($task->isFailed()) {
-                break;
+        try {
+            foreach ($provisioners as $provisioner) {
+                $provisioner->run($task);
+                if ($task->isFailed()) {
+                    break;
+                }
             }
-        }
-    }
-
-    /**
-     * Run a destroy task.
-     *
-     * @param Task $task
-     *   The destroy task.
-     */
-    protected function destroy(Task $task)
-    {
-        foreach ($this->destroyProvisioners as $provisioner) {
-            $provisioner->run($task);
-            if ($task->isFailed()) {
-                break;
+        } catch (\Exception $ex) {
+            if (!($ex instanceof LoggedException)) {
+                $task->setFailed();
+                $this->logger->addErrorLogMessage($task, $ex->getMessage(), 2);
+                $this->logger->addFailedLogMessage($task, sprintf('Provisioner %s failed.', $provisioner->getName()));
             }
         }
     }

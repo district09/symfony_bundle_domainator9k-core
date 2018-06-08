@@ -2,5 +2,6 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Exception;
 
-class LoggedException extends \Exception {
+class LoggedException extends \Exception
+{
 }

@@ -57,8 +57,7 @@ class TaskRunnerService
         iterable $destroyProvisioners,
         EntityManagerInterface $entityManager,
         TaskLoggerService $logger
-    )
-    {
+    ) {
         $this->buildProvisioners = $buildProvisioners;
         $this->destroyProvisioners = $destroyProvisioners;
         $this->entityManager = $entityManager;

@@ -5,11 +5,15 @@ services:
         tags:
             - { name: doctrine.event_listener, event: postPersist, connection: default }
             - { name: doctrine.event_listener, event: postRemove, connection: default }
-    DigipolisGent\Domainator9k\CoreBundle\Service\TaskService:
+    DigipolisGent\Domainator9k\CoreBundle\Service\TaskLoggerService:
     DigipolisGent\Domainator9k\CoreBundle\Service\TemplateService:
     DigipolisGent\Domainator9k\CoreBundle\Service\TokenService:
-    DigipolisGent\Domainator9k\CoreBundle\Service\ProvisionService:
-      arguments: [!tagged domainator.provisioner.build, !tagged domainator.provisioner.destroy]
+    DigipolisGent\Domainator9k\CoreBundle\Service\TaskRunnerService:
+      arguments: [
+          !tagged domainator.provisioner.build,
+          !tagged domainator.provisioner.destroy,
+          '@doctrine.orm.entity_manager'
+      ]
     DigipolisGent\Domainator9k\CoreBundle\Form\Type\ApplicationEnvironmentFormType:
         tags: [form.type]
     DigipolisGent\Domainator9k\CoreBundle\Form\Type\EnvironmentFormType:

@@ -3,17 +3,15 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Service;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Task;
-use DigipolisGent\Domainator9k\CoreBundle\Service\ProvisionService;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Class TaskService
+ * Class TaskLoggerService
  *
  * @package DigipolisGent\Domainator9k\CoreBundle\Service
  */
-class TaskService
+class TaskLoggerService
 {
-
     const LOG_TYPE_INFO = 'info';
     const LOG_TYPE_WARNING = 'warning';
     const LOG_TYPE_ERROR = 'error';
@@ -25,109 +23,17 @@ class TaskService
      *
      * @var EntityManagerInterface
      */
-    private $entityManager;
-
-    /**
-     * The provision service.
-     *
-     * @var ProvisionService
-     */
-    private $provisionService;
+    protected $entityManager;
 
     /**
      * Class constructor.
      *
      * @param EntityManagerInterface $entityManager
      *   The entity manager service.
-     * @param ProvisionService $provisionService
-     *   The provision service.
      */
-    public function __construct(EntityManagerInterface $entityManager, ProvisionService $provisionService)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
-        $this->provisionService = $provisionService;
-    }
-
-    /**
-     * Run a task.
-     *
-     * @param Task $task
-     *   The task to run.
-     *
-     * @return boolean
-     *   True when the task has been processed succesfully, false for any other
-     *   status.
-     */
-    public function run(Task $task)
-    {
-        if (!$task->isNew()) {
-            throw new \InvalidArgumentException(sprintf('Task "%s" cannot be restarted.', $task->getId()));
-        }
-
-        // Set the task in progress.
-        $task->setInProgress();
-        $this->entityManager->persist($task);
-        $this->entityManager->flush();
-
-        $this->provisionService->run($task);
-
-        // Update the status.
-        if ($task->isInProgress()) {
-            $task->setProcessed();
-        }
-
-        // Add a log message or simply persist any changes.
-        switch (true) {
-            case $task->isProcessed():
-                $this->addLogMessage($task, '', '', 0);
-                $this->addSuccessLogMessage($task, 'Task run completed.', 0);
-                break;
-
-            case $task->isFailed():
-                $this->addLogMessage($task, '', '', 0);
-                $this->addFailedLogMessage($task, 'Task run failed.', 0);
-                break;
-
-            default:
-                $this->entityManager->persist($task);
-                $this->entityManager->flush();
-                break;
-        }
-
-        return $task->isProcessed();
-    }
-
-    /**
-     * Run the next task of the specified type.
-     *
-     * @param string $type
-     *   The task type to run.
-     */
-    public function runNext(string $type)
-    {
-        $task = $this->entityManager
-            ->getRepository(Task::class)
-            ->getNextTask($type);
-
-        if ($task) {
-            $this->run($task);
-        }
-    }
-
-    /**
-     * Cancel a task.
-     *
-     * @param Task $task
-     *   The task to cancel.
-     */
-    public function cancel(Task $task)
-    {
-        if ($task->getStatus() !== Task::STATUS_NEW) {
-            throw new \InvalidArgumentException(sprintf('Task %s cannot be cancelled.', $task->getId()));
-        }
-
-        $task->setStatus(Task::STATUS_CANCEL);
-        $this->addInfoLogMessage($task, 'Task run cancelled.');
     }
 
     /**

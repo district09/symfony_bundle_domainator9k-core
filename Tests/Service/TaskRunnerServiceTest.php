@@ -135,18 +135,23 @@ class TaskRunnerServiceTest extends TestCase
             $mock = $this->getMockBuilder(ProvisionerInterface::class)
                 ->getMock();
             $mock->expects($this->once())
-                ->method('run')
+                ->method('setTask')
                 ->with($this->task)
+                ->willReturn(null);
+            $mock->expects($this->once())
+                ->method('run')
                 ->willReturn(null);
             $buildProvisioners[] = $mock;
         }
         $mock = $this->getMockBuilder(ProvisionerInterface::class)
             ->getMock();
         $mock->expects($this->once())
+            ->method('setTask')
+            ->with($this->task);
+        $mock->expects($this->once())
             ->method('run')
-            ->with($this->task)
-            ->willReturnCallback(function (Task $task) {
-                $task->setFailed();
+            ->willReturnCallback(function () {
+                $this->task->setFailed();
             });
         $buildProvisioners[] = $mock;
 
@@ -205,8 +210,11 @@ class TaskRunnerServiceTest extends TestCase
             $mock = $this->getMockBuilder(ProvisionerInterface::class)
                 ->getMock();
             $mock->expects($this->once())
-                ->method('run')
+                ->method('setTask')
                 ->with($this->task)
+                ->willReturn(null);
+            $mock->expects($this->once())
+                ->method('run')
                 ->willReturn(null);
             $buildProvisioners[] = $mock;
         }
@@ -214,12 +222,15 @@ class TaskRunnerServiceTest extends TestCase
         $mock = $this->getMockBuilder(ProvisionerInterface::class)
                 ->getMock();
             $mock->expects($this->once())
-                ->method('run')
+                ->method('setTask')
                 ->with($this->task)
+                ->willReturn(null);
+            $mock->expects($this->once())
+                ->method('run')
                 ->willReturnCallback(
-                    function (Task $task)
+                    function ()
                     {
-                        $task->setCancelled();
+                        $this->task->setCancelled();
                     }
                 );
             $buildProvisioners[] = $mock;
@@ -322,8 +333,11 @@ class TaskRunnerServiceTest extends TestCase
                     $mock = $this->getMockBuilder(ProvisionerInterface::class)
                         ->getMock();
                     $mock->expects($this->once())
-                        ->method('run')
+                        ->method('setTask')
                         ->with($this->task)
+                        ->willReturn(null);
+                    $mock->expects($this->once())
+                        ->method('run')
                         ->willReturn(null);
                     $buildProvisioners[] = $mock;
                 }
@@ -352,8 +366,12 @@ class TaskRunnerServiceTest extends TestCase
                     $mock = $this->getMockBuilder(ProvisionerInterface::class)
                         ->getMock();
                     $mock->expects($this->once())
-                        ->method('run')
+                        ->method('setTask')
                         ->with($this->task)
+                        ->willReturn(null);
+                    $mock->expects($this->once())
+                        ->method('run')
+                        ->with()
                         ->willReturn(null);
                     $destroyProvisioners[] = $mock;
                 }

@@ -6,6 +6,7 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\Task;
 
 interface ProvisionerInterface
 {
-    public function run(Task $task);
+    public function setTask(Task $task);
+    public function run();
     public function getName();
 }

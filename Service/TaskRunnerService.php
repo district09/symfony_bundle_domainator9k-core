@@ -140,7 +140,8 @@ class TaskRunnerService
         }
         try {
             foreach ($provisioners as $provisioner) {
-                $provisioner->run($task);
+                $provisioner->setTask($task);
+                $provisioner->run();
                 if ($task->isFailed()) {
                     break;
                 }

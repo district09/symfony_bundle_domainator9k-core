@@ -2,22 +2,16 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Service;
 
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Build;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Task;
-use DigipolisGent\Domainator9k\CoreBundle\Event\AbstractEvent;
-use DigipolisGent\Domainator9k\CoreBundle\Event\BuildEvent;
-use DigipolisGent\Domainator9k\CoreBundle\Event\DestroyEvent;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Class TaskService
+ * Class TaskLoggerService
  *
  * @package DigipolisGent\Domainator9k\CoreBundle\Service
  */
-class TaskService
+class TaskLoggerService
 {
-
     const LOG_TYPE_INFO = 'info';
     const LOG_TYPE_WARNING = 'warning';
     const LOG_TYPE_ERROR = 'error';
@@ -29,111 +23,17 @@ class TaskService
      *
      * @var EntityManagerInterface
      */
-    private $entityManager;
-
-    /**
-     * The event dispatcher service.
-     *
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    protected $entityManager;
 
     /**
      * Class constructor.
      *
      * @param EntityManagerInterface $entityManager
      *   The entity manager service.
-     * @param EventDispatcherInterface $eventDispatcher
-     *   The event dispatcher service.
      */
-    public function __construct(EntityManagerInterface $entityManager, EventDispatcherInterface $eventDispatcher)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
-        $this->eventDispatcher = $eventDispatcher;
-    }
-
-    /**
-     * Run a task.
-     *
-     * @param Task $task
-     *   The task to run.
-     */
-    public function run(Task $task)
-    {
-        if ($task->getStatus() !== Task::STATUS_NEW) {
-            throw new \InvalidArgumentException(sprintf('Task "%s" cannot be restarted.', $task->getId()));
-        }
-
-        // Set the task in progress.
-        $task->setStatus(Task::STATUS_IN_PROGRESS);
-        $this->entityManager->persist($task);
-        $this->entityManager->flush();
-
-        // Create and dispatch the event.
-        $event = $this->createEvent($task);
-        $this->eventDispatcher->dispatch($event::NAME, $event);
-        $task = $event->getTask();
-
-        // Update the status.
-        if ($task->getStatus() === Task::STATUS_IN_PROGRESS) {
-            $status = Task::STATUS_PROCESSED;
-            if ($event->isPropagationStopped()) {
-                $status = Task::STATUS_FAILED;
-            }
-
-            $task->setStatus($status);
-        }
-
-        // Add a log message or simply persist any changes.
-        switch ($task->getStatus()) {
-            case Task::STATUS_PROCESSED:
-                $this->addLogMessage($task, '', '', 0);
-                $this->addSuccessLogMessage($task, 'Task run completed.', 0);
-                break;
-
-            case Task::STATUS_FAILED:
-                $this->addLogMessage($task, '', '', 0);
-                $this->addFailedLogMessage($task, 'Task run failed.', 0);
-                break;
-
-            default:
-                $this->entityManager->persist($task);
-                $this->entityManager->flush();
-                break;
-        }
-    }
-
-    /**
-     * Run the next task of the specified type.
-     *
-     * @param string $type
-     *   The task type to run.
-     */
-    public function runNext(string $type)
-    {
-        $task = $this->entityManager
-            ->getRepository(Task::class)
-            ->getNextTask($type);
-
-        if ($task) {
-            $this->run($task);
-        }
-    }
-
-    /**
-     * Cancel a task.
-     *
-     * @param Task $task
-     *   The task to cancel.
-     */
-    public function cancel(Task $task)
-    {
-        if ($task->getStatus() !== Task::STATUS_NEW) {
-            throw new \InvalidArgumentException(sprintf('Task %s cannot be cancelled.', $task->getId()));
-        }
-
-        $task->setStatus(Task::STATUS_CANCEL);
-        $this->addInfoLogMessage($task, 'Task run cancelled.');
     }
 
     /**
@@ -309,33 +209,6 @@ class TaskService
     }
 
     /**
-     * Create an event object for a task.
-     *
-     * @param Task $task
-     *   The task.
-     *
-     * @return AbstractEvent
-     *   The event object.
-     */
-    protected function createEvent(Task $task): AbstractEvent
-    {
-        switch ($task->getType()) {
-            case Task::TYPE_BUILD:
-                $class = BuildEvent::class;
-                break;
-
-            case Task::TYPE_DESTROY:
-                $class = DestroyEvent::class;
-                break;
-
-            default:
-                throw new \InvalidArgumentException(sprintf('Task type %s is not supported.', $task->getType()));
-        }
-
-        return new $class($task);
-    }
-
-    /**
      * Indent a text.
      *
      * @param string $text
@@ -361,5 +234,119 @@ class TaskService
 
             return $matches[1] . $suffix;
         }, $text);
+    }
+
+    /**
+     * Generate an HTML safe task log.
+     *
+     * @param string $log
+     *   The task log.
+     *
+     * @return string
+     *   The escaped log.
+     */
+    public function escapeLog(string $log): string
+    {
+        // Default HTML escaping.
+        $log = htmlspecialchars($log, ENT_QUOTES, 'UTF-8', false);
+        $log = str_replace(["\r\n", "\r"], "\n", $log);
+
+        // Make titles bold.
+        $log = preg_replace('/^(\t*)### (.+) ###$/m', '$1<strong>$2</strong>', $log);
+
+        // Count the number of lines.
+        $lineCount = substr_count($log, "\n") + 1;
+
+        // Get the line number width.
+        $lineNumberWidth = \strlen($lineCount);
+
+        // Wrap all lines
+        $lineNumber = 0;
+        $prevIndents = [];
+        $log = (string) preg_replace_callback(
+            '/^(\t*)(?:(.+?)(?: \[(warning|error|success|failed)\])?)?$/m',
+            function ($matches) use (&$lineNumber, &$prevIndents, $lineCount, $lineNumberWidth) {
+                if (isset($matches[2])) {
+                    $indent = \strlen($matches[1]);
+                    $line = $matches[2];
+                } else {
+                    $indent = $prevIndents[0] ?? 0;
+                    $line = '';
+                }
+
+                $status = $matches[3] ?? null;
+
+                // Apply the message wrapper with indentation.
+                $line = sprintf(
+                    '<div class="%s" style="padding-left: %sem;">%s</div>',
+                    'message message--indent-' . $indent,
+                    $indent * 1.5,
+                    $line
+                );
+
+                // Add the line number.
+                $lineNumber++;
+                $line = sprintf(
+                    '<div class="%s">%' . $lineNumberWidth . 's</div>%s',
+                    'number number--' . $lineNumber,
+                    $lineNumber,
+                    $line
+                );
+
+                // Add the line status.
+                if ($status !== null) {
+                    $line = sprintf(
+                        '%s<div class="%s">[%s]</div>',
+                        $line,
+                        'status status--' . $status,
+                        $status
+                    );
+                }
+
+                // Wrap the whole line.
+                $class = 'line line--' . $lineNumber;
+
+                if ($lineNumber === 1) {
+                    $class .= ' line--first';
+                } elseif ($lineNumber === $lineCount) {
+                    $class .= ' line--last';
+                }
+
+                if ($status !== null) {
+                    $class .= ' line--status-' . $status;
+                }
+
+                $line = sprintf(
+                    '<div class="%s">%s</div>',
+                    $class,
+                    $line
+                );
+
+                if (!$prevIndents || $indent > $prevIndents[0]) {
+                    // Start a new indentation group.
+                    $line = sprintf(
+                        '<div class="%s">%s',
+                        'group group--indent-' . $indent . ' group--number-' . $lineNumber,
+                        $line
+                    );
+                    array_unshift($prevIndents, $indent);
+                } elseif ($indent < $prevIndents[0]) {
+                    // Close the previous groups.
+                    do {
+                        $line = '</div>' . $line;
+                        array_shift($prevIndents);
+                    } while ($indent < $prevIndents[0]);
+                }
+
+                return $line;
+            },
+            $log
+        );
+
+        if ($prevIndents) {
+            $log .= str_repeat('</div>', \count($prevIndents));
+        }
+
+        return $log;
     }
 }

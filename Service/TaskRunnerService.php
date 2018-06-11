@@ -146,10 +146,11 @@ class TaskRunnerService
                 }
             }
         } catch (\Exception $ex) {
+            $task->setFailed();
             if (!($ex instanceof LoggedException)) {
-                $task->setFailed();
-                $this->logger->addErrorLogMessage($task, $ex->getMessage(), 2);
-                $this->logger->addFailedLogMessage($task, sprintf('Provisioner %s failed.', $provisioner->getName()));
+                $this->logger
+                    ->addErrorLogMessage($task, $ex->getMessage(), 2)
+                    ->addFailedLogMessage($task, sprintf('Provisioner %s failed.', $provisioner->getName()));
             }
         }
     }

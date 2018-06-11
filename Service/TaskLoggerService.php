@@ -235,4 +235,118 @@ class TaskLoggerService
             return $matches[1] . $suffix;
         }, $text);
     }
+
+    /**
+     * Generate an HTML safe task log.
+     *
+     * @param string $log
+     *   The task log.
+     *
+     * @return string
+     *   The escaped log.
+     */
+    public function escapeLog(string $log): string
+    {
+        // Default HTML escaping.
+        $log = htmlspecialchars($log, ENT_QUOTES, 'UTF-8', false);
+        $log = str_replace(["\r\n", "\r"], "\n", $log);
+
+        // Make titles bold.
+        $log = preg_replace('/^(\t*)### (.+) ###$/m', '$1<strong>$2</strong>', $log);
+
+        // Count the number of lines.
+        $lineCount = substr_count($log, "\n") + 1;
+
+        // Get the line number width.
+        $lineNumberWidth = \strlen($lineCount);
+
+        // Wrap all lines
+        $lineNumber = 0;
+        $prevIndents = [];
+        $log = (string) preg_replace_callback(
+            '/^(\t*)(?:(.+?)(?: \[(warning|error|success|failed)\])?)?$/m',
+            function ($matches) use (&$lineNumber, &$prevIndents, $lineCount, $lineNumberWidth) {
+                if (isset($matches[2])) {
+                    $indent = \strlen($matches[1]);
+                    $line = $matches[2];
+                } else {
+                    $indent = $prevIndents[0] ?? 0;
+                    $line = '';
+                }
+
+                $status = $matches[3] ?? null;
+
+                // Apply the message wrapper with indentation.
+                $line = sprintf(
+                    '<div class="%s" style="padding-left: %sem;">%s</div>',
+                    'message message--indent-' . $indent,
+                    $indent * 1.5,
+                    $line
+                );
+
+                // Add the line number.
+                $lineNumber++;
+                $line = sprintf(
+                    '<div class="%s">%' . $lineNumberWidth . 's</div>%s',
+                    'number number--' . $lineNumber,
+                    $lineNumber,
+                    $line
+                );
+
+                // Add the line status.
+                if ($status !== null) {
+                    $line = sprintf(
+                        '%s<div class="%s">[%s]</div>',
+                        $line,
+                        'status status--' . $status,
+                        $status
+                    );
+                }
+
+                // Wrap the whole line.
+                $class = 'line line--' . $lineNumber;
+
+                if ($lineNumber === 1) {
+                    $class .= ' line--first';
+                } elseif ($lineNumber === $lineCount) {
+                    $class .= ' line--last';
+                }
+
+                if ($status !== null) {
+                    $class .= ' line--status-' . $status;
+                }
+
+                $line = sprintf(
+                    '<div class="%s">%s</div>',
+                    $class,
+                    $line
+                );
+
+                if (!$prevIndents || $indent > $prevIndents[0]) {
+                    // Start a new indentation group.
+                    $line = sprintf(
+                        '<div class="%s">%s',
+                        'group group--indent-' . $indent . ' group--number-' . $lineNumber,
+                        $line
+                    );
+                    array_unshift($prevIndents, $indent);
+                } elseif ($indent < $prevIndents[0]) {
+                    // Close the previous groups.
+                    do {
+                        $line = '</div>' . $line;
+                        array_shift($prevIndents);
+                    } while ($indent < $prevIndents[0]);
+                }
+
+                return $line;
+            },
+            $log
+        );
+
+        if ($prevIndents) {
+            $log .= str_repeat('</div>', \count($prevIndents));
+        }
+
+        return $log;
+    }
 }

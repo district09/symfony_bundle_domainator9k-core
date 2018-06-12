@@ -140,6 +140,9 @@ class TaskRunnerService
         }
         try {
             foreach ($provisioners as $provisioner) {
+                if ($task->getProvisioners() && !in_array(get_class($provisioner), $task->getProvisioners())) {
+                    continue;
+                }
                 $provisioner->setTask($task);
                 $provisioner->run();
                 if ($task->isFailed()) {
@@ -193,4 +196,21 @@ class TaskRunnerService
         $task->setStatus(Task::STATUS_CANCEL);
         $this->logger->addInfoLogMessage($task, 'Task run cancelled.');
     }
+
+    /**
+     * @return ProvisionerInterface[]
+     */
+    public function getBuildProvisioners()
+    {
+        return $this->buildProvisioners;
+    }
+
+    /**
+     * @return ProvisionerInterface[]
+     */
+    public function getDestroyProvisioners()
+    {
+        return $this->destroyProvisioners;
+    }
+
 }

@@ -140,7 +140,8 @@ class Task
     /**
      * @param string[] $provisioners
      */
-    public function setProvisioners($provisioners) {
+    public function setProvisioners($provisioners)
+    {
         $this->provisioners = $provisioners;
     }
 

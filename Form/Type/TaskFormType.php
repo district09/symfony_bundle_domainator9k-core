@@ -64,7 +64,7 @@ class TaskFormType extends AbstractType
             'multiple' => true,
             'required' => false,
             'choices' => $choices,
-            'label' => 'Limit to following provisioners (selecting none will run all provisioners)'
+            'label' => 'Limit to following provisioners (selecting none will run all provisioners)',
         ]);
         $builder->addEventSubscriber(new SettingFormListener($this->formService));
     }

@@ -53,6 +53,12 @@ class Task
     protected $created;
 
     /**
+     * @var string[]
+     * @ORM\Column(name="provisioners", type="simple_array", nullable=true)
+     */
+    protected $provisioners;
+
+    /**
      * @var string
      * @ORM\Column(name="log", type="text", nullable=true)
      */
@@ -121,6 +127,22 @@ class Task
     public function getCreated(): DateTime
     {
         return $this->created;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getProvisioners()
+    {
+        return $this->provisioners;
+    }
+
+    /**
+     * @param string[] $provisioners
+     */
+    public function setProvisioners($provisioners)
+    {
+        $this->provisioners = $provisioners;
     }
 
     /**

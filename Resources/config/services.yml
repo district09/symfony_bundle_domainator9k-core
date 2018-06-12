@@ -23,6 +23,8 @@ services:
         tags: [form.type]
     DigipolisGent\Domainator9k\CoreBundle\Form\Type\TokenFormType:
         tags: [form.type]
+    DigipolisGent\Domainator9k\CoreBundle\Form\Type\TaskFormType:
+        tags: [form.type]
     DigipolisGent\Domainator9k\CoreBundle\Form\Type\ApplicationTypeEnvironmentFormType:
         tags: [form.type]
     DigipolisGent\Domainator9k\CoreBundle\Twig\TemplateHelpExtension:

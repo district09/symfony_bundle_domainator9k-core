@@ -2,7 +2,7 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Command;
 
-use DigipolisGent\Domainator9k\CoreBundle\Service\TaskService;
+use DigipolisGent\Domainator9k\CoreBundle\Service\TaskRunnerService;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
 abstract class AbstractCommand extends ContainerAwareCommand
@@ -17,7 +17,7 @@ abstract class AbstractCommand extends ContainerAwareCommand
     protected function runNextTask(string $type)
     {
         $this->getContainer()
-            ->get(TaskService::class)
+            ->get(TaskRunnerService::class)
             ->runNext($type);
     }
 }

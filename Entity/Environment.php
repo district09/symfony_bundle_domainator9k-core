@@ -213,17 +213,6 @@ class Environment implements TemplateInterface
         $this->gitRef = $gitRef;
     }
 
-    public function getConfig(string $key): ?string
-    {
-        foreach ($this->getSettingDataValues() as $settingDataValue) {
-            if ($settingDataValue->getSettingDataType()->getKey() == $key) {
-                return $settingDataValue->getValue();
-            }
-        }
-
-        return '';
-    }
-
     /**
      * @return int
      */

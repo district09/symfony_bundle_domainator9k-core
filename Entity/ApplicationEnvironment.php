@@ -250,15 +250,4 @@ class ApplicationEnvironment implements TemplateInterface
 
         return end($servers)->getHost();
     }
-
-    public function getConfig(string $key): ?string
-    {
-        foreach ($this->getSettingDataValues() as $settingDataValue) {
-            if ($settingDataValue->getSettingDataType()->getKey() == $key) {
-                return $settingDataValue->getValue();
-            }
-        }
-
-        return '';
-    }
 }

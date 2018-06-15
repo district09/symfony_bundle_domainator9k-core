@@ -18,6 +18,7 @@ class AbstractApplicationTest extends TestCase
             'name()' => 'getName()',
             'nameCanonical()' => 'getNameCanonical()',
             'gitRepo()' => 'getGitRepo()',
+            'config(key)' => 'getConfig(key)',
             'applicationEnvironmentDatabaseName(name)' => 'getApplicationEnvironmentByEnvironmentName(name).getDatabaseName()',
             'applicationEnvironmentEnvironmentName(name)' => 'getApplicationEnvironmentByEnvironmentName(name).getEnvironmentName()',
             'applicationEnvironmentEnvironmentGitRef(name)' => 'getApplicationEnvironmentByEnvironmentName(name).getEnvironment().getGitRef()',

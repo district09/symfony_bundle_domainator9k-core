@@ -38,6 +38,7 @@ class ApplicationEnvironmentTest extends TestCase
             'databasePassword()' => 'getDatabasePassword()',
             'gitRef()' => 'getGitRef()',
             'domain()' => 'getDomain()',
+            'applicationConfig(key)' => 'getApplication().getConfig(key)'
         ];
 
         $this->assertEquals($expected, ApplicationEnvironment::getTemplateReplacements());

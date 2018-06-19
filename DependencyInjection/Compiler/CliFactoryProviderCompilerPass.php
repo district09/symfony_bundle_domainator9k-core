@@ -1,9 +1,7 @@
 <?php
 
-
 namespace DigipolisGent\Domainator9k\CoreBundle\DependencyInjection\Compiler;
 
-use DigipolisGent\Domainator9k\CoreBundle\Provider\CacheClearProvider;
 use DigipolisGent\Domainator9k\CoreBundle\Provider\CliFactoryProvider;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

@@ -25,5 +25,4 @@ class RemoteCli implements CliInterface
     {
         $this->connection->exec($command);
     }
-
 }

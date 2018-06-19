@@ -22,11 +22,11 @@ class DefaultCliFactory implements CliFactoryInterface
                 . ', ' . get_class($object) . ' given.'
             );
         }
-        $applicationEnvironment = $object;
+        $appEnv = $object;
         /** @var Environment $environment */
-        $environment = $applicationEnvironment->getEnvironment();
+        $environment = $appEnv->getEnvironment();
         /** @var AbstractApplication $application */
-        $application = $applicationEnvironment->getApplication();
+        $application = $appEnv->getApplication();
 
         /** @var VirtualServer[] $servers */
         $servers = $environment->getVirtualServers();

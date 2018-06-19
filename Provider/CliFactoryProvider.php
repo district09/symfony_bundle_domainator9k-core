@@ -6,7 +6,8 @@ use DigipolisGent\Domainator9k\CoreBundle\CLI\CliFactoryInterface;
 use DigipolisGent\Domainator9k\CoreBundle\CLI\CliInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Exception\NoCliFactoryFoundException;
 
-class CliFactoryProvider {
+class CliFactoryProvider
+{
 
     /**
      * @var CliFactoryInterface[]

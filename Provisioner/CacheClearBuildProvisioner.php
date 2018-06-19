@@ -36,13 +36,11 @@ class CacheClearBuildProvisioner extends AbstractProvisioner
                     $appEnv,
                     $this->cliFactoryProvider->createCliFor($appEnv)
                 );
-        }
-        catch (NoCacheClearerFoundException $cacheEx) {
+        } catch (NoCacheClearerFoundException $cacheEx) {
             // There is no cache clearer registered for this application type,
             // meaning we can't clear cache for it. This probably shouldn't make
             // the task fail, but should we log it somehow?
-        }
-        catch (NoCliFactoryFoundException $cliEx) {
+        } catch (NoCliFactoryFoundException $cliEx) {
             // There is no cli factory registered for this application
             // envrironment, meaning we can't clear cache for it. This probably
             // shouldn't make the task fail, but should we log it somehow?

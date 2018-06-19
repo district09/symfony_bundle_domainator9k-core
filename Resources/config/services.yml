@@ -29,3 +29,15 @@ services:
         tags: [form.type]
     DigipolisGent\Domainator9k\CoreBundle\Twig\TemplateHelpExtension:
         tags: [twig.extension]
+    DigipolisGent\Domainator9k\CoreBundle\Provisioner\CacheClearBuildProvisioner:
+        tags:
+            - {name: domainator.provisioner.build, priority: -90}
+        arguments:
+            - '@DigipolisGent\Domainator9k\CoreBundle\Provider\CliFactoryProvider'
+            - '@DigipolisGent\Domainator9k\CoreBundle\Provider\CacheClearProvider'
+    DigipolisGent\Domainator9k\CoreBundle\CLI\DefaultCliFactory:
+    DigipolisGent\Domainator9k\CoreBundle\Provider\CacheClearProvider:
+    DigipolisGent\Domainator9k\CoreBundle\Provider\CliFactoryProvider:
+        arguments:
+            - '@DigipolisGent\Domainator9k\CoreBundle\CLI\DefaultCliFactory'
+

@@ -38,6 +38,9 @@ class DefaultCliFactoryTest extends TestCase
 
     public function testCreate()
     {
+        // We have untestable code in DefaultCliFactory since the ssh client
+        // can't me mocked and it would be serious overkill to abstract it to
+        // yet another factory just so we can mock it here.
         $factory = new DefaultCliFactory();
         $appEnv = $this->getMockBuilder(ApplicationEnvironment::class)->getMock();
         $env = $this->getMockBuilder(Environment::class)->getMock();
@@ -47,32 +50,6 @@ class DefaultCliFactoryTest extends TestCase
 
         $server = $this->getMockBuilder(VirtualServer::class)->getMock();
         $server->expects($this->once())->method('isTaskServer')->willreturn(false);
-
-        $env->expects($this->once())->method('getVirtualServers')->willReturn(new ArrayCollection([$server]));
-        $this->assertNull($factory->create($appEnv));
-    }
-
-    /**
-     * @expectedException \Exception
-     * @expectedExceptionMessage SSH login failed.
-     */
-    public function testCreateLoginFailed()
-    {
-        // We have untestable code in DefaultCliFactory since the ssh client
-        // can't me mocked and it would be serious overkill to abstract it to
-        // yet another factory just so we can mock it here. So the best we can
-        // do is test up until the login and let it fail.
-        $factory = new DefaultCliFactory();
-        $appEnv = $this->getMockBuilder(ApplicationEnvironment::class)->getMock();
-        $env = $this->getMockBuilder(Environment::class)->getMock();
-        $app = $this->getMockBuilder(AbstractApplication::class)->getMock();
-        $appEnv->expects($this->once())->method('getEnvironment')->willReturn($env);
-        $appEnv->expects($this->once())->method('getApplication')->willReturn($app);
-
-        $server = $this->getMockBuilder(VirtualServer::class)->getMock();
-        $server->expects($this->once())->method('isTaskServer')->willreturn(true);
-        $server->expects($this->once())->method('getHost')->willreturn('localhost');
-        $server->expects($this->once())->method('getPort')->willreturn(22);
 
         $env->expects($this->once())->method('getVirtualServers')->willReturn(new ArrayCollection([$server]));
         $this->assertNull($factory->create($appEnv));

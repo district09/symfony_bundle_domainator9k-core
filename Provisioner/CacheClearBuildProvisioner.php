@@ -6,6 +6,7 @@ use DigipolisGent\Domainator9k\CoreBundle\Exception\NoCacheClearerFoundException
 use DigipolisGent\Domainator9k\CoreBundle\Exception\NoCliFactoryFoundException;
 use DigipolisGent\Domainator9k\CoreBundle\Provider\CacheClearProvider;
 use DigipolisGent\Domainator9k\CoreBundle\Provider\CliFactoryProvider;
+use DigipolisGent\Domainator9k\CoreBundle\Service\TaskLoggerService;
 
 class CacheClearBuildProvisioner extends AbstractProvisioner
 {
@@ -20,30 +21,46 @@ class CacheClearBuildProvisioner extends AbstractProvisioner
      */
     protected $cacheClearProvider;
 
-    public function __construct(CliFactoryProvider $cliFactoryProvider, CacheClearProvider $cacheClearProvider)
-    {
+    /**
+     * @var TaskLoggerService
+     */
+    protected $taskLoggerService;
+
+    public function __construct(
+        CliFactoryProvider $cliFactoryProvider,
+        CacheClearProvider $cacheClearProvider,
+        TaskLoggerService $taskLoggerService
+    ) {
         $this->cliFactoryProvider = $cliFactoryProvider;
         $this->cacheClearProvider = $cacheClearProvider;
+        $this->taskLoggerService = $taskLoggerService;
     }
 
     protected function doRun()
     {
         $appEnv = $this->task->getApplicationEnvironment();
+        $application = $appEnv->getApplication();
+        $environment = $appEnv->getEnvironment();
+
+        $this->taskLoggerService->addLogHeader(
+            $this->task,
+            sprintf(
+                'Clearing cache for %s on %s.',
+                $application->getName(),
+                $environment->getName()
+            )
+        );
         try {
             $this->cacheClearProvider
-                ->getCacheClearerFor($appEnv->getApplication())
+                ->getCacheClearerFor($application)
                 ->clearCache(
                     $appEnv,
                     $this->cliFactoryProvider->createCliFor($appEnv)
                 );
         } catch (NoCacheClearerFoundException $cacheEx) {
-            // There is no cache clearer registered for this application type,
-            // meaning we can't clear cache for it. This probably shouldn't make
-            // the task fail, but should we log it somehow?
+            $this->taskLoggerService->addWarningLogMessage($this->task, $cacheEx->getMessage(), 2);
         } catch (NoCliFactoryFoundException $cliEx) {
-            // There is no cli factory registered for this application
-            // envrironment, meaning we can't clear cache for it. This probably
-            // shouldn't make the task fail, but should we log it somehow?
+            $this->taskLoggerService->addWarningLogMessage($this->task, $cliEx->getMessage(), 2);
         }
     }
 

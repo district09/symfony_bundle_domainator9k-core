@@ -7,10 +7,12 @@ use DigipolisGent\Domainator9k\CoreBundle\CLI\CliFactoryInterface;
 use DigipolisGent\Domainator9k\CoreBundle\CLI\CliInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\AbstractApplication;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationEnvironment;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Environment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Task;
 use DigipolisGent\Domainator9k\CoreBundle\Provider\CacheClearProvider;
 use DigipolisGent\Domainator9k\CoreBundle\Provider\CliFactoryProvider;
 use DigipolisGent\Domainator9k\CoreBundle\Provisioner\CacheClearBuildProvisioner;
+use DigipolisGent\Domainator9k\CoreBundle\Service\TaskLoggerService;
 use PHPUnit\Framework\TestCase;
 
 class CacheClearBuildProvisionerTest extends TestCase
@@ -19,7 +21,8 @@ class CacheClearBuildProvisionerTest extends TestCase
     {
         $cliFactoryProvider = new CliFactoryProvider();
         $cacheClearProvider = new CacheClearProvider();
-        $provisioner = new CacheClearBuildProvisioner($cliFactoryProvider, $cacheClearProvider);
+        $taskLoggerService = $this->getMockBuilder(TaskLoggerService::class)->disableOriginalConstructor()->getMock();
+        $provisioner = new CacheClearBuildProvisioner($cliFactoryProvider, $cacheClearProvider, $taskLoggerService);
         $this->assertEquals('Clear caches', $provisioner->getName());
     }
 
@@ -29,9 +32,11 @@ class CacheClearBuildProvisionerTest extends TestCase
         $cacheClearProvider = new CacheClearProvider();
 
         $application = $this->getMockBuilder(AbstractApplication::class)->getMock();
+        $environment = $this->getMockBuilder(Environment::class)->getMock();
 
         $appEnv = $this->getMockBuilder(ApplicationEnvironment::class)->getMock();
         $appEnv->expects($this->once())->method('getApplication')->willReturn($application);
+        $appEnv->expects($this->once())->method('getEnvironment')->willReturn($environment);
 
         $task = $this->getMockBuilder(Task::class)->getMock();
         $task->expects($this->once())->method('getApplicationEnvironment')->willReturn($appEnv);
@@ -48,7 +53,9 @@ class CacheClearBuildProvisionerTest extends TestCase
 
         $cacheClearProvider->registerCacheClearer($clearer, get_class($application));
 
-        $provisioner = new CacheClearBuildProvisioner($cliFactoryProvider, $cacheClearProvider);
+        $taskLoggerService = $this->getMockBuilder(TaskLoggerService::class)->disableOriginalConstructor()->getMock();
+
+        $provisioner = new CacheClearBuildProvisioner($cliFactoryProvider, $cacheClearProvider, $taskLoggerService);
         $provisioner->setTask($task);
         $provisioner->run();
     }

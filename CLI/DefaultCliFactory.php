@@ -39,12 +39,14 @@ class DefaultCliFactory implements CliFactoryInterface
             $user = $application->getNameCanonical();
             $keyLocation = rtrim(Path::getHomeDirectory(), '/') . '/.ssh/id_rsa';
 
-            $ssh = new SSH2($server->getHost(), $server->getPort());
+            $host = $server->getHost();
+            $port = $server->getPort() ?: 22;
+            $ssh = new SSH2($host, $port);
             $key = new RSA();
             $key->loadKey(file_get_contents($keyLocation));
 
             if (!$ssh->login($user, $key)) {
-                throw new \Exception('SSH login failed.');
+                throw new \Exception(sprintf('SSH login for %s@%s:%s failed.', $user, $host, $port));
             }
             return new RemoteCli($ssh);
         }

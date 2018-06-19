@@ -34,14 +34,29 @@ class CliFactoryProvider
      * @param mixed $object
      *
      * @return CliInterface
+     *
+     * @throws \InvalidArgumentException
+     * @throws NoCliFactoryFoundException
      */
     public function createCliFor($object)
     {
+        if (!is_object($object)) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    '%s::createCliFor() expects parameter 1 to be an object, %s given.',
+                    get_called_class(),
+                    gettype($object)
+                )
+            );
+        }
+
         $class = get_class($object);
 
-        if (!$class || !isset($this->cliFactories[$class])) {
+        if (!isset($this->cliFactories[$class])) {
             if (!($this->defaultCliFactory instanceof CliFactoryInterface)) {
-                throw new NoCliFactoryFoundException('No cli factory found for ' . $class);
+                throw new NoCliFactoryFoundException(
+                    sprintf('No cli factory found for %s and no default factory given.', $class)
+                );
             }
             return $this->defaultCliFactory->create($object);
         }

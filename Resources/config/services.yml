@@ -35,6 +35,7 @@ services:
         arguments:
             - '@DigipolisGent\Domainator9k\CoreBundle\Provider\CliFactoryProvider'
             - '@DigipolisGent\Domainator9k\CoreBundle\Provider\CacheClearProvider'
+            - '@DigipolisGent\Domainator9k\CoreBundle\Service\TaskLoggerService'
     DigipolisGent\Domainator9k\CoreBundle\CLI\DefaultCliFactory:
     DigipolisGent\Domainator9k\CoreBundle\Provider\CacheClearProvider:
     DigipolisGent\Domainator9k\CoreBundle\Provider\CliFactoryProvider:

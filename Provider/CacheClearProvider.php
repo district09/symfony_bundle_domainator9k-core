@@ -19,13 +19,24 @@ class CacheClearProvider
      *
      * @return CacheClearerInterface
      *
+     * @throws \InvalidArgumentException
      * @throws NoCacheClearerFoundException
      */
     public function getCacheClearerFor($object)
     {
+        if (!is_object($object)) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    '%s::getCacheClearerFor() expects parameter 1 to be an object, %s given.',
+                    get_called_class(),
+                    gettype($object)
+                )
+            );
+        }
+
         $class = get_class($object);
 
-        if (!$class || !isset($this->cacheClearers[$class])) {
+        if (!isset($this->cacheClearers[$class])) {
             throw new NoCacheClearerFoundException('No cache clearer found for ' . $class);
         }
 

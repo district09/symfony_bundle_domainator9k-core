@@ -17,7 +17,6 @@ class RemoteCli implements CliInterface
      */
     protected $lastOutput;
 
-
     /**
      * RemoteCli class constructor.
      *

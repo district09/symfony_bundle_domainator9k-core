@@ -15,8 +15,7 @@ use Webmozart\PathUtil\Path;
 class DefaultCliFactory implements CliFactoryInterface
 {
     /**
-     * It's a CliFactory, the method is called 'create', the return type is type
-     * hinted... What do you think it does!?
+     * {@inheritdoc}
      */
     public function create($object): ?CliInterface
     {

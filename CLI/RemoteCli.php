@@ -61,5 +61,4 @@ class RemoteCli implements CliInterface
     {
         return $this->lastOutput;
     }
-
 }

@@ -49,7 +49,7 @@ class CacheClearBuildProvisionerTest extends TestCase
         $cliFactoryProvider->registerCliFactory($cliFactory, get_class($appEnv));
 
         $clearer = $this->getMockBuilder(CacheClearerInterface::class)->getMock();
-        $clearer->expects($this->once())->method('clearCache')->with($appEnv, $cli);
+        $clearer->expects($this->once())->method('clearCache')->with($appEnv, $cli)->willReturn(true);
 
         $cacheClearProvider->registerCacheClearer($clearer, get_class($application));
 

@@ -51,12 +51,17 @@ class CacheClearBuildProvisioner extends AbstractProvisioner
             )
         );
         try {
-            $this->cacheClearProvider
+            $cli = $this->cliFactoryProvider->createCliFor($appEnv);
+            $result = $this->cacheClearProvider
                 ->getCacheClearerFor($application)
                 ->clearCache(
                     $appEnv,
-                    $this->cliFactoryProvider->createCliFor($appEnv)
+                    $cli
                 );
+            if (!$result) {
+                $this->taskLoggerService->addErrorLogMessage($this->task, 'Cache clear failed.', 2);
+                throw new \Exception($cli->getLastOutput());
+            }
         } catch (NoCacheClearerFoundException $cacheEx) {
             $this->taskLoggerService->addWarningLogMessage($this->task, $cacheEx->getMessage(), 2);
         } catch (NoCliFactoryFoundException $cliEx) {

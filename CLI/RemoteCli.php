@@ -46,7 +46,7 @@ class RemoteCli implements CliInterface
      */
     public function execute(CommandBuilder $command)
     {
-        $result = $this->connection->exec($command);
+        $result = $this->connection->exec($command->getCommand());
         $this->lastOutput = $result ? $result : '';
 
         return $this->connection->getExitStatus() === 0;

@@ -2,6 +2,7 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\CLI;
 
+use DigipolisGent\CommandBuilder\CommandBuilder;
 use phpseclib\Net\SSH2;
 
 class RemoteCli implements CliInterface
@@ -30,20 +31,20 @@ class RemoteCli implements CliInterface
     {
         $this->connection = $connection;
         if ($cwd) {
-            $this->execute('cd -P ' . escapeshellarg($cwd));
+            $this->execute(CommandBuilder::create('cd')->addFlag('P')->addArgument($cwd));
         }
     }
 
     /**
      * Executes a command.
      *
-     * @param string $command
-     *   The (properly shell-escaped) command to execute.
+     * @param CommandBuilder $command
+     *   The command to execute.
      *
      * @return bool
      *   True on success, false on failure.
      */
-    public function execute(string $command)
+    public function execute(CommandBuilder $command)
     {
         $result = $this->connection->exec($command);
         $this->lastOutput = $result ? $result : '';

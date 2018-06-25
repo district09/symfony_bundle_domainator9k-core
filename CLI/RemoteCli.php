@@ -19,6 +19,11 @@ class RemoteCli implements CliInterface
     protected $lastOutput;
 
     /**
+     * @var string
+     */
+    protected $cwd;
+
+    /**
      * RemoteCli class constructor.
      *
      * @param SSH2 $connection
@@ -30,9 +35,7 @@ class RemoteCli implements CliInterface
     public function __construct(SSH2 $connection, $cwd = null)
     {
         $this->connection = $connection;
-        if ($cwd) {
-            $this->execute(CommandBuilder::create('cd')->addFlag('P')->addArgument($cwd));
-        }
+        $this->cwd = $cwd;
     }
 
     /**
@@ -46,8 +49,15 @@ class RemoteCli implements CliInterface
      */
     public function execute(CommandBuilder $command)
     {
+        if ($this->cwd) {
+            $command = CommandBuilder::create('cd')
+                ->addFlag('P')
+                ->addArgument($this->cwd)
+                ->onSuccess($command);
+        }
+        $this->lastOutput = 'Executing ' . $command . "\n";
         $result = $this->connection->exec($command->getCommand());
-        $this->lastOutput = $result ? $result : '';
+        $this->lastOutput .= $result ? $result : '';
 
         return $this->connection->getExitStatus() === 0;
     }

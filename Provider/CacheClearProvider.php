@@ -4,6 +4,7 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Provider;
 
 use DigipolisGent\Domainator9k\CoreBundle\CacheClearer\CacheClearerInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Exception\NoCacheClearerFoundException;
+use Doctrine\ORM\Proxy\Proxy;
 
 class CacheClearProvider
 {
@@ -35,11 +36,13 @@ class CacheClearProvider
         }
 
         $class = get_class($object);
-
-        if (!isset($this->cacheClearers[$class])) {
-            throw new NoCacheClearerFoundException('No cache clearer found for ' . $class);
+        if (!isset($this->cacheClearers[$class]) && $object instanceof Proxy) {
+            $class = get_parent_class($object);
+        }
+        if (isset($this->cacheClearers[$class])) {
+            return $this->cacheClearers[$class];
         }
 
-        return $this->cacheClearers[$class];
+        throw new NoCacheClearerFoundException('No cache clearer found for ' . $class);
     }
 }

@@ -36,6 +36,10 @@ abstract class AbstractApplication implements TemplateInterface
      * @ORM\Column(name="name", type="string", nullable=false)
      * @Assert\NotBlank()
      * @Assert\Length(min="2", max="255")
+     * @Assert\Regex(
+     *     pattern="/^[a-z0-9\-]+$/",
+     *     message="Name can only contain alphanumeric characters and dashes."
+     * )
      */
     protected $name;
 

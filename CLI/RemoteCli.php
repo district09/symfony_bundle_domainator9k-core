@@ -71,4 +71,8 @@ class RemoteCli implements CliInterface
     {
         return $this->lastOutput;
     }
+
+    public function getConnection() {
+        return $this->connection;
+    }
 }

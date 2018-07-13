@@ -23,4 +23,6 @@ interface CliInterface
      * @return string
      */
     public function getLastOutput();
+
+    public function getConnection();
 }

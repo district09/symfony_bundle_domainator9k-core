@@ -60,7 +60,6 @@ class CacheClearBuildProvisioner extends AbstractProvisioner
                 );
             if (!$result) {
                 $this->taskLoggerService->addErrorLogMessage($this->task, 'Cache clear failed.', 2);
-                throw new \Exception($cli->getLastOutput());
             }
             $output = $cli->getLastOutput();
             if ($output) {

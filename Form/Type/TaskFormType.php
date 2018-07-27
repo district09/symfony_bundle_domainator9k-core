@@ -44,8 +44,7 @@ class TaskFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         parent::buildForm($builder, $options);
-        $choices = [];
-        $provisioners = [];
+
         switch ($options['type']) {
             case Task::TYPE_BUILD:
                 $provisioners = $this->taskRunnerService->getBuildProvisioners();
@@ -54,17 +53,31 @@ class TaskFormType extends AbstractType
             case Task::TYPE_DESTROY:
                 $provisioners = $this->taskRunnerService->getDestroyProvisioners();
                 break;
+
+            default:
+                $provisioners = [];
+                break;
         }
 
+        $choices = [];
+        $defaults = [];
         foreach ($provisioners as $provisioner) {
-            $choices[$provisioner->getName()] = get_class($provisioner);
+            $class = get_class($provisioner);
+            $choices[$provisioner->getName()] = $class;
+
+            if ($provisioner->isExecutedByDefault()) {
+                $defaults[] = $class;
+            }
         }
+
         $builder->add('provisioners', ChoiceType::class, [
             'expanded' => true,
             'multiple' => true,
             'required' => false,
             'choices' => $choices,
-            'label' => 'Limit to following provisioners (selecting none will run all provisioners)',
+            'data' => $defaults,
+            'empty_data' => $defaults,
+            'label' => 'Limit to following provisioners (selecting none will run the default provisioners)',
         ]);
         $builder->addEventSubscriber(new SettingFormListener($this->formService));
     }

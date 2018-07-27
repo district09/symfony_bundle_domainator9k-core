@@ -76,4 +76,9 @@ class CacheClearBuildProvisioner extends AbstractProvisioner
     {
         return 'Clear caches';
     }
+
+    public function isExecutedByDefault()
+    {
+        return false;
+    }
 }

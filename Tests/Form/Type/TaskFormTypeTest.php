@@ -47,6 +47,7 @@ class TaskFormTypeTest extends AbstractFormTypeTest
             $mock = $this->getMockBuilder(ProvisionerInterface::class)->getMock();
             $name = 'Provisioner' . $index;
             $mock->expects($this->once())->method('getName')->willReturn($name);
+            $mock->expects($this->once())->method('isExecutedByDefault')->willReturn(false);
             $provisioners[] = $mock;
             $choices[$name] = get_class($mock);
         }
@@ -67,7 +68,9 @@ class TaskFormTypeTest extends AbstractFormTypeTest
                     'multiple' => true,
                     'required' => false,
                     'choices' => $choices,
-                    'label' => 'Limit to following provisioners (selecting none will run all provisioners)',
+                    'data' => [],
+                    'empty_data' => [],
+                    'label' => 'Limit to following provisioners (selecting none will run the default provisioners)',
                 ]
             );
 

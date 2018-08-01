@@ -30,4 +30,9 @@ abstract class AbstractProvisioner implements ProvisionerInterface
     }
 
     abstract protected function doRun();
+
+    public function isExecutedByDefault()
+    {
+        return true;
+    }
 }

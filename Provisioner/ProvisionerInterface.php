@@ -9,4 +9,5 @@ interface ProvisionerInterface
     public function setTask(Task $task);
     public function run();
     public function getName();
+    public function isExecutedByDefault();
 }

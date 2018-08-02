@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="virtualserver")
+ * @ORM\Table(name="virtual_server")
  */
 class VirtualServer
 {

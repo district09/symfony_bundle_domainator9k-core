@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @package DigipolisGent\Domainator9k\CoreBundle\Entity
  *
  * @ORM\Entity()
+ * @ORM\Table(name="application_type")
  */
 class ApplicationType
 {

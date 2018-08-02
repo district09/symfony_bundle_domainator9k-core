@@ -39,12 +39,15 @@ class EnvironmentEventListenerTest extends TestCase
         $applications = new ArrayCollection();
         $applications->add(new QuuxApplication());
 
+        $applicationTypes = new ArrayCollection();
+        $applicationTypes->add(new ApplicationType());
+
         $entityManager
             ->expects($this->at(0))
             ->method('getRepository')
-            ->with($this->equalTo(AbstractApplication::class))
+            ->with($this->equalTo(ApplicationType::class))
             ->willReturn(
-                $this->getRepositoryMock($applications)
+                $this->getRepositoryMock($applicationTypes)
             );
 
         $entityManager
@@ -54,26 +57,6 @@ class EnvironmentEventListenerTest extends TestCase
 
         $entityManager
             ->expects($this->at(2))
-            ->method('flush');
-
-        $applicationTypes = new ArrayCollection();
-        $applicationTypes->add(new ApplicationType());
-
-        $entityManager
-            ->expects($this->at(3))
-            ->method('getRepository')
-            ->with($this->equalTo(ApplicationType::class))
-            ->willReturn(
-                $this->getRepositoryMock($applicationTypes)
-            );
-
-        $entityManager
-            ->expects($this->at(4))
-            ->method('persist');
-
-
-        $entityManager
-            ->expects($this->at(5))
             ->method('flush');
 
         $args = $this->getLifecycleEventArgsMock($entity, $entityManager);

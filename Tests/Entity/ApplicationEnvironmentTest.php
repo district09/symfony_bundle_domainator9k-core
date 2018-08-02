@@ -23,12 +23,22 @@ class ApplicationEnvironmentTest extends TestCase
     {
         $expected = [
             'serverIps()' => 'getServerIps()',
-            'environmentName()' => 'getEnvironment().getName()',
+            'workerServerIp()' => 'getWorkerServerIp()',
+            'environmentName()' => 'getEnvironmentName()',
+            'applicationName()' => 'getApplication().getName()',
+            'applicationNameCanonical()' => 'getApplication().getNameCanonical()',
+            'applicationGitRepo()' => 'getApplication().getGitRepo()',
+            'applicationServerIps(dev_environment_name)' => 'getApplication().getApplicationEnvironmentByEnvironmentName(dev_environment_name).getServerIps()',
+            'environmentGitRef()' => 'getEnvironment().getGitRef()',
+            'environmentConfig(key)' => 'getEnvironment().getConfig(key)',
+            'environmentPriority()' => 'getEnvironment().getPriority()',
             'config(key)' => 'getConfig(key)',
             'databaseName()' => 'getDatabaseName()',
             'databaseUser()' => 'getDatabaseUser()',
             'databasePassword()' => 'getDatabasePassword()',
             'gitRef()' => 'getGitRef()',
+            'domain()' => 'getDomain()',
+            'applicationConfig(key)' => 'getApplication().getConfig(key)'
         ];
 
         $this->assertEquals($expected, ApplicationEnvironment::getTemplateReplacements());

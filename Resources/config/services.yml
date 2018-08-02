@@ -6,20 +6,39 @@ services:
             - { name: doctrine.event_listener, event: postPersist, connection: default }
             - { name: doctrine.event_listener, event: postRemove, connection: default }
     DigipolisGent\Domainator9k\CoreBundle\Service\TaskLoggerService:
-    DigipolisGent\Domainator9k\CoreBundle\EventListener\BuildEventListener:
-        tags:
-            - { name: kernel.event_listener, event: domainator.build, method: onStart, priority: 99 }
-            - { name: kernel.event_listener, event: domainator.build, method: onEnd, priority: 1 }
-    DigipolisGent\Domainator9k\CoreBundle\EventListener\DestroyEventListener:
-        tags:
-            - { name: kernel.event_listener, event: domainator.destroy, method: onStart, priority: 99 }
-            - { name: kernel.event_listener, event: domainator.destroy, method: onEnd, priority: 1 }
     DigipolisGent\Domainator9k\CoreBundle\Service\TemplateService:
+    DigipolisGent\Domainator9k\CoreBundle\Service\TokenService:
+    DigipolisGent\Domainator9k\CoreBundle\Service\TaskRunnerService:
+        arguments:
+            - !tagged domainator.provisioner.build
+            - !tagged domainator.provisioner.destroy
+            - '@doctrine.orm.entity_manager'
+            - '@DigipolisGent\Domainator9k\CoreBundle\Service\TaskLoggerService'
+
     DigipolisGent\Domainator9k\CoreBundle\Form\Type\ApplicationEnvironmentFormType:
         tags: [form.type]
     DigipolisGent\Domainator9k\CoreBundle\Form\Type\EnvironmentFormType:
         tags: [form.type]
     DigipolisGent\Domainator9k\CoreBundle\Form\Type\VirtualServerFormType:
         tags: [form.type]
+    DigipolisGent\Domainator9k\CoreBundle\Form\Type\TokenFormType:
+        tags: [form.type]
+    DigipolisGent\Domainator9k\CoreBundle\Form\Type\TaskFormType:
+        tags: [form.type]
     DigipolisGent\Domainator9k\CoreBundle\Form\Type\ApplicationTypeEnvironmentFormType:
         tags: [form.type]
+    DigipolisGent\Domainator9k\CoreBundle\Twig\TemplateHelpExtension:
+        tags: [twig.extension]
+    DigipolisGent\Domainator9k\CoreBundle\Provisioner\CacheClearBuildProvisioner:
+        tags:
+            - {name: domainator.provisioner.build, priority: -90}
+        arguments:
+            - '@DigipolisGent\Domainator9k\CoreBundle\Provider\CliFactoryProvider'
+            - '@DigipolisGent\Domainator9k\CoreBundle\Provider\CacheClearProvider'
+            - '@DigipolisGent\Domainator9k\CoreBundle\Service\TaskLoggerService'
+    DigipolisGent\Domainator9k\CoreBundle\CLI\DefaultCliFactory:
+    DigipolisGent\Domainator9k\CoreBundle\Provider\CacheClearProvider:
+    DigipolisGent\Domainator9k\CoreBundle\Provider\CliFactoryProvider:
+        arguments:
+            - '@DigipolisGent\Domainator9k\CoreBundle\CLI\DefaultCliFactory'
+

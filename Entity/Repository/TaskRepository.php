@@ -28,6 +28,7 @@ class TaskRepository extends EntityRepository
 
     public function getLastTaskId(ApplicationEnvironment $applicationEnvironment, string $type)
     {
+
         $task = $this->_em->createQueryBuilder()
             ->select('t')
             ->from(Task::class, 't')
@@ -36,7 +37,7 @@ class TaskRepository extends EntityRepository
             ->andWhere('ae.id=:id')
             ->setParameter('type', $type)
             ->setParameter('id', $applicationEnvironment->getId())
-            ->orderBy('t.created')
+            ->orderBy('t.created','DESC')
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();

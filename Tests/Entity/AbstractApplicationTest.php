@@ -15,7 +15,22 @@ class AbstractApplicationTest extends TestCase
     public function testGetTemplateReplacements()
     {
         $expected = [
+            'name()' => 'getName()',
             'nameCanonical()' => 'getNameCanonical()',
+            'gitRepo()' => 'getGitRepo()',
+            'config(key)' => 'getConfig(key)',
+            'applicationEnvironmentDatabaseName(name)' => 'getApplicationEnvironmentByEnvironmentName(name).getDatabaseName()',
+            'applicationEnvironmentEnvironmentName(name)' => 'getApplicationEnvironmentByEnvironmentName(name).getEnvironmentName()',
+            'applicationEnvironmentEnvironmentGitRef(name)' => 'getApplicationEnvironmentByEnvironmentName(name).getEnvironment().getGitRef()',
+            'applicationEnvironmentEnvironmentConfig(name,key)' => 'getApplicationEnvironmentByEnvironmentName(name).getEnvironment().getConfig(key)',
+            'applicationEnvironmentEnvironmentPriority(name)' => 'getApplicationEnvironmentByEnvironmentName(name).getEnvironment().getPriority()',
+            'applicationEnvironmentDatabaseUser(name)' => 'getApplicationEnvironmentByEnvironmentName(name).getDatabaseUser()',
+            'applicationEnvironmentDatabasePassword(name)' => 'getApplicationEnvironmentByEnvironmentName(name).getDatabasePassword()',
+            'applicationEnvironmentGitRef(name)' => 'getApplicationEnvironmentByEnvironmentName(name).getGitRef()',
+            'applicationEnvironmentDomain(name)' => 'getApplicationEnvironmentByEnvironmentName(name).getDomain()',
+            'applicationEnvironmentServerIps(name)' => 'getApplicationEnvironmentByEnvironmentName(name).getServerIps()',
+            'applicationEnvironmentWorkerServerIp(name)' => 'getApplicationEnvironmentByEnvironmentName(name).getWorkerServerIp()',
+            'applicationEnvironmentConfig(name,key)' => 'getApplicationEnvironmentByEnvironmentName(name).getConfig(key)',
             'serverIps(dev_environment_name)' => 'getApplicationEnvironmentByEnvironmentName(dev_environment_name).getServerIps()',
         ];
 
@@ -46,7 +61,7 @@ class AbstractApplicationTest extends TestCase
 
         $application->setName('My application name');
         $this->assertEquals('My application name', $application->getName());
-        $this->assertEquals('myapplicatio', $application->getNameCanonical());
+        $this->assertEquals('myapplicationn', $application->getNameCanonical());
 
         $this->assertTrue($application->isHasDatabase());
         $application->setHasDatabase(false);
@@ -64,7 +79,7 @@ class AbstractApplicationTest extends TestCase
         $this->assertCount(0,$application->getApplicationEnvironments());
 
         $this->assertNull($application->getId());
-        
+
         $application->setDeleted(true);
         $this->assertTrue($application->isDeleted());
     }

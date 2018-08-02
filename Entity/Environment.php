@@ -3,8 +3,10 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\IdentifiableTrait;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\TemplateImplementationTrait;
 use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -14,11 +16,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="environment")
  * @UniqueEntity(fields={"name"})
  */
-class Environment
+class Environment implements TemplateInterface
 {
 
     use SettingImplementationTrait;
     use IdentifiableTrait;
+    use TemplateImplementationTrait;
 
     /**
      * @var string
@@ -61,6 +64,21 @@ class Environment
     protected $virtualServers;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="git_ref",type="string",nullable=true)
+     * @Assert\NotBlank()
+     */
+    protected $gitRef;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="priority",type="integer",nullable=true)
+     */
+    protected $priority;
+
+    /**
      * Creates a new environment.
      */
     public function __construct()
@@ -83,7 +101,7 @@ class Environment
      *
      * @return string
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -141,7 +159,7 @@ class Environment
     /**
      * @return ArrayCollection
      */
-    public function getApplicationEnvironments()
+    public function getApplicationEnvironments(): Collection
     {
         return $this->applicationEnvironments;
     }
@@ -157,7 +175,7 @@ class Environment
     /**
      * @return ArrayCollection
      */
-    public function getApplicationTypeEnvironments()
+    public function getApplicationTypeEnvironments(): Collection
     {
         return $this->applicationTypeEnvironments;
     }
@@ -174,8 +192,40 @@ class Environment
     /**
      * @return ArrayCollection
      */
-    public function getVirtualServers()
+    public function getVirtualServers(): Collection
     {
         return $this->virtualServers;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGitRef(): ?string
+    {
+        return $this->gitRef;
+    }
+
+    /**
+     * @param string $gitRef
+     */
+    public function setGitRef(string $gitRef)
+    {
+        $this->gitRef = $gitRef;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPriority(): ?int
+    {
+        return $this->priority;
+    }
+
+    /**
+     * @param int $priority
+     */
+    public function setPriority(int $priority = null)
+    {
+        $this->priority = $priority;
     }
 }

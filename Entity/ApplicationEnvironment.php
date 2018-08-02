@@ -3,8 +3,10 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\IdentifiableTrait;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\TemplateImplementationTrait;
 use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -17,6 +19,7 @@ class ApplicationEnvironment implements TemplateInterface
 
     use SettingImplementationTrait;
     use IdentifiableTrait;
+    use TemplateImplementationTrait;
 
     /**
      * @var ArrayCollection
@@ -91,25 +94,9 @@ class ApplicationEnvironment implements TemplateInterface
     }
 
     /**
-     * @return array
-     */
-    public static function getTemplateReplacements(): array
-    {
-        return [
-            'serverIps()' => 'getServerIps()',
-            'environmentName()' => 'getEnvironment().getName()',
-            'config(key)' => 'getConfig(key)',
-            'databaseName()' => 'getDatabaseName()',
-            'databaseUser()' => 'getDatabaseUser()',
-            'databasePassword()' => 'getDatabasePassword()',
-            'gitRef()' => 'getGitRef()',
-        ];
-    }
-
-    /**
      * @return AbstractApplication
      */
-    public function getApplication()
+    public function getApplication(): ?AbstractApplication
     {
         return $this->application;
     }
@@ -125,7 +112,7 @@ class ApplicationEnvironment implements TemplateInterface
     /**
      * @return string
      */
-    public function getDatabaseName()
+    public function getDatabaseName(): ?string
     {
         return $this->databaseName;
     }
@@ -141,7 +128,7 @@ class ApplicationEnvironment implements TemplateInterface
     /**
      * @return string
      */
-    public function getEnvironmentName()
+    public function getEnvironmentName(): ?string
     {
         return $this->getEnvironment()->getName();
     }
@@ -149,7 +136,7 @@ class ApplicationEnvironment implements TemplateInterface
     /**
      * @return Environment
      */
-    public function getEnvironment()
+    public function getEnvironment(): ?Environment
     {
         return $this->environment;
     }
@@ -165,7 +152,7 @@ class ApplicationEnvironment implements TemplateInterface
     /**
      * @return string
      */
-    public function getDatabaseUser()
+    public function getDatabaseUser(): ?string
     {
         return $this->databaseUser;
     }
@@ -181,7 +168,7 @@ class ApplicationEnvironment implements TemplateInterface
     /**
      * @return string
      */
-    public function getDatabasePassword()
+    public function getDatabasePassword(): ?string
     {
         return $this->databasePassword;
     }
@@ -197,7 +184,7 @@ class ApplicationEnvironment implements TemplateInterface
     /**
      * @return string
      */
-    public function getGitRef()
+    public function getGitRef(): ?string
     {
         return $this->gitRef;
     }
@@ -205,7 +192,7 @@ class ApplicationEnvironment implements TemplateInterface
     /**
      * @param string $gitRef
      */
-    public function setGitRef(string $gitRef)
+    public function setGitRef(string $gitRef = null)
     {
         $this->gitRef = $gitRef;
     }
@@ -213,7 +200,7 @@ class ApplicationEnvironment implements TemplateInterface
     /**
      * @return ArrayCollection
      */
-    public function getTasks()
+    public function getTasks(): Collection
     {
         return $this->tasks;
     }
@@ -221,7 +208,7 @@ class ApplicationEnvironment implements TemplateInterface
     /**
      * @return string
      */
-    public function getDomain()
+    public function getDomain(): ?string
     {
         return $this->domain;
     }
@@ -248,14 +235,19 @@ class ApplicationEnvironment implements TemplateInterface
         return implode(' ', $serverIps);
     }
 
-    public function getConfig($key)
+    /**
+     * @return string
+     */
+    public function getWorkerServerIp(): string
     {
-        foreach ($this->getSettingDataValues() as $settingDataValue) {
-            if ($settingDataValue->getSettingDataType()->getKey() == $key) {
-                return $settingDataValue->getValue();
+        /** @var VirtualServer $server */
+        $servers = $this->getEnvironment()->getVirtualServers();
+        foreach ($servers as $server) {
+            if ($server->isTaskServer()) {
+                return $server->getHost();
             }
         }
 
-        return '';
+        return end($servers)->getHost();
     }
 }

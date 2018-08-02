@@ -4,8 +4,10 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Entity;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\IdentifiableTrait;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\TemplateImplementationTrait;
 use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -15,23 +17,29 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @package DigipolisGent\Domainator9k\CoreBundle\Entity
  *
  * @ORM\Entity()
- * @ORM\Table()
+ * @ORM\Table(name="abstract_application")
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr",type="string")
- * @UniqueEntity(fields={"name"})
+ * @UniqueEntity(fields={"name"})]
+ * @ORM\HasLifecycleCallbacks()
  */
 abstract class AbstractApplication implements TemplateInterface
 {
 
     use SettingImplementationTrait;
     use IdentifiableTrait;
+    use TemplateImplementationTrait;
 
     /**
      * @var string
      *
      * @ORM\Column(name="name", type="string", nullable=false)
      * @Assert\NotBlank()
-     * @Assert\Length(min="3", max="255")
+     * @Assert\Length(min="2", max="255")
+     * @Assert\Regex(
+     *     pattern="/^[a-z0-9\-]+$/",
+     *     message="Name can only contain alphanumeric characters and dashes."
+     * )
      */
     protected $name;
 
@@ -54,8 +62,6 @@ abstract class AbstractApplication implements TemplateInterface
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="ApplicationEnvironment", mappedBy="application", cascade={"all"},fetch="EAGER")
-     * @Assert\Valid()
-     * @Assert\NotNull()
      */
     protected $applicationEnvironments;
 
@@ -65,6 +71,13 @@ abstract class AbstractApplication implements TemplateInterface
      * @ORM\Column(name="deleted",type="boolean")
      */
     protected $deleted = false;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="application_type",type="string")
+     */
+    protected $applicationType;
 
     /**
      * @return string
@@ -89,7 +102,7 @@ abstract class AbstractApplication implements TemplateInterface
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -105,16 +118,16 @@ abstract class AbstractApplication implements TemplateInterface
     /**
      * @return string
      */
-    public function getNameCanonical()
+    public function getNameCanonical(): ?string
     {
         $name = strtolower(preg_replace("/[^a-zA-Z0-9]+/", "", $this->getName()));
-        return substr($name, 0, 12);
+        return substr($name, 0, 14);
     }
 
     /**
      * @return string
      */
-    public function getGitRepo()
+    public function getGitRepo(): ?string
     {
         return $this->gitRepo;
     }
@@ -130,7 +143,7 @@ abstract class AbstractApplication implements TemplateInterface
     /**
      * @return bool
      */
-    public function isHasDatabase(): bool
+    public function isHasDatabase(): ?bool
     {
         return $this->hasDatabase;
     }
@@ -163,7 +176,7 @@ abstract class AbstractApplication implements TemplateInterface
     /**
      * @return ArrayCollection
      */
-    public function getApplicationEnvironments()
+    public function getApplicationEnvironments(): Collection
     {
         return $this->applicationEnvironments;
     }
@@ -172,7 +185,7 @@ abstract class AbstractApplication implements TemplateInterface
      * @param $name
      * @return mixed|null
      */
-    public function getApplicationEnvironmentByEnvironmentName(string $name)
+    public function getApplicationEnvironmentByEnvironmentName(string $name): ?ApplicationEnvironment
     {
         foreach ($this->applicationEnvironments as $applicationEnvironment) {
             if ($applicationEnvironment->getEnvironment()->getName() == $name) {
@@ -180,16 +193,16 @@ abstract class AbstractApplication implements TemplateInterface
             }
         }
 
-        return '';
+        return null;
     }
 
     /**
      * @return array
      */
-    public static function getTemplateReplacements(): array
+    public static function additionalTemplateReplacements(): array
     {
+        // Backward compatibility.
         return [
-            'nameCanonical()' => 'getNameCanonical()',
             'serverIps(dev_environment_name)' => 'getApplicationEnvironmentByEnvironmentName(dev_environment_name).getServerIps()',
         ];
     }
@@ -197,7 +210,7 @@ abstract class AbstractApplication implements TemplateInterface
     /**
      * @return bool
      */
-    public function isDeleted(): bool
+    public function isDeleted(): ?bool
     {
         return $this->deleted;
     }
@@ -208,5 +221,12 @@ abstract class AbstractApplication implements TemplateInterface
     public function setDeleted(bool $deleted = false)
     {
         $this->deleted = $deleted;
+    }
+
+    /**
+     * @ORM\PrePersist()
+     */
+    public function prePersist(){
+        $this->applicationType = $this::getApplicationType();
     }
 }

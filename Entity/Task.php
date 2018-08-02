@@ -16,30 +16,13 @@ class Task
     const STATUS_NEW = 'new';
     const STATUS_IN_PROGRESS = 'in_progress';
     const STATUS_PROCESSED = 'processed';
+    const STATUS_FAILED = 'failed';
+    const STATUS_CANCEL= 'cancel';
 
     const TYPE_BUILD = 'build';
     const TYPE_DESTROY = 'destroy';
 
     use IdentifiableTrait;
-
-    /**
-     * @var DateTime
-     * @ORM\Column(name="created", type="datetime", nullable=false)
-     */
-    protected $created;
-
-    /**
-     * @var string
-     * @ORM\Column(name="log", type="text", nullable=true)
-     */
-    protected $log;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="status",type="string")
-     */
-    protected $status;
 
     /**
      * @var ApplicationEnvironment
@@ -57,6 +40,31 @@ class Task
     protected $type;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="status",type="string")
+     */
+    protected $status;
+
+    /**
+     * @var DateTime
+     * @ORM\Column(name="created", type="datetime", nullable=false)
+     */
+    protected $created;
+
+    /**
+     * @var string[]
+     * @ORM\Column(name="provisioners", type="simple_array", nullable=true)
+     */
+    protected $provisioners;
+
+    /**
+     * @var string
+     * @ORM\Column(name="log", type="text", nullable=true)
+     */
+    protected $log;
+
+    /**
      * Build constructor.
      */
     public function __construct()
@@ -66,11 +74,75 @@ class Task
     }
 
     /**
+     * @return ApplicationEnvironment
+     */
+    public function getApplicationEnvironment()
+    {
+        return $this->applicationEnvironment;
+    }
+
+    /**
+     * @param ApplicationEnvironment $applicationEnvironment
+     */
+    public function setApplicationEnvironment(ApplicationEnvironment $applicationEnvironment)
+    {
+        $this->applicationEnvironment = $applicationEnvironment;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     */
+    public function setType(string $type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     */
+    public function setStatus(string $status)
+    {
+        $this->status = $status;
+    }
+
+    /**
      * @return DateTime
      */
     public function getCreated(): DateTime
     {
         return $this->created;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getProvisioners()
+    {
+        return $this->provisioners;
+    }
+
+    /**
+     * @param string[] $provisioners
+     */
+    public function setProvisioners($provisioners)
+    {
+        $this->provisioners = $provisioners;
     }
 
     /**
@@ -98,50 +170,84 @@ class Task
     }
 
     /**
-     * @param ApplicationEnvironment $applicationEnvironment
+     * Mark this task as in progress.
      */
-    public function setApplicationEnvironment(ApplicationEnvironment $applicationEnvironment)
+    public function setInProgress()
     {
-        $this->applicationEnvironment = $applicationEnvironment;
+        $this->setStatus(static::STATUS_IN_PROGRESS);
     }
 
     /**
-     * @return ApplicationEnvironment
+     * Mark this task as processed.
      */
-    public function getApplicationEnvironment()
+    public function setProcessed()
     {
-        return $this->applicationEnvironment;
+        $this->setStatus(static::STATUS_PROCESSED);
     }
 
     /**
-     * @return string
+     * Mark this task as failed.
      */
-    public function getStatus(): string
+    public function setFailed()
     {
-        return $this->status;
+        $this->setStatus(static::STATUS_FAILED);
     }
 
     /**
-     * @param string $status
+     * Mark this task as in cancelled.
      */
-    public function setStatus(string $status)
+    public function setCancelled()
     {
-        $this->status = $status;
+        $this->setStatus(static::STATUS_CANCEL);
     }
 
     /**
-     * @return string
+     * Check if this task is new.
+     *
+     * @return boolean
      */
-    public function getType(): string
+    public function isNew()
     {
-        return $this->type;
+        return $this->getStatus() === static::STATUS_NEW;
     }
 
     /**
-     * @param string $type
+     * Check if this task is in progress.
+     *
+     * @return boolean
      */
-    public function setType(string $type)
+    public function isInProgress()
     {
-        $this->type = $type;
+        return $this->getStatus() === static::STATUS_IN_PROGRESS;
+    }
+
+    /**
+     * Check if this task is processed.
+     *
+     * @return boolean
+     */
+    public function isProcessed()
+    {
+        return $this->getStatus() === static::STATUS_PROCESSED;
+    }
+
+    /**
+     * Check if this task is failed.
+     *
+     * @return boolean
+     */
+    public function isFailed()
+    {
+        return $this->getStatus() === static::STATUS_FAILED;
+    }
+
+    /**
+     * Check if this task is cancelled.
+     *
+     * @return boolean
+     */
+    public function isCancelled()
+    {
+        return $this->getStatus() === static::STATUS_CANCEL;
     }
 }

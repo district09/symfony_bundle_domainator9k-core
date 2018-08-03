@@ -29,7 +29,6 @@ class Environment implements TemplateInterface
      * @Assert\NotBlank();
      * @Assert\Regex(
      *     pattern="/^[a-z]+$/",
-     *     match=true,
      *     message="Your name cannot contain a space"
      * )
      */

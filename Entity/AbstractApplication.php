@@ -47,7 +47,10 @@ abstract class AbstractApplication implements TemplateInterface
      * @var string
      *
      * @ORM\Column(name="git_repo", type="string", nullable=false)
-     * @Assert\Regex("/^git@[a-z0-9]*.[a-z]*:[a-zA-Z0-9]*\/[^\s.\\]*.git/")
+     * @Assert\Regex(
+     *     pattern="/^git@[a-z0-9]*.[a-z]*:[a-zA-Z0-9]*\/[^\s.\\]*.git$/",
+     *     message="The git repository url must be in the git@xxx.git format"
+     * )
      */
     protected $gitRepo;
 

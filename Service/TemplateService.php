@@ -189,6 +189,8 @@ class TemplateService
             }
         }
 
+        $this->replacements[$type] = [];
+
         foreach ($replacements as $replacementKey => $replacementValueCallback) {
             // Extract the key and parameters.
             if (!preg_match('#^

@@ -140,7 +140,7 @@ class TemplateService
                 $result = call_user_func_array([$result, $callback], $callbackParams);
             }
 
-            return $result;
+            return (string) $result;
         }
 
         return $original;

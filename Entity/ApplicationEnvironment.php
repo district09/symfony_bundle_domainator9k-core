@@ -78,7 +78,7 @@ class ApplicationEnvironment implements TemplateInterface
      * @ORM\Column(name="domain",type="string",nullable=true)
      * @Assert\NotBlank()
      * @Assert\Regex(
-     *     pattern="/^(([a-zA-Z]{1})|([a-zA-Z]{1}[a-zA-Z]{1})|([a-zA-Z]{1}[0-9]{1})|([0-9]{1}[a-zA-Z]{1})|([a-zA-Z0-9][a-zA-Z0-9-_]{1,61}[a-zA-Z0-9]))\.([a-zA-Z]{2,6}|[a-zA-Z0-9-]{2,30}\.[a-zA-Z]{2,3})$/",
+     *     pattern="/^[a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?(\.[a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?)*\.[a-z]{2,63}$/",
      *     message="The domain is not valid"
      * )
      */

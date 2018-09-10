@@ -48,6 +48,7 @@ class TaskFormTypeTest extends AbstractFormTypeTest
             $name = 'Provisioner' . $index;
             $mock->expects($this->once())->method('getName')->willReturn($name);
             $mock->expects($this->once())->method('isExecutedByDefault')->willReturn(false);
+            $mock->expects($this->once())->method('isSelectable')->willReturn(true);
             $provisioners[] = $mock;
             $choices[$name] = get_class($mock);
         }

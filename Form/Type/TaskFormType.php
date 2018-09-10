@@ -62,11 +62,13 @@ class TaskFormType extends AbstractType
         $choices = [];
         $defaults = [];
         foreach ($provisioners as $provisioner) {
-            $class = get_class($provisioner);
-            $choices[$provisioner->getName()] = $class;
+            if ($provisioner->isSelectable()) {
+                $class = get_class($provisioner);
+                $choices[$provisioner->getName()] = $class;
 
-            if ($provisioner->isExecutedByDefault()) {
-                $defaults[] = $class;
+                if ($provisioner->isExecutedByDefault()) {
+                    $defaults[] = $class;
+                }
             }
         }
 

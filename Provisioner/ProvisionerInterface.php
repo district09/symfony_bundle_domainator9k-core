@@ -10,4 +10,5 @@ interface ProvisionerInterface
     public function run();
     public function getName();
     public function isExecutedByDefault();
+    public function isSelectable();
 }

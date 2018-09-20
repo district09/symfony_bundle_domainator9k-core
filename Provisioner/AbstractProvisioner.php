@@ -35,4 +35,9 @@ abstract class AbstractProvisioner implements ProvisionerInterface
     {
         return true;
     }
+
+    public function isSelectable()
+    {
+        return true;
+    }
 }

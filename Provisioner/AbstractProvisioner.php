@@ -33,7 +33,7 @@ abstract class AbstractProvisioner implements ProvisionerInterface
 
     public function isExecutedByDefault()
     {
-        return true;
+        return false;
     }
 
     public function isSelectable()

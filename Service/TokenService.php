@@ -7,7 +7,7 @@ use Camel\CaseTransformer;
 use Camel\Format\SnakeCase;
 use Camel\Format\StudlyCaps;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Token;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -27,7 +27,7 @@ class TokenService
      */
     protected $caseTransformer;
 
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         $this->repository = $entityManager->getRepository(Token::class);
         $this->caseTransformer = new CaseTransformer(new SnakeCase(), new StudlyCaps());

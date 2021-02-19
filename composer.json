@@ -8,18 +8,17 @@
   "minimum-stability": "stable",
   "require": {
     "php": ">=7.1",
-    "symfony/symfony": ">=3.4",
+    "symfony/symfony": "^4.0",
     "digipolisgent/setting-bundle": "dev-develop",
     "digipolisgent/command-builder": "^1.0",
-    "doctrine/doctrine-bundle": "^1.6",
+    "doctrine/doctrine-bundle": "^2.2.3",
     "doctrine/orm": "^2.5",
-    "symfony/swiftmailer-bundle": "^2.3",
+    "symfony/swiftmailer-bundle": "^3.5",
     "phpseclib/phpseclib": "^3.0",
-    "phpseclib/phpseclib2_compat": "^1.0",
     "webmozart/path-util": "^2.3",
-    "doctrine/doctrine-fixtures-bundle": "^2.3",
+    "doctrine/doctrine-fixtures-bundle": "^3.0",
     "mattketmo/camel": "^1.1",
-    "roave/better-reflection": "^4"
+    "roave/better-reflection": "^4.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^6.5"

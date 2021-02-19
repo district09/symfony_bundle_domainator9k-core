@@ -16,7 +16,7 @@ abstract class AbstractCommand extends ContainerAwareCommand
      */
     protected function runNextTask(string $type)
     {
-        $this->getContainer
+        $this->getContainer()
             // @deprecated
             // This is deprecated in Symfony 4, but we leave it here
             // intentionally so we'll _have_ to fix it once we upgrade from 3 to

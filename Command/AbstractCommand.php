@@ -3,10 +3,20 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\Command;
 
 use DigipolisGent\Domainator9k\CoreBundle\Service\TaskRunnerService;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 
-abstract class AbstractCommand extends ContainerAwareCommand
+abstract class AbstractCommand extends Command
 {
+
+    /**
+     * @var TaskRunnerService
+     */
+    protected $taskRunner;
+
+    public function __construct(TaskRunnerService $taskRunner)
+    {
+        parent::__construct($name);
+    }
 
     /**
      * Run the next task of the specified type.
@@ -16,15 +26,6 @@ abstract class AbstractCommand extends ContainerAwareCommand
      */
     protected function runNextTask(string $type)
     {
-        $this->getContainer()
-            // @deprecated
-            // This is deprecated in Symfony 4, but we leave it here
-            // intentionally so we'll _have_ to fix it once we upgrade from 3 to
-            // 4. The only way to do it in 3.4 is to make the service public,
-            // which we don't want. Symfony 4 supports injecting service
-            // dependencies in commands in the constructor (allowing them to be
-            // private, Symfony 3 doesn't.
-            ->get(TaskRunnerService::class)
-            ->runNext($type);
+        $this->taskRunner->runNext($type);
     }
 }

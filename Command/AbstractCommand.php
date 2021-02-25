@@ -15,7 +15,8 @@ abstract class AbstractCommand extends Command
 
     public function __construct(TaskRunnerService $taskRunner)
     {
-        parent::__construct($name);
+        parent::__construct();
+        $this->taskRunner = $taskRunner;
     }
 
     /**

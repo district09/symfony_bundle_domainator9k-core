@@ -5,6 +5,7 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Service;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\TemplateInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Exception\TemplateException;
+use DigipolisGent\Domainator9k\CoreBundle\Provider\TemplateProviderInterface;
 
 /**
  * Class TemplateService
@@ -22,6 +23,11 @@ class TemplateService
     protected $tokenService;
 
     /**
+     * @var TemplateProviderInterface[]
+     */
+    protected $templateProviders;
+
+    /**
      * The replacements.
      *
      * @var array
@@ -34,9 +40,12 @@ class TemplateService
      * @param TokenService $tokenService
      *   The token service.
      */
-    public function __construct(TokenService $tokenService)
-    {
+    public function __construct(
+        iterable $templateProviders,
+        TokenService $tokenService
+    ) {
         $this->tokenService = $tokenService;
+        $this->templateProviders = $templateProviders;
     }
 
     /**
@@ -258,6 +267,33 @@ class TemplateService
                 'object' => $object,
             ];
         }
+
+        foreach ($this->templateProviders as $templateProvider) {
+            foreach($templateProvider->registerReplacements($type, $object) as $templateType => $templates) {
+                if (!isset($this->replacements[$templateType])) {
+                    $this->replacements[$templateType] = [];
+                }
+                $this->replacements[$templateType] = array_merge($this->replacements[$templateType], $templates);
+            }
+        }
+    }
+
+    public function listTemplates($name, $class) {
+        $templates = [];
+        $templateReplacements = array_keys(
+            $name === 'token'
+                ? $this->tokenService->getTemplateReplacements()
+                : $class::getTemplateReplacements()
+        );
+        foreach ($this->templateProviders as $templateProvider) {
+            $templateReplacements = array_merge($templateReplacements, $templateProvider->listTemplates($class));
+        }
+
+        foreach ($templateReplacements as $templateReplacement) {
+            $templates[] = '[[ ' . $name . ':' . $templateReplacement . ' ]]';
+        }
+
+        return $templates;
     }
 
 }

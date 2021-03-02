@@ -7,6 +7,8 @@ services:
             - { name: doctrine.event_listener, event: postRemove, connection: default }
     DigipolisGent\Domainator9k\CoreBundle\Service\TaskLoggerService:
     DigipolisGent\Domainator9k\CoreBundle\Service\TemplateService:
+        arguments:
+            $templateProviders: !tagged template_provider
     DigipolisGent\Domainator9k\CoreBundle\Service\TokenService:
     DigipolisGent\Domainator9k\CoreBundle\Service\TaskRunnerService:
         arguments:

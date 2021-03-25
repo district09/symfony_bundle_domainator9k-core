@@ -8,8 +8,8 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\AbstractApplication;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Environment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\VirtualServer;
-use phpseclib\Crypt\RSA;
-use phpseclib\Net\SSH2;
+use phpseclib3\Net\SSH2;
+use phpseclib3\Crypt\PublicKeyLoader;
 use Webmozart\PathUtil\Path;
 
 class DefaultCliFactory implements CliFactoryInterface
@@ -45,8 +45,7 @@ class DefaultCliFactory implements CliFactoryInterface
             $host = $server->getHost();
             $port = $server->getPort() ?: 22;
             $ssh = new SSH2($host, $port);
-            $key = new RSA();
-            $key->loadKey(file_get_contents($keyLocation));
+            $key = PublicKeyLoader::load(file_get_contents($keyLocation));
 
             if (!$ssh->login($user, $key)) {
                 throw new \Exception(sprintf('SSH login for %s@%s:%s failed.', $user, $host, $port));

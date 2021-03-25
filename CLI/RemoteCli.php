@@ -3,7 +3,7 @@
 namespace DigipolisGent\Domainator9k\CoreBundle\CLI;
 
 use DigipolisGent\CommandBuilder\CommandBuilder;
-use phpseclib\Net\SSH2;
+use phpseclib3\Net\SSH2;
 
 class RemoteCli implements CliInterface
 {

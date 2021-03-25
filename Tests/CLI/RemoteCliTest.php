@@ -5,7 +5,7 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Tests\CLI;
 
 use DigipolisGent\CommandBuilder\CommandBuilder;
 use DigipolisGent\Domainator9k\CoreBundle\CLI\RemoteCli;
-use phpseclib\Net\SSH2;
+use phpseclib3\Net\SSH2;
 use PHPUnit\Framework\TestCase;
 
 class RemoteCliTest extends TestCase

@@ -8,18 +8,24 @@
   "minimum-stability": "stable",
   "require": {
     "php": ">=7.1",
-    "symfony/symfony": ">=3.4",
-    "digipolisgent/setting-bundle": "^1.0",
+    "symfony/console": "^4.4",
+    "symfony/dependency-injection": "^4.4",
+    "symfony/config": "^4.4",
+    "symfony/http-kernel": "^4.4",
+    "symfony/validator": "^4.4",
+    "symfony/event-dispatcher": "^4.4",
+    "symfony/form": "^4.4",
+    "symfony/options-resolver": "^4.4",
+    "digipolisgent/setting-bundle": "^2.0",
     "digipolisgent/command-builder": "^1.0",
-    "doctrine/doctrine-bundle": "^1.6",
+    "doctrine/doctrine-bundle": "^2.2.3",
     "doctrine/orm": "^2.5",
-    "symfony/swiftmailer-bundle": "^2.3",
+    "symfony/swiftmailer-bundle": "^3.5",
     "phpseclib/phpseclib": "^3.0",
-    "phpseclib/phpseclib2_compat": "^1.0",
     "webmozart/path-util": "^2.3",
-    "doctrine/doctrine-fixtures-bundle": "^2.3",
+    "doctrine/doctrine-fixtures-bundle": "^3.0",
     "mattketmo/camel": "^1.1",
-    "roave/better-reflection": "^3"
+    "roave/better-reflection": "^4.0"
   },
   "require-dev": {
     "phpunit/phpunit": "^6.5"

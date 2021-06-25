@@ -4,7 +4,7 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Event;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Task;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 abstract class AbstractEvent extends Event
 {

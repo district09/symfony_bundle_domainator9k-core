@@ -9,7 +9,7 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationType;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationTypeEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Environment;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 
 /**
  * Class LoadApplicationTypes

@@ -16,7 +16,7 @@
     "symfony/event-dispatcher": "^4.4",
     "symfony/form": "^4.4",
     "symfony/options-resolver": "^4.4",
-    "digipolisgent/setting-bundle": "^2.0",
+    "digipolisgent/setting-bundle": "^3.0|dev-feature/symfony5",
     "digipolisgent/command-builder": "^1.0",
     "doctrine/doctrine-bundle": "^2.2.3",
     "doctrine/orm": "^2.5",

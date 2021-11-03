@@ -43,7 +43,7 @@ class EnvironmentEventListenerTest extends TestCase
         $applicationTypes->add(new ApplicationType());
 
         $entityManager
-            ->expects($this->at(0))
+            ->expects($this->atLeastOnce())
             ->method('getRepository')
             ->with($this->equalTo(ApplicationType::class))
             ->willReturn(
@@ -51,12 +51,12 @@ class EnvironmentEventListenerTest extends TestCase
             );
 
         $entityManager
-            ->expects($this->at(1))
+            ->expects($this->atLeastOnce())
             ->method('persist');
 
 
         $entityManager
-            ->expects($this->at(2))
+            ->expects($this->atLeastOnce())
             ->method('flush');
 
         $args = $this->getLifecycleEventArgsMock($entity, $entityManager);
@@ -82,21 +82,21 @@ class EnvironmentEventListenerTest extends TestCase
         $entityManager = $this->getEntityManagerMock();
 
         $entityManager
-            ->expects($this->at(0))
+            ->expects($this->atLeastOnce())
             ->method('remove');
 
 
         $entityManager
-            ->expects($this->at(1))
+            ->expects($this->atLeastOnce())
             ->method('flush');
 
         $entityManager
-            ->expects($this->at(2))
+            ->expects($this->atLeastOnce())
             ->method('remove');
 
 
         $entityManager
-            ->expects($this->at(3))
+            ->expects($this->atLeastOnce())
             ->method('flush');
 
         $args = $this->getLifecycleEventArgsMock($entity, $entityManager);
@@ -111,7 +111,7 @@ class EnvironmentEventListenerTest extends TestCase
             ->getMock();
 
         $mock
-            ->expects($this->at(0))
+            ->expects($this->atLeastOnce())
             ->method('findAll')
             ->willReturn($arrayCollection);
 
@@ -136,12 +136,12 @@ class EnvironmentEventListenerTest extends TestCase
             ->getMock();
 
         $mock
-            ->expects($this->at(0))
+            ->expects($this->atLeastOnce())
             ->method('getEntity')
             ->willReturn($entity);
 
         $mock
-            ->expects($this->at(1))
+            ->expects($this->atLeastOnce())
             ->method('getEntityManager')
             ->willReturn($entityManager);
 

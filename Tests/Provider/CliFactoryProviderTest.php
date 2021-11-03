@@ -24,11 +24,9 @@ class CliFactoryProviderTest extends TestCase
         $this->assertEquals($cli, $cliFactoryProvider->createCliFor($object));
     }
 
-    /**
-     * @expectedException \DigipolisGent\Domainator9k\CoreBundle\Exception\NoCliFactoryFoundException
-     */
     public function testNoClearer()
     {
+        $this->expectException(\DigipolisGent\Domainator9k\CoreBundle\Exception\NoCliFactoryFoundException::class);
         $cacheClearProvider = new CliFactoryProvider();
         $object = $this->getMockBuilder('\stdClass')->getMock();
         $class = get_class($object);

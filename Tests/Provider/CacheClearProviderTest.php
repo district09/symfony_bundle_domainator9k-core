@@ -21,11 +21,9 @@ class CacheClearProviderTest extends TestCase
         $this->assertEquals($clearer, $cacheClearProvider->getCacheClearerFor($object));
     }
 
-    /**
-     * @expectedException \DigipolisGent\Domainator9k\CoreBundle\Exception\NoCacheClearerFoundException
-     */
     public function testNoClearer()
     {
+        $this->expectException(\DigipolisGent\Domainator9k\CoreBundle\Exception\NoCacheClearerFoundException::class);
         $cacheClearProvider = new CacheClearProvider();
         $object = $this->getMockBuilder('\stdClass')->getMock();
         $class = get_class($object);

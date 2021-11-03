@@ -14,7 +14,7 @@ class ApplicationTypeEnvironmentFormTypeTest extends AbstractFormTypeTest
         $optionsResolver = $this->getOptionsResolverMock();
 
         $optionsResolver
-            ->expects($this->at(0))
+            ->expects($this->atLeastOnce())
             ->method('setDefault')
             ->with('data_class', ApplicationTypeEnvironment::class);
 
@@ -26,10 +26,8 @@ class ApplicationTypeEnvironmentFormTypeTest extends AbstractFormTypeTest
     {
         $formBuilder = $this->getFormBuilderMock();
 
-        $index = 0;
-
         $formBuilder
-            ->expects($this->at($index))
+            ->expects($this->atLeastOnce())
             ->method('addEventSubscriber');
 
         $formType = new ApplicationTypeEnvironmentFormType($this->getFormServiceMock());

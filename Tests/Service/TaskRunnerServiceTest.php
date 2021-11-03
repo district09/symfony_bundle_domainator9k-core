@@ -41,22 +41,12 @@ class TaskRunnerServiceTest extends TestCase
      */
     protected $taskRunnerService;
 
-    /**
-     * @var int
-     */
-    protected $entityManagerIndex;
-
-    /**
-     * @var int
-     */
-    protected $provisionServiceIndex;
-
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->task = new Task();
         $this->task->setType(Task::TYPE_BUILD);
-        $id = uniqid();
+        $id = random_int(1, 9999);
         $prop = new \ReflectionProperty($this->task, 'id');
         $prop->setAccessible(true);
         $prop->setValue($this->task, $id);
@@ -71,17 +61,12 @@ class TaskRunnerServiceTest extends TestCase
         $this->logger = $this->getMockBuilder(TaskLoggerService::class)
             ->disableOriginalConstructor()
             ->getMock();
-
-        $this->entityManagerIndex = 0;
-        $this->provisionServiceIndex = 0;
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessageRegExp /Task "(.*)" cannot be restarted\./
-     */
     public function testRunNotNew()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('/Task "(.*)" cannot be restarted\./');
         $this->task->setProcessed();
         $this->taskRunnerService = new TaskRunnerService([], [], $this->entityManager, $this->logger);
         $this->taskRunnerService->run($this->task);
@@ -107,7 +92,7 @@ class TaskRunnerServiceTest extends TestCase
     public function testRunFailed()
     {
         $this->entityManager
-            ->expects($this->at($this->entityManagerIndex++))
+            ->expects($this->atLeastOnce())
             ->method('persist')
             ->with($this->callback(
                 function (Task $task)
@@ -117,16 +102,16 @@ class TaskRunnerServiceTest extends TestCase
             ));
 
         $this->entityManager
-            ->expects($this->at($this->entityManagerIndex++))
+            ->expects($this->atLeastOnce())
             ->method('flush');
 
         $this->logger
-            ->expects($this->at(0))
+            ->expects($this->any())
             ->method('addLogMessage')
             ->with($this->task, '', '', 0);
 
         $this->logger
-            ->expects($this->at(1))
+            ->expects($this->any())
             ->method('addFailedLogMessage')
             ->with($this->task, 'Task run failed.', 0);
 
@@ -178,31 +163,29 @@ class TaskRunnerServiceTest extends TestCase
     public function testRunCancelled()
     {
         $this->entityManager
-            ->expects($this->at($this->entityManagerIndex++))
+            ->expects($this->any())
             ->method('persist')
-            ->with($this->callback(
-                function (Task $task)
-                {
-                    return $task->isInProgress();
-                }
-            ));
+            ->withConsecutive(
+                [
+                    $this->callback(
+                        function (Task $task)
+                        {
+                            return $task->isInProgress();
+                        }
+                    )
+                ],
+                [
+                    $this->callback(
+                        function (Task $task)
+                        {
+                            return $task->isCancelled();
+                        }
+                    )
+                ]
+            );
 
         $this->entityManager
-            ->expects($this->at($this->entityManagerIndex++))
-            ->method('flush');
-
-        $this->entityManager
-            ->expects($this->at($this->entityManagerIndex++))
-            ->method('persist')
-            ->with($this->callback(
-                function (Task $task)
-                {
-                    return $task->isCancelled();
-                }
-            ));
-
-        $this->entityManager
-            ->expects($this->at($this->entityManagerIndex++))
+            ->expects($this->atLeast(2))
             ->method('flush');
 
         $buildProvisioners = [];
@@ -251,12 +234,12 @@ class TaskRunnerServiceTest extends TestCase
         $repository = $this->getMockBuilder(TaskRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
-        $repository->expects($this->at(0))
+        $repository->expects($this->any())
             ->method('getNextTask')
             ->with(Task::TYPE_BUILD)
             ->willReturn($this->task);
         $this->entityManager
-            ->expects($this->at($this->entityManagerIndex++))
+            ->expects($this->atLeastOnce())
             ->method('getRepository')
             ->with(Task::class)
             ->willReturn($repository);
@@ -269,7 +252,7 @@ class TaskRunnerServiceTest extends TestCase
     public function testCancel()
     {
         $this->logger
-            ->expects($this->at(0))
+            ->expects($this->any())
             ->method('addInfoLogMessage')
             ->with($this->task, 'Task run cancelled.');
         $this->taskRunnerService = new TaskRunnerService(
@@ -283,12 +266,10 @@ class TaskRunnerServiceTest extends TestCase
         $this->assertTrue($this->task->isCancelled());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessageRegExp /Task (.*) cannot be cancelled\./
-     */
     public function testCancelRunning()
     {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessageMatches('/Task (.*) cannot be cancelled\./');
         $this->task->setInProgress();
         $this->taskRunnerService = new TaskRunnerService(
             [],
@@ -302,7 +283,7 @@ class TaskRunnerServiceTest extends TestCase
     protected function expectSuccessfulRun()
     {
         $this->entityManager
-            ->expects($this->at($this->entityManagerIndex++))
+            ->expects($this->atLeastOnce())
             ->method('persist')
             ->with($this->callback(
                 function (Task $task)
@@ -312,16 +293,16 @@ class TaskRunnerServiceTest extends TestCase
             ));
 
         $this->entityManager
-            ->expects($this->at($this->entityManagerIndex++))
+            ->expects($this->atLeastOnce())
             ->method('flush');
 
         $this->logger
-            ->expects($this->at(0))
+            ->expects($this->any())
             ->method('addLogMessage')
             ->with($this->task, '', '', 0);
 
         $this->logger
-            ->expects($this->at(1))
+            ->expects($this->any())
             ->method('addSuccessLogMessage')
             ->with($this->task, 'Task run completed.', 0);
 

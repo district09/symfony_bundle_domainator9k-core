@@ -30,7 +30,7 @@
     "webmozart/path-util": "^2.3"
   },
   "require-dev": {
-    "phpunit/phpunit": "^6.5"
+    "phpunit/phpunit": "^9"
   },
   "autoload": {
     "psr-4": {

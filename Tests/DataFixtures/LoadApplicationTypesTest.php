@@ -9,7 +9,7 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationType;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationTypeEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Environment;
 use DigipolisGent\Domainator9k\CoreBundle\Tests\Fixtures\Entity\QuuxApplication;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadataFactory;
 use PHPUnit\Framework\TestCase;
@@ -19,15 +19,31 @@ class LoadApplicationTypesTest extends TestCase
 
     public function testLoad()
     {
-        $objectManager = $this->getObjectManagerMock();
+        $objectManager = $this->getEntityManagerMock();
 
         $applicationTypeRepository = $this->getApplicationTypeRepositoryMock('quux_application');
 
+        $environments = [
+            new Environment(),
+        ];
+
+        $environmentRepository = $this->getEnvironmentRepositoryMock($environments);
+
+        $applicationTypeEnvironmentRepository = $this->getApplicationTypeEnvironmentRepository(null);
+
         $objectManager
-            ->expects($this->at(0))
+            ->expects($this->atLeastOnce())
             ->method('getRepository')
-            ->with($this->equalTo(ApplicationType::class))
-            ->willReturn($applicationTypeRepository);
+            ->willReturnCallback(function ($class) use ($applicationTypeRepository, $environmentRepository, $applicationTypeEnvironmentRepository) {
+                switch($class) {
+                    case ApplicationType::class:
+                        return $applicationTypeRepository;
+                    case Environment::class:
+                        return $environmentRepository;
+                    case ApplicationTypeEnvironment::class:
+                        return $applicationTypeEnvironmentRepository;
+                }
+            });
 
         $metadata = new \stdClass();
         $metadata->subClasses = [
@@ -37,40 +53,18 @@ class LoadApplicationTypesTest extends TestCase
         $metadataFactory = $this->getMetadataFactoryMock(AbstractApplication::class, $metadata);
 
         $objectManager
-            ->expects($this->at(1))
+            ->expects($this->atLeastOnce())
             ->method('getMetadataFactory')
             ->willReturn($metadataFactory);
-
-
-        $environments = [
-            new Environment(),
-        ];
-
-        $environmentRepository = $this->getEnvironmentRepositoryMock($environments);
-
-        $objectManager
-            ->expects($this->at(2))
-            ->method('getRepository')
-            ->with($this->equalTo(Environment::class))
-            ->willReturn($environmentRepository);
-
-
-        $applicationTypeEnvironmentRepository = $this->getApplicationTypeEnvironmentRepository(null);
-
-        $objectManager
-            ->expects($this->at(3))
-            ->method('getRepository')
-            ->with($this->equalTo(ApplicationTypeEnvironment::class))
-            ->willReturn($applicationTypeEnvironmentRepository);
 
         $fixture = new LoadApplicationTypes();
         $fixture->load($objectManager);
     }
 
-    private function getObjectManagerMock()
+    private function getEntityManagerMock()
     {
         $mock = $this
-            ->getMockBuilder(ObjectManager::class)
+            ->getMockBuilder(EntityManagerInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -86,7 +80,7 @@ class LoadApplicationTypesTest extends TestCase
             ->getMock();
 
         $mock
-            ->expects($this->at(0))
+            ->expects($this->atLeastOnce())
             ->method('findOneBy')
             ->with(['name' => $type])
             ->willReturn(null);
@@ -102,7 +96,7 @@ class LoadApplicationTypesTest extends TestCase
             ->getMock();
 
         $mock
-            ->expects($this->at(0))
+            ->expects($this->atLeastOnce())
             ->method('getMetadataFor')
             ->with($this->equalTo($className))
             ->willReturn($metadata);
@@ -118,7 +112,7 @@ class LoadApplicationTypesTest extends TestCase
             ->getMock();
 
         $mock
-            ->expects($this->at(0))
+            ->expects($this->atLeastOnce())
             ->method('findAll')
             ->willReturn($environments);
 
@@ -133,7 +127,7 @@ class LoadApplicationTypesTest extends TestCase
             ->getMock();
 
         $mock
-            ->expects($this->at(0))
+            ->expects($this->atLeastOnce())
             ->method('findOneBy')
             ->willReturn($applicationTypeEnvironment);
 

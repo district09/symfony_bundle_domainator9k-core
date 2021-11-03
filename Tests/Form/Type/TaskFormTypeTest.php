@@ -16,14 +16,15 @@ class TaskFormTypeTest extends AbstractFormTypeTest
     {
         $optionsResolver = $this->getOptionsResolverMock();
 
+        $arguments = [
+            ['data_class', Task::class],
+            ['type', Task::TYPE_BUILD],
+        ];
+
         $optionsResolver
-            ->expects($this->at(0))
+            ->expects($this->atLeastOnce())
             ->method('setDefault')
-            ->with('data_class', Task::class);
-        $optionsResolver
-            ->expects($this->at(1))
-            ->method('setDefault')
-            ->with('type', Task::TYPE_BUILD);
+            ->withConsecutive(...$arguments);
 
         $taskRunnerService = $this->getMockBuilder(TaskRunnerService::class)
             ->disableOriginalConstructor()
@@ -59,7 +60,7 @@ class TaskFormTypeTest extends AbstractFormTypeTest
             ->willReturn($provisioners);
 
         $formBuilder
-            ->expects($this->at(0))
+            ->expects($this->atLeastOnce())
             ->method('add')
             ->with(
                 'provisioners',
@@ -76,7 +77,7 @@ class TaskFormTypeTest extends AbstractFormTypeTest
             );
 
         $formBuilder
-            ->expects($this->at(1))
+            ->expects($this->atLeastOnce())
             ->method('addEventSubscriber');
 
         $formType = new TaskFormType($this->getFormServiceMock(), $taskRunnerService);

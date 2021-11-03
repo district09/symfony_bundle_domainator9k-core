@@ -14,7 +14,7 @@ class EnvironmentFormTypeTest extends AbstractFormTypeTest
         $optionsResolver = $this->getOptionsResolverMock();
 
         $optionsResolver
-            ->expects($this->at(0))
+            ->expects($this->atLeastOnce())
             ->method('setDefault')
             ->with('data_class', Environment::class);
 
@@ -27,23 +27,17 @@ class EnvironmentFormTypeTest extends AbstractFormTypeTest
         $formBuilder = $this->getFormBuilderMock();
 
         $arguments = [
-            'name',
-            'prod',
+            ['name'],
+            ['prod'],
         ];
 
-        $index = 0;
-
-        foreach ($arguments as $argument) {
-            $formBuilder
-                ->expects($this->at($index))
-                ->method('add')
-                ->with($argument);
-
-            $index++;
-        }
+        $formBuilder
+            ->expects($this->atLeastOnce())
+            ->method('add')
+            ->withConsecutive(...$arguments);
 
         $formBuilder
-            ->expects($this->at($index))
+            ->expects($this->atLeastOnce())
             ->method('addEventSubscriber');
 
         $formType = new EnvironmentFormType($this->getFormServiceMock());

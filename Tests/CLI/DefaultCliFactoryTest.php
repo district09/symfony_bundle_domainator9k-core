@@ -16,7 +16,7 @@ class DefaultCliFactoryTest extends TestCase
 {
     protected $keyCreated = false;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         // Create a bogus ssh key if one doens't exist, so the tests won't throw
@@ -28,7 +28,7 @@ class DefaultCliFactoryTest extends TestCase
         }
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
         if ($this->keyCreated) {
@@ -55,11 +55,9 @@ class DefaultCliFactoryTest extends TestCase
         $this->assertNull($factory->create($appEnv));
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testCreateUnsuppoerted()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $factory = new DefaultCliFactory();
         $object = $this->getMockBuilder('\stdClass')->getMock();
         $factory->create($object);

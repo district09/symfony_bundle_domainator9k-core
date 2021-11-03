@@ -16,7 +16,7 @@ class TokenServiceTest extends TestCase
     protected $entityManager;
     protected $repository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->repository = $this

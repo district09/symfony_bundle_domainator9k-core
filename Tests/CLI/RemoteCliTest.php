@@ -18,12 +18,12 @@ class RemoteCliTest extends TestCase
         $output = 'some output';
         $command = CommandBuilder::create('cd')->addFlag('P')->addArgument($dir)->onSuccess($execute)->getCommand();
         $connection
-            ->expects($this->at(0))
+            ->expects($this->any())
             ->method('exec')
             ->with($command)
             ->willReturn($output);
         $connection
-            ->expects($this->at(1))
+            ->expects($this->any())
             ->method('getExitStatus')
             ->willReturn(0);
         $cli = new RemoteCli($connection, $dir);

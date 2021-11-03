@@ -21,18 +21,17 @@ class TaskRepositoryTest extends TestCase
         $classMetadata = $this->getClassMetadataMock();
         $querybuilderMock = $this->getQueryBuilderMock();
 
-        $this->addMethodToQueryBuilder($querybuilderMock, 'select', $querybuilderMock, 0);
-        $this->addMethodToQueryBuilder($querybuilderMock, 'from', $querybuilderMock, 1);
-        $this->addMethodToQueryBuilder($querybuilderMock, 'where', $querybuilderMock, 2);
-        $this->addMethodToQueryBuilder($querybuilderMock, 'andWhere', $querybuilderMock, 3);
-        $this->addMethodToQueryBuilder($querybuilderMock, 'setParameter', $querybuilderMock, 4);
-        $this->addMethodToQueryBuilder($querybuilderMock, 'setParameter', $querybuilderMock, 5);
-        $this->addMethodToQueryBuilder($querybuilderMock, 'orderBy', $querybuilderMock, 6);
-        $this->addMethodToQueryBuilder($querybuilderMock, 'setMaxResults', $querybuilderMock, 7);
-        $this->addMethodToQueryBuilder($querybuilderMock, 'getQuery', $this->getQueryMock(), 8);
+        $this->addMethodToQueryBuilder($querybuilderMock, 'select', $querybuilderMock);
+        $this->addMethodToQueryBuilder($querybuilderMock, 'from', $querybuilderMock);
+        $this->addMethodToQueryBuilder($querybuilderMock, 'where', $querybuilderMock);
+        $this->addMethodToQueryBuilder($querybuilderMock, 'andWhere', $querybuilderMock);
+        $this->addMethodToQueryBuilder($querybuilderMock, 'setParameter', $querybuilderMock);
+        $this->addMethodToQueryBuilder($querybuilderMock, 'orderBy', $querybuilderMock);
+        $this->addMethodToQueryBuilder($querybuilderMock, 'setMaxResults', $querybuilderMock);
+        $this->addMethodToQueryBuilder($querybuilderMock, 'getQuery', $this->getQueryMock());
 
         $entityManager
-            ->expects($this->at(0))
+            ->expects($this->atLeastOnce())
             ->method('createQueryBuilder')
             ->willReturn($querybuilderMock);
 
@@ -68,7 +67,7 @@ class TaskRepositoryTest extends TestCase
         $this->addMethodToQueryBuilder($querybuilderMock, 'getQuery', $this->getQueryMock($returnValue), 9);
 
         $entityManager
-            ->expects($this->at(0))
+            ->expects($this->atLeastOnce())
             ->method('createQueryBuilder')
             ->willReturn($querybuilderMock);
 
@@ -106,10 +105,10 @@ class TaskRepositoryTest extends TestCase
         return $mock;
     }
 
-    private function addMethodToQueryBuilder($queryBuilder, $method, $returnValue,$index)
+    private function addMethodToQueryBuilder($queryBuilder, $method, $returnValue)
     {
         $queryBuilder
-            ->expects($this->at($index))
+            ->expects($this->atLeastOnce())
             ->method($this->equalTo($method))
             ->willReturn($returnValue);
     }
@@ -122,7 +121,7 @@ class TaskRepositoryTest extends TestCase
             ->getMock();
 
         $mock
-            ->expects($this->at(0))
+            ->expects($this->atLeastOnce())
             ->method('getOneOrNullResult')
             ->willReturn($returnValue);
 

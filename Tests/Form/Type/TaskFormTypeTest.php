@@ -22,7 +22,7 @@ class TaskFormTypeTest extends AbstractFormTypeTest
         ];
 
         $optionsResolver
-            ->expects($this->atLeastOnce())
+            ->expects($this->atLeast(count($arguments)))
             ->method('setDefault')
             ->withConsecutive(...$arguments);
 

@@ -52,6 +52,7 @@ class TaskRunnerServiceTest extends TestCase
         $prop->setValue($this->task, $id);
 
         $this->entityManager = $this->getMockBuilder(EntityManagerInterface::class)
+            ->enableArgumentCloning()
             ->getMock();
 
         $this->provisionService = $this->getMockBuilder(ProvisionService::class)
@@ -163,7 +164,7 @@ class TaskRunnerServiceTest extends TestCase
     public function testRunCancelled()
     {
         $this->entityManager
-            ->expects($this->any())
+            ->expects($this->atLeast(2))
             ->method('persist')
             ->withConsecutive(
                 [

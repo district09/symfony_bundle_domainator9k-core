@@ -37,7 +37,7 @@ class AbstractApplicationFormTypeTest extends AbstractFormTypeTest
             ['hasDatabase'],
         ];
 
-        $formBuilder->expects($this->atLeastOnce())
+        $formBuilder->expects($this->atLeast(count($arguments)))
             ->method('add')
             ->withConsecutive(...$arguments);
 

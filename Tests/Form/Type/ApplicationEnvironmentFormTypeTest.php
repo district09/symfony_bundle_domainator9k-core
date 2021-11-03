@@ -35,7 +35,7 @@ class ApplicationEnvironmentFormTypeTest extends AbstractFormTypeTest
         ];
 
         $formBuilder
-            ->expects($this->atLeastOnce())
+            ->expects($this->atLeast(count($arguments)))
             ->method('add')
             ->withConsecutive(...$arguments);
 

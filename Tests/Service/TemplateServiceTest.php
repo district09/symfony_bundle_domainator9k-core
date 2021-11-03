@@ -20,7 +20,7 @@ class TemplateServiceTest extends TestCase
     protected $tokenService;
     protected $repository;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $token = new Token();
@@ -45,12 +45,10 @@ class TemplateServiceTest extends TestCase
         $this->tokenService = new TokenService($this->entityManager);
     }
 
-    /**
-     * @expectedException \DigipolisGent\Domainator9k\CoreBundle\Exception\TemplateException
-     */
     public function testReplaceKeysWithInvalidEntity()
     {
-        $templateService = new TemplateService($this->tokenService);
+        $this->expectException(\DigipolisGent\Domainator9k\CoreBundle\Exception\TemplateException::class);
+        $templateService = new TemplateService([], $this->tokenService);
 
         $text = <<<EOL
         This is a random text.
@@ -65,7 +63,7 @@ EOL;
 
     public function testReplaceKeysWithValidEntity()
     {
-        $templateService = new TemplateService($this->tokenService);
+        $templateService = new TemplateService([], $this->tokenService);
         $name = $this->token->getName();
         $value = $this->token->getValue();
         $text = <<<EOL
@@ -97,7 +95,7 @@ EOL;
 
     public function testReplaceKeysRecursively()
     {
-        $templateService = new TemplateService($this->tokenService);
+        $templateService = new TemplateService([], $this->tokenService);
         $name = $this->token->getName();
         $value = $this->token->getValue();
 

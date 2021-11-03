@@ -7,28 +7,30 @@
   "support": {},
   "minimum-stability": "stable",
   "require": {
-    "php": ">=7.1",
-    "symfony/console": "^4.4",
-    "symfony/dependency-injection": "^4.4",
-    "symfony/config": "^4.4",
-    "symfony/http-kernel": "^4.4",
-    "symfony/validator": "^4.4",
-    "symfony/event-dispatcher": "^4.4",
-    "symfony/form": "^4.4",
-    "symfony/options-resolver": "^4.4",
-    "digipolisgent/setting-bundle": "^2.0",
+    "php": ">=7.4",
     "digipolisgent/command-builder": "^1.0",
+    "digipolisgent/setting-bundle": "^3.0",
     "doctrine/doctrine-bundle": "^2.2.3",
-    "doctrine/orm": "^2.5",
-    "symfony/swiftmailer-bundle": "^3.5",
-    "phpseclib/phpseclib": "^3.0",
-    "webmozart/path-util": "^2.3",
     "doctrine/doctrine-fixtures-bundle": "^3.0",
+    "doctrine/orm": "^2.5",
     "mattketmo/camel": "^1.1",
-    "roave/better-reflection": "^4.0"
+    "phpseclib/phpseclib": "^3.0",
+    "roave/better-reflection": "^4.0",
+    "symfony/config": "^5.0",
+    "symfony/console": "^5.0",
+    "symfony/dependency-injection": "^5.0",
+    "symfony/doctrine-bridge": "^5.3",
+    "symfony/event-dispatcher": "^5.0",
+    "symfony/form": "^5.0",
+    "symfony/http-kernel": "^5.0",
+    "symfony/options-resolver": "^5.0",
+    "symfony/twig-bundle": "^5.0",
+    "symfony/uid": "^5.3",
+    "symfony/validator": "^5.0",
+    "webmozart/path-util": "^2.3"
   },
   "require-dev": {
-    "phpunit/phpunit": "^6.5"
+    "phpunit/phpunit": "^9"
   },
   "autoload": {
     "psr-4": {

@@ -33,5 +33,6 @@ class BuildCommand extends AbstractCommand
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->runNextTask(Task::TYPE_BUILD);
+        return 0;
     }
 }

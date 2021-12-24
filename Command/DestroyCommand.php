@@ -33,5 +33,6 @@ class DestroyCommand extends AbstractCommand
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this->runNextTask(Task::TYPE_DESTROY);
+        return 0;
     }
 }

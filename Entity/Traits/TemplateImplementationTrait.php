@@ -4,7 +4,11 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Entity\Traits;
 
 use DigipolisGent\Domainator9k\CoreBundle\Entity\TemplateInterface;
 use Roave\BetterReflection\Reflection\ReflectionClass;
+use Roave\BetterReflection\Reflection\ReflectionIntersectionType;
 use Roave\BetterReflection\Reflection\ReflectionMethod;
+use Roave\BetterReflection\Reflection\ReflectionNamedType;
+use Roave\BetterReflection\Reflection\ReflectionType;
+use Roave\BetterReflection\Reflection\ReflectionUnionType;
 
 /**
  * Trait IdentifiableTrait
@@ -66,18 +70,13 @@ trait TemplateImplementationTrait
             if (!$method->hasReturnType()) {
                 continue;
             }
-            $returnType = $method->getReturnType();
+
             // Whose return type is scalar or implements TemplateInterface and
             // is different from the current class (prevent loops).
-            if (
-                !$returnType->isBuiltin()
-                && (
-                    !class_exists($returnType)
-                  || !is_a((string)$returnType, TemplateInterface::class, true)
-                )
-            ) {
+            if (!static::returnTypeIsRelevant($method->getReturnType())) {
                 continue;
             }
+
             // Whose parameters are scalar (or non existant).
             foreach ($method->getParameters() as $parameter) {
                 $parameterType = $parameter->getType();
@@ -88,6 +87,34 @@ trait TemplateImplementationTrait
             $relevantMethods[$method->getName()] = $method;
         }
         return $relevantMethods;
+    }
+
+    /**
+     * Check if a return type is relevant for template replacements.
+     *
+     * @param ReflectionType $returnType
+     *   The return type.
+     *
+     * @return boolean
+     */
+    protected static function returnTypeIsRelevant(ReflectionType $returnType) {
+        if ($returnType instanceof ReflectionIntersectionType || $returnType instanceof ReflectionUnionType) {
+            foreach ($returnType->getTypes() as $type) {
+                if (static::returnTypeIsRelevant($type)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        if ($returnType instanceof ReflectionNamedType) {
+            return $returnType->isBuiltin() && (string)$returnType !== 'null'
+                || (
+                    class_exists((string)$returnType)
+                    && is_a((string)$returnType, TemplateInterface::class, true)
+                );
+        }
+
+        return false;
     }
 
     /**
@@ -110,6 +137,25 @@ trait TemplateImplementationTrait
     protected static function getTemplateReplacementsForMethod(ReflectionMethod $method, int $maxDepth, array $skip)
     {
         $returnType = $method->getReturnType();
+        if ($returnType instanceof ReflectionNamedType) {
+            return static::getTemplateReplacementsForMethodWithReturnType($method, $returnType, $maxDepth, $skip);
+        }
+
+        if ($returnType instanceof ReflectionIntersectionType || $returnType instanceof ReflectionUnionType) {
+            $replacements = [];
+            foreach ($returnType->getTypes() as $type) {
+                if ((string)$type !== 'null') {
+                    $replacements += static::getTemplateReplacementsForMethodWithReturnType($method, $type, $maxDepth, $skip);
+                }
+            }
+            return $replacements;
+        }
+
+        return [];
+    }
+
+    protected static function getTemplateReplacementsForMethodWithReturnType(ReflectionMethod $method, ReflectionNamedType $returnType, int $maxDepth, array $skip)
+    {
         $parameters = [];
         foreach ($method->getParameters() as $parameter) {
             $parameters[] = $parameter->getName();
@@ -138,7 +184,7 @@ trait TemplateImplementationTrait
                 return [];
             }
         }
-        return static::getSubReplacementsForMethod($method, $maxDepth, $skip);
+        return static::getSubReplacementsForMethodWithReturnType($method, $returnType, $maxDepth, $skip);
     }
 
     /**
@@ -157,9 +203,8 @@ trait TemplateImplementationTrait
      * @return array
      *   The templates generated for this method.
      */
-    protected static function getSubReplacementsForMethod(ReflectionMethod $method, int $maxDepth, array $skip)
+    protected static function getSubReplacementsForMethodWithReturnType(ReflectionMethod $method, ReflectionType $returnType, int $maxDepth, array $skip)
     {
-        $returnType = $method->getReturnType();
         $parameters = [];
         foreach ($method->getParameters() as $parameter) {
             $parameters[] = $parameter->getName();

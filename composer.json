@@ -15,7 +15,7 @@
     "doctrine/orm": "^2.5",
     "mattketmo/camel": "^1.1",
     "phpseclib/phpseclib": "^3.0",
-    "roave/better-reflection": "^4.0",
+    "roave/better-reflection": "^5.0",
     "symfony/config": "^5.0",
     "symfony/console": "^5.0",
     "symfony/dependency-injection": "^5.0",

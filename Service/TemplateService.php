@@ -146,6 +146,9 @@ class TemplateService
                 }
 
                 // Execute the callback.
+                if (!is_callable([$result, $callback])) {
+                    continue;
+                }
                 $result = call_user_func_array([$result, $callback], $callbackParams);
             }
 

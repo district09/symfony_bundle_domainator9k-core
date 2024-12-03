@@ -19,7 +19,7 @@ class TemplateHelpExtension extends AbstractExtension
         $this->tokenService = $tokenService;
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction(

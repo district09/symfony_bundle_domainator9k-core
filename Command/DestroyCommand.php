@@ -30,7 +30,7 @@ class DestroyCommand extends AbstractCommand
      * @param OutputInterface $output
      *   The output.
      */
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->runNextTask(Task::TYPE_DESTROY);
         return 0;

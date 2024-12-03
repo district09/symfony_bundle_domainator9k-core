@@ -21,7 +21,7 @@ class LoadApplicationTypes extends Fixture
     /**
      * @param ObjectManager $manager
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $applicationTypeRepository = $manager->getRepository(ApplicationType::class);
         $metadata = $manager->getMetadataFactory()->getMetadataFor(AbstractApplication::class);

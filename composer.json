@@ -9,7 +9,7 @@
   "require": {
     "php": ">=7.4",
     "digipolisgent/command-builder": "^1.0",
-    "digipolisgent/setting-bundle": "^3.0",
+    "digipolisgent/setting-bundle": "dev-feature/symfony6",
     "doctrine/doctrine-bundle": "^2.2.3",
     "doctrine/doctrine-fixtures-bundle": "^3.0",
     "doctrine/orm": "^2.5",

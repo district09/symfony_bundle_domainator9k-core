@@ -10,10 +10,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Class ApplicationTypeEnvironment
  * @package DigipolisGent\Domainator9k\CoreBundle\Entity
- *
- * @ORM\Entity(repositoryClass="DigipolisGent\Domainator9k\CoreBundle\Repository\ApplicationTypeEnvironmentRepository")
- * @ORM\Table(name="application_type_environment")
  */
+#[ORM\Table(name: 'application_type_environment')]
+#[ORM\Entity(repositoryClass: \DigipolisGent\Domainator9k\CoreBundle\Repository\ApplicationTypeEnvironmentRepository::class)]
 class ApplicationTypeEnvironment
 {
 
@@ -22,18 +21,16 @@ class ApplicationTypeEnvironment
 
     /**
      * @var ApplicationType
-     *
-     * @ORM\ManyToOne(targetEntity="ApplicationType",inversedBy="applicationTypeEnvironments")
-     * @ORM\JoinColumn(referencedColumnName="id")
      */
+    #[ORM\JoinColumn(referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \ApplicationType::class, inversedBy: 'applicationTypeEnvironments')]
     protected $applicationType;
 
     /**
      * @var  Environment
-     *
-     * @ORM\ManyToOne(targetEntity="Environment",inversedBy="applicationTypeEnvironments")
-     * @ORM\JoinColumn(referencedColumnName="id")
      */
+    #[ORM\JoinColumn(referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \Environment::class, inversedBy: 'applicationTypeEnvironments')]
     protected $environment;
 
     public static function getSettingImplementationName()

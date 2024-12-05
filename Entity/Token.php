@@ -6,31 +6,25 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\IdentifiableTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="token")
- */
+#[ORM\Table(name: 'token')]
+#[ORM\Entity]
 class Token
 {
     use IdentifiableTrait;
 
     /**
      * @var string
-     * @ORM\Column(name="name", type="string", length=255, nullable=false, unique=true)
-     * @Assert\NotBlank()
-     * @Assert\Regex(
-     *   pattern="/[a-z0-9_]/",
-     *   message="Name can only contain lowercase letters, numbers and underscores"
-     * )
      */
+    #[ORM\Column(name: 'name', type: 'string', length: 255, nullable: false, unique: true)]
+    #[Assert\NotBlank]
+    #[Assert\Regex(pattern: '/[a-z0-9_]/', message: 'Name can only contain lowercase letters, numbers and underscores')]
     protected $name;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="value",type="text", nullable=false)
-     * @Assert\NotBlank()
      */
+    #[ORM\Column(name: 'value', type: 'text', nullable: false)]
+    #[Assert\NotBlank]
     protected $value;
 
     /**

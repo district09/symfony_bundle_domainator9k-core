@@ -10,10 +10,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="application_environment")
- */
+#[ORM\Table(name: 'application_environment')]
+#[ORM\Entity]
 class ApplicationEnvironment implements TemplateInterface
 {
 
@@ -23,65 +21,55 @@ class ApplicationEnvironment implements TemplateInterface
 
     /**
      * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Task",mappedBy="applicationEnvironment",cascade={"remove"})
      */
+    #[ORM\OneToMany(targetEntity: \Task::class, mappedBy: 'applicationEnvironment', cascade: ['remove'])]
     protected $tasks;
 
     /**
      * @var AbstractApplication
-     *
-     * @ORM\ManyToOne(targetEntity="AbstractApplication", inversedBy="applicationEnvironments")
-     * @ORM\JoinColumn(name="application_id", referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'application_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \AbstractApplication::class, inversedBy: 'applicationEnvironments')]
     protected $application;
 
     /**
      * @var Environment
-     *
-     * @ORM\ManyToOne(targetEntity="Environment",inversedBy="applicationEnvironments")
-     * @ORM\JoinColumn(name="environment_id",referencedColumnName="id")
      */
+    #[ORM\JoinColumn(name: 'environment_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \Environment::class, inversedBy: 'applicationEnvironments')]
     protected $environment;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="database_name",type="string",nullable=true)
      */
+    #[ORM\Column(name: 'database_name', type: 'string', nullable: true)]
     protected $databaseName;
 
     /**
      * @var string
-     * @ORM\Column(name="database_user",type="string",nullable=true)
      */
+    #[ORM\Column(name: 'database_user', type: 'string', nullable: true)]
     protected $databaseUser;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="database_password",type="string",nullable=true)
      */
+    #[ORM\Column(name: 'database_password', type: 'string', nullable: true)]
     protected $databasePassword;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="git_ref",type="string",nullable=true)
-     * @Assert\NotBlank()
      */
+    #[ORM\Column(name: 'git_ref', type: 'string', nullable: true)]
+    #[Assert\NotBlank]
     protected $gitRef;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="domain",type="string",nullable=true)
-     * @Assert\NotBlank()
-     * @Assert\Regex(
-     *     pattern="/^[a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?(\.[a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?)*\.[a-z]{2,63}$/",
-     *     message="The domain is not valid"
-     * )
      */
+    #[ORM\Column(name: 'domain', type: 'string', nullable: true)]
+    #[Assert\NotBlank]
+    #[Assert\Regex(pattern: '/^[a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?(\.[a-z0-9]([a-z0-9\-]{0,61}[a-z0-9])?)*\.[a-z]{2,63}$/', message: 'The domain is not valid')]
     protected $domain;
 
     public function __construct()

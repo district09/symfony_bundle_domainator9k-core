@@ -7,10 +7,8 @@ use DigipolisGent\SettingBundle\Entity\Traits\SettingImplementationTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="virtual_server")
- */
+#[ORM\Table(name: 'virtual_server')]
+#[ORM\Entity]
 class VirtualServer
 {
 
@@ -19,38 +17,37 @@ class VirtualServer
 
     /**
      * @var string
-     * @ORM\Column(name="name", type="string", length=255, nullable=false)
-     * @Assert\NotBlank()
      */
+    #[ORM\Column(name: 'name', type: 'string', length: 255, nullable: false)]
+    #[Assert\NotBlank]
     protected $name;
 
     /**
      * @var string
-     * @ORM\Column(name="host", type="string", length=20, nullable=false)
-     * @Assert\NotBlank()
      */
+    #[ORM\Column(name: 'host', type: 'string', length: 20, nullable: false)]
+    #[Assert\NotBlank]
     protected $host;
 
     /**
      * @var integer
-     * @ORM\Column(name="port", type="integer", nullable=false)
-     * @Assert\NotBlank()
      */
+    #[ORM\Column(name: 'port', type: 'integer', nullable: false)]
+    #[Assert\NotBlank]
     protected $port;
 
     /**
      * @var Environment
-     *
-     * @ORM\ManyToOne(targetEntity="Environment",inversedBy="virtualServers")
-     * @ORM\JoinColumn(referencedColumnName="id")
-     * @Assert\NotNull()
      */
+    #[ORM\JoinColumn(referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \Environment::class, inversedBy: 'virtualServers')]
+    #[Assert\NotNull]
     protected $environment;
 
     /**
      * @var boolean
-     * @ORM\Column(name="task_server", type="boolean")
      */
+    #[ORM\Column(name: 'task_server', type: 'boolean')]
     protected $taskServer;
 
     public function __construct()

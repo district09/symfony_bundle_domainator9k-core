@@ -11,10 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Class ApplicationType
  * @package DigipolisGent\Domainator9k\CoreBundle\Entity
- *
- * @ORM\Entity()
- * @ORM\Table(name="application_type")
  */
+#[ORM\Table(name: 'application_type')]
+#[ORM\Entity]
 class ApplicationType
 {
 
@@ -23,16 +22,14 @@ class ApplicationType
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="name",type="string")
      */
+    #[ORM\Column(name: 'name', type: 'string')]
     protected $name;
 
     /**
      * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="ApplicationTypeEnvironment",mappedBy="applicationType",cascade={"all"},orphanRemoval=true)
      */
+    #[ORM\OneToMany(targetEntity: \ApplicationTypeEnvironment::class, mappedBy: 'applicationType', cascade: ['all'], orphanRemoval: true)]
     protected $applicationTypeEnvironments;
 
     /**

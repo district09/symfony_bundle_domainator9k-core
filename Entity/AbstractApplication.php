@@ -15,14 +15,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Class AbstractApplication
  * @package DigipolisGent\Domainator9k\CoreBundle\Entity
- *
- * @ORM\Entity()
- * @ORM\Table(name="abstract_application")
- * @ORM\InheritanceType("JOINED")
- * @ORM\DiscriminatorColumn(name="discr",type="string")
- * @UniqueEntity(fields={"name"})]
- * @ORM\HasLifecycleCallbacks()
  */
+#[ORM\Table(name: 'abstract_application')]
+#[ORM\Entity]
+#[ORM\InheritanceType('JOINED')]
+#[ORM\DiscriminatorColumn(name: 'discr', type: 'string')]
+#[UniqueEntity(fields: ['name'])] // ]
+#[ORM\HasLifecycleCallbacks]
 abstract class AbstractApplication implements TemplateInterface
 {
 
@@ -32,54 +31,42 @@ abstract class AbstractApplication implements TemplateInterface
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="name", type="string", nullable=false)
-     * @Assert\NotBlank()
-     * @Assert\Length(min="2", max="255")
-     * @Assert\Regex(
-     *     pattern="/^[a-z0-9\-]+$/",
-     *     message="Name can only contain alphanumeric characters and dashes."
-     * )
      */
+    #[ORM\Column(name: 'name', type: 'string', nullable: false)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 2, max: 255)]
+    #[Assert\Regex(pattern: '/^[a-z0-9\-]+$/', message: 'Name can only contain alphanumeric characters and dashes.')]
     protected $name;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="git_repo", type="string", nullable=false)
-     * @Assert\Regex(
-     *     pattern="/^(git@[a-z0-9-\.]*\.[a-z]*:|https:\/\/[a-z0-9-\.]*\.[a-z]*\/)[a-zA-Z0-9-]*\/[^\s.\\]*\.git$/",
-     *     message="The git repository url must be in the git@host:respository.git or the https://host/repository.git format"
-     * )
      */
+    #[ORM\Column(name: 'git_repo', type: 'string', nullable: false)]
+    #[Assert\Regex(pattern: '/^(git@[a-z0-9-\.]*\.[a-z]*:|https:\/\/[a-z0-9-\.]*\.[a-z]*\/)[a-zA-Z0-9-]*\/[^\s.\\\]*\.git$/', message: 'The git repository url must be in the git@host:respository.git or the https://host/repository.git format')]
     protected $gitRepo;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="has_database", type="boolean", options={"default"="1"})
      */
+    #[ORM\Column(name: 'has_database', type: 'boolean', options: ['default' => '1'])]
     protected $hasDatabase = true;
 
     /**
      * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="ApplicationEnvironment", mappedBy="application", cascade={"all"},fetch="EAGER")
      */
+    #[ORM\OneToMany(targetEntity: \ApplicationEnvironment::class, mappedBy: 'application', cascade: ['all'], fetch: 'EAGER')]
     protected $applicationEnvironments;
 
     /**
      * @var boolean
-     *
-     * @ORM\Column(name="deleted",type="boolean")
      */
+    #[ORM\Column(name: 'deleted', type: 'boolean')]
     protected $deleted = false;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="application_type",type="string")
      */
+    #[ORM\Column(name: 'application_type', type: 'string')]
     protected $applicationType;
 
     /**
@@ -226,9 +213,7 @@ abstract class AbstractApplication implements TemplateInterface
         $this->deleted = $deleted;
     }
 
-    /**
-     * @ORM\PrePersist()
-     */
+    #[ORM\PrePersist]
     public function prePersist(){
         $this->applicationType = $this::getApplicationType();
     }

@@ -6,7 +6,7 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Form\Type;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationTypeEnvironment;
 use DigipolisGent\Domainator9k\CoreBundle\Form\Type\ApplicationTypeEnvironmentFormType;
 
-class ApplicationTypeEnvironmentFormTypeTest extends AbstractFormTypeTest
+class ApplicationTypeEnvironmentFormTypeTest extends AbstractFormType
 {
 
     public function testConfigureOptions()

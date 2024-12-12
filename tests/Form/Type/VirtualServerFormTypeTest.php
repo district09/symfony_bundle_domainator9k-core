@@ -6,7 +6,7 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Form\Type;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\VirtualServer;
 use DigipolisGent\Domainator9k\CoreBundle\Form\Type\VirtualServerFormType;
 
-class VirtualServerFormTypeTest extends AbstractFormTypeTest
+class VirtualServerFormTypeTest extends AbstractFormType
 {
 
     public function testConfigureOptions()

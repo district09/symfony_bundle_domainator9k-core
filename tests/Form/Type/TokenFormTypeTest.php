@@ -6,7 +6,7 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Form\Type;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Token;
 use DigipolisGent\Domainator9k\CoreBundle\Form\Type\TokenFormType;
 
-class TokenFormTypeTest extends AbstractFormTypeTest
+class TokenFormTypeTest extends AbstractFormType
 {
 
     public function testConfigureOptions()

@@ -4,8 +4,8 @@ services:
         autoconfigure: true
         public: false
     DigipolisGent\Domainator9k\CoreBundle\:
-        resource: '../../*'
-        exclude: '../../{Entity,Repository,Tests}'
+        resource: '../src/*'
+        exclude: '../src/{Entity,Repository,Tests}'
     DigipolisGent\Domainator9k\CoreBundle\EventListener\EnvironmentEventListener:
         tags:
             - { name: doctrine.event_listener, event: postPersist, connection: default }

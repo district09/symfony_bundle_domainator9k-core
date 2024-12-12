@@ -5,13 +5,13 @@
       <directory suffix=".php">.</directory>
     </include>
     <exclude>
-      <directory suffix=".php">./Tests</directory>
+      <directory suffix=".php">./tests</directory>
       <directory suffix=".php">./vendor</directory>
     </exclude>
   </coverage>
   <testsuites>
     <testsuite name="core-bundle">
-      <directory>./Tests</directory>
+      <directory>./tests</directory>
     </testsuite>
   </testsuites>
 </phpunit>

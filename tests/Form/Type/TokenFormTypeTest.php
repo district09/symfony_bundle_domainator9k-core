@@ -3,10 +3,10 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Form\Type;
 
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Environment;
-use DigipolisGent\Domainator9k\CoreBundle\Form\Type\EnvironmentFormType;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Token;
+use DigipolisGent\Domainator9k\CoreBundle\Form\Type\TokenFormType;
 
-class EnvironmentFormTypeTest extends AbstractFormTypeTest
+class TokenFormTypeTest extends AbstractFormType
 {
 
     public function testConfigureOptions()
@@ -16,9 +16,9 @@ class EnvironmentFormTypeTest extends AbstractFormTypeTest
         $optionsResolver
             ->expects($this->atLeastOnce())
             ->method('setDefault')
-            ->with('data_class', Environment::class);
+            ->with('data_class', Token::class);
 
-        $formType = new EnvironmentFormType($this->getFormServiceMock());
+        $formType = new TokenFormType($this->getFormServiceMock());
         $formType->configureOptions($optionsResolver);
     }
 
@@ -28,7 +28,7 @@ class EnvironmentFormTypeTest extends AbstractFormTypeTest
 
         $arguments = [
             ['name'],
-            ['prod'],
+            ['value'],
         ];
 
         $formBuilder
@@ -40,7 +40,7 @@ class EnvironmentFormTypeTest extends AbstractFormTypeTest
             ->expects($this->atLeastOnce())
             ->method('addEventSubscriber');
 
-        $formType = new EnvironmentFormType($this->getFormServiceMock());
+        $formType = new TokenFormType($this->getFormServiceMock());
         $formType->buildForm($formBuilder, []);
     }
 }

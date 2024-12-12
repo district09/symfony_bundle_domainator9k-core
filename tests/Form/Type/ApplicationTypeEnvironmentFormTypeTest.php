@@ -3,10 +3,10 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Form\Type;
 
-use DigipolisGent\Domainator9k\CoreBundle\Entity\Token;
-use DigipolisGent\Domainator9k\CoreBundle\Form\Type\TokenFormType;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationTypeEnvironment;
+use DigipolisGent\Domainator9k\CoreBundle\Form\Type\ApplicationTypeEnvironmentFormType;
 
-class TokenFormTypeTest extends AbstractFormTypeTest
+class ApplicationTypeEnvironmentFormTypeTest extends AbstractFormType
 {
 
     public function testConfigureOptions()
@@ -16,9 +16,9 @@ class TokenFormTypeTest extends AbstractFormTypeTest
         $optionsResolver
             ->expects($this->atLeastOnce())
             ->method('setDefault')
-            ->with('data_class', Token::class);
+            ->with('data_class', ApplicationTypeEnvironment::class);
 
-        $formType = new TokenFormType($this->getFormServiceMock());
+        $formType = new ApplicationTypeEnvironmentFormType($this->getFormServiceMock());
         $formType->configureOptions($optionsResolver);
     }
 
@@ -26,21 +26,11 @@ class TokenFormTypeTest extends AbstractFormTypeTest
     {
         $formBuilder = $this->getFormBuilderMock();
 
-        $arguments = [
-            ['name'],
-            ['value'],
-        ];
-
-        $formBuilder
-            ->expects($this->atLeast(count($arguments)))
-            ->method('add')
-            ->withConsecutive(...$arguments);
-
         $formBuilder
             ->expects($this->atLeastOnce())
             ->method('addEventSubscriber');
 
-        $formType = new TokenFormType($this->getFormServiceMock());
+        $formType = new ApplicationTypeEnvironmentFormType($this->getFormServiceMock());
         $formType->buildForm($formBuilder, []);
     }
 }

@@ -11,11 +11,9 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="environment")
- * @UniqueEntity(fields={"name"})
- */
+#[ORM\Table(name: 'environment')]
+#[ORM\Entity]
+#[UniqueEntity(fields: ['name'])]
 class Environment implements TemplateInterface
 {
 
@@ -25,56 +23,48 @@ class Environment implements TemplateInterface
 
     /**
      * @var string
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank();
-     * @Assert\Regex(
-     *     pattern="/^[a-z]+$/",
-     *     message="Your name cannot contain a space"
-     * )
      */
+    #[ORM\Column(type: 'string')]
+    #[Assert\NotBlank] // ;
+    #[Assert\Regex(pattern: '/^[a-z]+$/', message: 'Your name cannot contain a space')]
     protected $name;
 
     /**
      * @var boolean
-     * @ORM\Column(type="boolean")
      */
+    #[ORM\Column(type: 'boolean')]
     protected $prod;
 
     /**
      * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="ApplicationEnvironment",mappedBy="environment",cascade={"remove"})
      */
+    #[ORM\OneToMany(targetEntity: \ApplicationEnvironment::class, mappedBy: 'environment', cascade: ['remove'])]
     protected $applicationEnvironments;
 
 
     /**
      * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="ApplicationTypeEnvironment",mappedBy="environment",cascade={"remove"})
      */
+    #[ORM\OneToMany(targetEntity: \ApplicationTypeEnvironment::class, mappedBy: 'environment', cascade: ['remove'])]
     protected $applicationTypeEnvironments;
 
     /**
      * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="VirtualServer",mappedBy="environment")
      */
+    #[ORM\OneToMany(targetEntity: \VirtualServer::class, mappedBy: 'environment')]
     protected $virtualServers;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="git_ref",type="string",nullable=true)
-     * @Assert\NotBlank()
      */
+    #[ORM\Column(name: 'git_ref', type: 'string', nullable: true)]
+    #[Assert\NotBlank]
     protected $gitRef;
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="priority",type="integer",nullable=true)
      */
+    #[ORM\Column(name: 'priority', type: 'integer', nullable: true)]
     protected $priority;
 
     /**

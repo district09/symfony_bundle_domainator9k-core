@@ -3,10 +3,10 @@
 
 namespace DigipolisGent\Domainator9k\CoreBundle\Tests\Form\Type;
 
-use DigipolisGent\Domainator9k\CoreBundle\Entity\ApplicationEnvironment;
-use DigipolisGent\Domainator9k\CoreBundle\Form\Type\ApplicationEnvironmentFormType;
+use DigipolisGent\Domainator9k\CoreBundle\Entity\Environment;
+use DigipolisGent\Domainator9k\CoreBundle\Form\Type\EnvironmentFormType;
 
-class ApplicationEnvironmentFormTypeTest extends AbstractFormTypeTest
+class EnvironmentFormTypeTest extends AbstractFormType
 {
 
     public function testConfigureOptions()
@@ -16,9 +16,9 @@ class ApplicationEnvironmentFormTypeTest extends AbstractFormTypeTest
         $optionsResolver
             ->expects($this->atLeastOnce())
             ->method('setDefault')
-            ->with('data_class', ApplicationEnvironment::class);
+            ->with('data_class', Environment::class);
 
-        $formType = new ApplicationEnvironmentFormType($this->getFormServiceMock());
+        $formType = new EnvironmentFormType($this->getFormServiceMock());
         $formType->configureOptions($optionsResolver);
     }
 
@@ -27,11 +27,8 @@ class ApplicationEnvironmentFormTypeTest extends AbstractFormTypeTest
         $formBuilder = $this->getFormBuilderMock();
 
         $arguments = [
-            ['domain'],
-            ['databaseName'],
-            ['databaseUser'],
-            ['databasePassword'],
-            ['gitRef'],
+            ['name'],
+            ['prod'],
         ];
 
         $formBuilder
@@ -43,7 +40,7 @@ class ApplicationEnvironmentFormTypeTest extends AbstractFormTypeTest
             ->expects($this->atLeastOnce())
             ->method('addEventSubscriber');
 
-        $formType = new ApplicationEnvironmentFormType($this->getFormServiceMock());
+        $formType = new EnvironmentFormType($this->getFormServiceMock());
         $formType->buildForm($formBuilder, []);
     }
 }

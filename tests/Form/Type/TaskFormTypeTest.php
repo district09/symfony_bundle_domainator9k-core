@@ -9,7 +9,7 @@ use DigipolisGent\Domainator9k\CoreBundle\Provisioner\ProvisionerInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Service\TaskRunnerService;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
-class TaskFormTypeTest extends AbstractFormTypeTest
+class TaskFormTypeTest extends AbstractFormType
 {
 
     public function testConfigureOptions()

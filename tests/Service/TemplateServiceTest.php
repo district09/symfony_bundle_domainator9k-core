@@ -19,6 +19,7 @@ class TemplateServiceTest extends TestCase
     protected $token;
     protected $tokenService;
     protected $repository;
+    protected EntityManager $entityManager;
 
     protected function setUp(): void
     {

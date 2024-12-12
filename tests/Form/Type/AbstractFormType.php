@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-abstract class AbstractFormTypeTest extends TestCase
+abstract class AbstractFormType extends TestCase
 {
 
     /**

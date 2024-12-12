@@ -6,10 +6,8 @@ use DateTime;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\Traits\IdentifiableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="DigipolisGent\Domainator9k\CoreBundle\Entity\Repository\TaskRepository")
- * @ORM\Table(name="task")
- */
+#[ORM\Table(name: 'task')]
+#[ORM\Entity(repositoryClass: \DigipolisGent\Domainator9k\CoreBundle\Entity\Repository\TaskRepository::class)]
 class Task
 {
 
@@ -26,42 +24,39 @@ class Task
 
     /**
      * @var ApplicationEnvironment
-     *
-     * @ORM\ManyToOne(targetEntity="ApplicationEnvironment",inversedBy="tasks")
-     * @ORM\JoinColumn(referencedColumnName="id")
      */
+    #[ORM\JoinColumn(referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: \ApplicationEnvironment::class, inversedBy: 'tasks')]
     protected $applicationEnvironment;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="type",type="string")
      */
+    #[ORM\Column(name: 'type', type: 'string')]
     protected $type;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="status",type="string")
      */
+    #[ORM\Column(name: 'status', type: 'string')]
     protected $status;
 
     /**
      * @var DateTime
-     * @ORM\Column(name="created", type="datetime", nullable=false)
      */
+    #[ORM\Column(name: 'created', type: 'datetime', nullable: false)]
     protected $created;
 
     /**
      * @var string[]
-     * @ORM\Column(name="provisioners", type="simple_array", nullable=true)
      */
+    #[ORM\Column(name: 'provisioners', type: 'simple_array', nullable: true)]
     protected $provisioners;
 
     /**
      * @var string
-     * @ORM\Column(name="log", type="text", nullable=true)
      */
+    #[ORM\Column(name: 'log', type: 'text', nullable: true)]
     protected $log;
 
     /**

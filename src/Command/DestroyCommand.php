@@ -17,7 +17,7 @@ class DestroyCommand extends AbstractCommand
     /**
      * Configure the command properties.
      */
-    public function configure()
+    public function configure(): void
     {
         $this->setName('domainator:destroy');
     }

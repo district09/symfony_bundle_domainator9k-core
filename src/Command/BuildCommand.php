@@ -17,7 +17,7 @@ class BuildCommand extends AbstractCommand
     /**
      * Configure the command properties.
      */
-    public function configure()
+    public function configure(): void
     {
         $this->setName('domainator:build');
     }

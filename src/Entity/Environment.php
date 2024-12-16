@@ -38,20 +38,20 @@ class Environment implements TemplateInterface
     /**
      * @var ArrayCollection
      */
-    #[ORM\OneToMany(targetEntity: \ApplicationEnvironment::class, mappedBy: 'environment', cascade: ['remove'])]
+    #[ORM\OneToMany(targetEntity: ApplicationEnvironment::class, mappedBy: 'environment', cascade: ['remove'])]
     protected $applicationEnvironments;
 
 
     /**
      * @var ArrayCollection
      */
-    #[ORM\OneToMany(targetEntity: \ApplicationTypeEnvironment::class, mappedBy: 'environment', cascade: ['remove'])]
+    #[ORM\OneToMany(targetEntity: ApplicationTypeEnvironment::class, mappedBy: 'environment', cascade: ['remove'])]
     protected $applicationTypeEnvironments;
 
     /**
      * @var ArrayCollection
      */
-    #[ORM\OneToMany(targetEntity: \VirtualServer::class, mappedBy: 'environment')]
+    #[ORM\OneToMany(targetEntity: VirtualServer::class, mappedBy: 'environment')]
     protected $virtualServers;
 
     /**

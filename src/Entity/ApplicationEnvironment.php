@@ -22,21 +22,21 @@ class ApplicationEnvironment implements TemplateInterface
     /**
      * @var ArrayCollection
      */
-    #[ORM\OneToMany(targetEntity: \Task::class, mappedBy: 'applicationEnvironment', cascade: ['remove'])]
+    #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'applicationEnvironment', cascade: ['remove'])]
     protected $tasks;
 
     /**
      * @var AbstractApplication
      */
     #[ORM\JoinColumn(name: 'application_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \AbstractApplication::class, inversedBy: 'applicationEnvironments')]
+    #[ORM\ManyToOne(targetEntity: AbstractApplication::class, inversedBy: 'applicationEnvironments')]
     protected $application;
 
     /**
      * @var Environment
      */
     #[ORM\JoinColumn(name: 'environment_id', referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \Environment::class, inversedBy: 'applicationEnvironments')]
+    #[ORM\ManyToOne(targetEntity: Environment::class, inversedBy: 'applicationEnvironments')]
     protected $environment;
 
     /**

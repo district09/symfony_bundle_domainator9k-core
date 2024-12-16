@@ -26,7 +26,7 @@ class Task
      * @var ApplicationEnvironment
      */
     #[ORM\JoinColumn(referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \ApplicationEnvironment::class, inversedBy: 'tasks')]
+    #[ORM\ManyToOne(targetEntity: ApplicationEnvironment::class, inversedBy: 'tasks')]
     protected $applicationEnvironment;
 
     /**

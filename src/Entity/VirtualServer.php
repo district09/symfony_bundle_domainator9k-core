@@ -40,7 +40,7 @@ class VirtualServer
      * @var Environment
      */
     #[ORM\JoinColumn(referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \Environment::class, inversedBy: 'virtualServers')]
+    #[ORM\ManyToOne(targetEntity: Environment::class, inversedBy: 'virtualServers')]
     #[Assert\NotNull]
     protected $environment;
 

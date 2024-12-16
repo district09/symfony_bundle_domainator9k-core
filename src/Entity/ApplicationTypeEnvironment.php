@@ -23,14 +23,14 @@ class ApplicationTypeEnvironment
      * @var ApplicationType
      */
     #[ORM\JoinColumn(referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \ApplicationType::class, inversedBy: 'applicationTypeEnvironments')]
+    #[ORM\ManyToOne(targetEntity: ApplicationType::class, inversedBy: 'applicationTypeEnvironments')]
     protected $applicationType;
 
     /**
      * @var  Environment
      */
     #[ORM\JoinColumn(referencedColumnName: 'id')]
-    #[ORM\ManyToOne(targetEntity: \Environment::class, inversedBy: 'applicationTypeEnvironments')]
+    #[ORM\ManyToOne(targetEntity: Environment::class, inversedBy: 'applicationTypeEnvironments')]
     protected $environment;
 
     public static function getSettingImplementationName()

@@ -54,7 +54,7 @@ abstract class AbstractApplication implements TemplateInterface
     /**
      * @var ArrayCollection
      */
-    #[ORM\OneToMany(targetEntity: \ApplicationEnvironment::class, mappedBy: 'application', cascade: ['all'], fetch: 'EAGER')]
+    #[ORM\OneToMany(targetEntity: ApplicationEnvironment::class, mappedBy: 'application', cascade: ['all'], fetch: 'EAGER')]
     protected $applicationEnvironments;
 
     /**

@@ -29,7 +29,7 @@ class ApplicationType
     /**
      * @var ArrayCollection
      */
-    #[ORM\OneToMany(targetEntity: \ApplicationTypeEnvironment::class, mappedBy: 'applicationType', cascade: ['all'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: ApplicationTypeEnvironment::class, mappedBy: 'applicationType', cascade: ['all'], orphanRemoval: true)]
     protected $applicationTypeEnvironments;
 
     /**

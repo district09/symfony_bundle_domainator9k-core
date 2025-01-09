@@ -5,7 +5,7 @@ namespace DigipolisGent\Domainator9k\CoreBundle\Provider;
 use DigipolisGent\Domainator9k\CoreBundle\CLI\CliFactoryInterface;
 use DigipolisGent\Domainator9k\CoreBundle\CLI\CliInterface;
 use DigipolisGent\Domainator9k\CoreBundle\Exception\NoCliFactoryFoundException;
-use Doctrine\ORM\Proxy\Proxy;
+use Doctrine\Common\Util\ClassUtils;
 
 class CliFactoryProvider
 {
@@ -51,14 +51,12 @@ class CliFactoryProvider
             );
         }
 
-        $class = get_class($object);
+        $class = ClassUtils::getRealClass(get_class($object));
 
-        if (!isset($this->cliFactories[$class]) && $object instanceof Proxy) {
-            $class = get_parent_class($object);
-        }
-        if (isset($this->cliFactories[$class])) {
+        if (isset($this->cliFactories[$class]) ) {
             return $this->cliFactories[$class]->create($object);
         }
+
         if (!($this->defaultCliFactory instanceof CliFactoryInterface)) {
             throw new NoCliFactoryFoundException(
                 sprintf('No cli factory found for %s and no default factory given.', $class)

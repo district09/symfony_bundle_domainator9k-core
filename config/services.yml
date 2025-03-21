@@ -10,6 +10,10 @@ services:
         tags:
             - { name: doctrine.event_listener, event: postPersist, connection: default }
             - { name: doctrine.event_listener, event: postRemove, connection: default }
+    DigipolisGent\Domainator9k\CoreBundle\EventListener\TokenEventListener:
+        tags:
+            - { name: doctrine.event_listener, event: postPersist, connection: default }
+            - { name: doctrine.event_listener, event: postRemove, connection: default }
     DigipolisGent\Domainator9k\CoreBundle\Service\TemplateService:
         arguments:
             $templateProviders: !tagged template_provider

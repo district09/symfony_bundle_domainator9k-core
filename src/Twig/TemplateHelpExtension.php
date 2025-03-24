@@ -53,7 +53,7 @@ class TemplateHelpExtension extends AbstractExtension
             if (!is_a($class, TemplateInterface::class, true)) {
                 new RuntimeError(sprintf('Class %s does not implement %s.', $class, TemplateInterface::class));
             }
-            $templates[$key] = $this->cache->get('template_help:' . $class, function(ItemInterface $item) use ($class): array {
+            $templates[$key] = $this->cache->get(static::CACHE_TAG . '_' . str_replace('\\', '_', $class), function(ItemInterface $item) use ($class): array {
                 $item->tag(static::CACHE_TAG);
                 $item->expiresAfter(static::CACHE_LIFETIME);
 

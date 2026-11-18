@@ -213,7 +213,7 @@ class Environment implements TemplateInterface
     /**
      * @param int $priority
      */
-    public function setPriority(int $priority = null)
+    public function setPriority(?int $priority = null)
     {
         $this->priority = $priority;
     }

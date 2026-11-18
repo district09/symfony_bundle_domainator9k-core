@@ -183,7 +183,7 @@ class TemplateService
      * @param array $replacements
      *   Array of replacements, leave null to get them from the object.
      */
-    protected function registerReplacements(string $type, $object, array $replacements = null)
+    protected function registerReplacements(string $type, $object, ?array $replacements = null)
     {
         // Initialize the replacements.
         if ($this->replacements === null) {

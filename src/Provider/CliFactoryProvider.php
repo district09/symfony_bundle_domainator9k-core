@@ -21,7 +21,7 @@ class CliFactoryProvider
     protected $defaultCliFactory;
 
 
-    public function __construct(CliFactoryInterface $defaultCliFactory = null)
+    public function __construct(?CliFactoryInterface $defaultCliFactory = null)
     {
         $this->defaultCliFactory = $defaultCliFactory;
     }

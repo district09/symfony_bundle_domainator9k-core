@@ -96,7 +96,7 @@ class ApplicationEnvironment implements TemplateInterface
     /**
      * @param AbstractApplication $application
      */
-    public function setApplication(AbstractApplication $application = null)
+    public function setApplication(?AbstractApplication $application = null)
     {
         $this->application = $application;
     }
@@ -112,7 +112,7 @@ class ApplicationEnvironment implements TemplateInterface
     /**
      * @param string $databaseName
      */
-    public function setDatabaseName(string $databaseName = null)
+    public function setDatabaseName(?string $databaseName = null)
     {
         $this->databaseName = $databaseName;
     }
@@ -152,7 +152,7 @@ class ApplicationEnvironment implements TemplateInterface
     /**
      * @param string $databaseUser
      */
-    public function setDatabaseUser(string $databaseUser = null)
+    public function setDatabaseUser(?string $databaseUser = null)
     {
         $this->databaseUser = $databaseUser;
     }
@@ -168,7 +168,7 @@ class ApplicationEnvironment implements TemplateInterface
     /**
      * @param string $databasePassword
      */
-    public function setDatabasePassword(string $databasePassword = null)
+    public function setDatabasePassword(?string $databasePassword = null)
     {
         $this->databasePassword = $databasePassword;
     }
@@ -184,7 +184,7 @@ class ApplicationEnvironment implements TemplateInterface
     /**
      * @param string $gitRef
      */
-    public function setGitRef(string $gitRef = null)
+    public function setGitRef(?string $gitRef = null)
     {
         $this->gitRef = $gitRef;
     }

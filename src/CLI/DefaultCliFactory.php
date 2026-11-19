@@ -10,7 +10,7 @@ use DigipolisGent\Domainator9k\CoreBundle\Entity\Environment;
 use DigipolisGent\Domainator9k\CoreBundle\Entity\VirtualServer;
 use phpseclib3\Net\SSH2;
 use phpseclib3\Crypt\PublicKeyLoader;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 
 class DefaultCliFactory implements CliFactoryInterface
 {
